@@ -4,9 +4,21 @@ import BentoGridSection from "../sections/bentro-grid/BentoGridSection";
 import BentoGridSkeleton from "../sections/bentro-grid/BentoGridSkeleton";
 import { useEffect, useState } from "react";
 import OfferHeader from "../components/header/OfferHeader";
+// import { getUserData } from "../shared/auth";
+// import { useNavigate } from "react-router-dom";
 
 const OffersPage = () => {
+  // const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
+
+  // useEffect(() => {
+  //   const userData = getUserData();
+  //   if (!userData) {
+  //     navigate('/');
+  //   }
+  //   setIsLoading(false);
+  // }, []);
+
 
   useEffect(() => {
     // Simula una carga de datos
