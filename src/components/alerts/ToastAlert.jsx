@@ -3,7 +3,7 @@ import "./css/toast.css";
 
 export default function ToastAlert({ position, timer, icon, title, isColored }) {
 
-  const showToastSigned = () => {
+  const showToast = () => {
     return new Promise((resolve) => {
       const Toast = Swal.mixin({
         toast: true,
@@ -11,9 +11,9 @@ export default function ToastAlert({ position, timer, icon, title, isColored }) 
         showConfirmButton: false,
         timer: timer,
         timerProgressBar: true,
-        iconColor: 'white',
+        iconColor: isColored ? 'white' : 'auto',
         customClass: {
-          popup: 'colored-toast',
+          popup: isColored ? 'colored-toast' : '',
         },
         didOpen: (toast) => {
             // toast.onmouseenter = Swal.stopTimer;
@@ -31,7 +31,7 @@ export default function ToastAlert({ position, timer, icon, title, isColored }) 
   }
 
   return ( 
-    showToastSigned()
+    showToast()
   );
 }
 
