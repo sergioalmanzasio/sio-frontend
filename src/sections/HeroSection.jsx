@@ -5,10 +5,12 @@ import AnimatedBackground from "../components/AnimatedBackground";
 import { PrimaryButton, SecondaryButton } from "../components/ui/button";
 import RegistrationModal from "../components/RegistrationModal";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function HeroSection() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   return (
     <>
@@ -34,13 +36,23 @@ export default function HeroSection() {
                 Ver Ofertas
             </PrimaryButton>
             
-            {/* The enhanced button component is used here */}
+            { !isAuthenticated && (
+              <SecondaryButton 
+                className="bg-white text-blue-600 px-10 py-3 text-md cursor-pointer"
+                onClick={() => setIsModalOpen(true)}
+              >
+                Registrarse
+              </SecondaryButton>
+            ) }  
+
+
+            {/* The enhanced button component is used here
             <SecondaryButton 
                 className="bg-white text-blue-600 px-10 py-3 text-md cursor-pointer"
                 onClick={() => setIsModalOpen(true)}
             >
               Registrarse
-            </SecondaryButton>
+            </SecondaryButton> */}
           </div>
         </div>
         

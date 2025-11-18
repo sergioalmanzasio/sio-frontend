@@ -2,17 +2,21 @@ import { Input } from "../ui/input";
 import { Mail, Lock, Eye } from "lucide-react";
 import { PrimaryButton } from "../ui/button";
 import ToastAlert from "../alerts/ToastAlert";
-import useSignin from "../../hooks/useSignin";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
-const LoginForm = ({ onClickForgotPassword }) => {
+const LoginForm = ({ onClickForgotPassword, onClose }) => {
   const navigate = useNavigate();
-  const { signin, isLogin, loading } = useSignin();
+  const { login, isAuthenticated, loading } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+
+  const clearInput = () => {
+    document.querySelector('input').value = '';
+  }
 
   const handleInputChange = (e) => {
     // Capturar el evento enter
@@ -36,17 +40,32 @@ const LoginForm = ({ onClickForgotPassword }) => {
         return;
       }
     }
-
-    await signin(formData);
+    const loginSuccess = await login(formData);
+    if (loginSuccess) {
+      ToastAlert({
+        position: "top",
+        timer: 1800,
+        icon: "success",
+        title: "Sesión iniciada correctamente.",
+        isColored: false
+      });
+      onClose();
+      navigate('/offers');
+    }
   };
 
-  // NUEVA LÓGICA: Reaccionar cuando isLogin cambie a true
+   // NUEVA LÓGICA: Reaccionar cuando isLogin cambie a true
   useEffect(() => {
-    if (isLogin) {
-      console.log("¡LOGIN EXITOSO! El estado AHORA es TRUE.");
-      navigate('/offers'); // Redirige a offers
+    if (isAuthenticated) {
+      // 1. Notificar al Navbar para que cierre el dropdown y actualice isAuthenticated
+      if (onClose) {
+        onClose(); 
+      }
+
+      // 2. Redirigir al usuario 
+      navigate('/offers');  
     }
-  }, [isLogin]); // El efecto se ejecuta cada vez que isLogin cambia
+  }, [isAuthenticated, navigate]); 
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -58,6 +77,8 @@ const LoginForm = ({ onClickForgotPassword }) => {
   return (
     <div className="absolute right-0 mt-3 w-80 md:w-100 bg-white border border-gray-100 rounded-xl shadow-2xl p-6 origin-top-right transform scale-100 transition-all duration-300 ease-out animate-fadeIn">
       <div className="flex flex-col space-y-4">
+        <h2 className="text-lg font-semibold mb-1">Iniciar sesión</h2>
+        <p className="text-sm text-gray-600 mb-4">Ingresa tus datos para iniciar sesión</p>
         <Input
           type="email"
           name="email"
@@ -88,7 +109,10 @@ const LoginForm = ({ onClickForgotPassword }) => {
       <a
         href="#"
         className="text-xs text-blue-600 mt-3 block text-center hover:text-blue-700 transition cursor-pointer"
-        onClick={() => onClickForgotPassword()}
+        onClick={() => {
+          clearInput();
+          onClickForgotPassword();
+        }}
       >
         ¿Olvidaste tu contraseña?
       </a>

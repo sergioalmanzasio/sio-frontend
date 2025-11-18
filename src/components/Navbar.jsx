@@ -1,55 +1,81 @@
 // src/components/Navbar.jsx
 
 import { useState } from "react";
-import { Mail, Lock, Menu } from "lucide-react";
-import { GradientButton, PrimaryButton } from "./ui/button";
-import { Input } from "./ui/input";
+import { GradientButton } from "./ui/button";
 import ForgotPasswordModal from "./modals/ForgotPasswordModal";
 import LoginForm from "./form/LoginForm";
-
-
-const clearInput = () => {
-  document.querySelector('input').value = '';
-}
+import { LogOut } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import ModalAlertConfirm from "./alerts/ModalAlertConfirm";
+import { useAuth } from "../context/AuthContext";
 
 export default function Navbar() {
   const [showLogin, setShowLogin] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const { isAuthenticated, userData, logout } = useAuth();
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    ModalAlertConfirm({
+      title: "¿Estás seguro(a) de cerrar sesión?",
+      text: "Esto cerrará tu sesión y te redirigirá al inicio.",
+      icon: "warning",
+      confirmText: "Sí, cerrar sesión",
+      cancelText: "Cancelar",
+      confirmCallback: () => {
+        logout(); // Llama a la función global de logout
+        navigate('/');
+      },
+      cancelCallback: () => {
+        // Do nothing
+      }
+    });
+  };
+
 
   return (
     <><header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-lg transition-all duration-300">
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
         {/* Logo */}
-        <div className="text-3xl font-extrabold text-blue-600 tracking-wider">
+        <div className="text-3xl font-extrabold text-blue-600 tracking-wider cursor-pointer" onClick={() => navigate('/')}>
           <img src="/src/assets/SIO-logo.png" className="w-24 h-16" alt="" />
         </div>
 
-        {/* Login Button & Dropdown */}
-        <div className="relative">
-          <GradientButton
-            className="hidden md:flex" // Hide on small screens for cleaner look
-            onClick={() => setShowLogin(!showLogin)}
-          >
-            {showLogin ? "Cancelar" : "Iniciar sesión"}
-          </GradientButton>
+        {
+          isAuthenticated ? 
+          (
+            <div className="flex items-center gap-4">
+              <span className="text-gray-600"> {userData.firstName}</span>
+              <button className="text-gray-600 hover:text-gray-800 transition" onClick={handleLogout}>
+                <LogOut className="cursor-pointer"/>
+              </button>
+            </div>
+          ) : (
+            <div className="relative">
+              <GradientButton
+                className="hidden md:flex cursor-pointer" // Hide on small screens for cleaner look
+                onClick={() => setShowLogin(!showLogin)}
+              >
+                {showLogin ? "Cancelar" : "Iniciar sesión"}
+              </GradientButton>
 
-          {showLogin && (
-            <LoginForm onClickForgotPassword={() => {
-              setShowLogin(false);
-              setShowForgotPassword(true);
-              clearInput();
-            }} />
-          )}
-        </div>
+              {showLogin && (
+                <LoginForm onClickForgotPassword={() => {
+                  setShowLogin(false);
+                  setShowForgotPassword(true);
+                }}
+                onClose={() => setShowLogin(false)}
+                />
+              )}
+            </div>  
+          )
+        }  
       </div>
-
     </header>
     
     <ForgotPasswordModal isOpen={showForgotPassword} onClose={() => setShowForgotPassword(false)} />
     
     </>
-  );
-
-  
+  );  
 }
