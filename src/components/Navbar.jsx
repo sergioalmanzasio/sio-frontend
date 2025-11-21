@@ -8,9 +8,12 @@ import { LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import ModalAlertConfirm from "./alerts/ModalAlertConfirm";
 import { useAuth } from "../context/AuthContext";
+import { Menu, X } from "lucide-react";
+import MenuUser from "./menu/MenuUser";
 
 export default function Navbar() {
   const [showLogin, setShowLogin] = useState(false);
+  const [showMenuUser, setShowMenuUser] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const { isAuthenticated, userData, logout } = useAuth();
 
@@ -41,16 +44,31 @@ export default function Navbar() {
         <div className="text-3xl font-extrabold text-blue-600 tracking-wider cursor-pointer" onClick={() => navigate('/')}>
           <img src="/src/assets/SIO-logo.png" className="w-24 h-16" alt="" />
         </div>
+        {/* Icono de menu */}
 
         {
           isAuthenticated ? 
           (
             <div className="flex items-center gap-4">
+              
               <span className="text-gray-600"> {userData.firstName}</span>
-              <button className="text-gray-600 hover:text-gray-800 transition" onClick={handleLogout}>
+               {
+                showMenuUser ? (
+                  <X className="cursor-pointer text-blue-600" onClick={() => setShowMenuUser(!showMenuUser)} />
+                ) : (
+                  <Menu className="cursor-pointer text-blue-600" onClick={() => setShowMenuUser(!showMenuUser)} />
+                )
+              }
+              {/* <button className="text-gray-600 hover:text-gray-800 transition" onClick={handleLogout}>
                 <LogOut className="cursor-pointer"/>
-              </button>
-            </div>
+              </button> */}
+              <div className="relative">
+                {showMenuUser && (
+                  <MenuUser onClose={() => setShowMenuUser(false)} onCloseSession={handleLogout} />
+                )}
+              </div>
+            </div>  
+          
           ) : (
             <div className="relative">
               <GradientButton
@@ -68,6 +86,8 @@ export default function Navbar() {
                 onClose={() => setShowLogin(false)}
                 />
               )}
+
+             
             </div>  
           )
         }  
