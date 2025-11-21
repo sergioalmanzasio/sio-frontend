@@ -26,8 +26,8 @@ const Select = ({ options, label, value, onChange }) => {
         <option value="" disabled>
           Selecciona {label}
         </option>
-        {options.map((op) => (
-          <option key={op} value={op}>
+        {options.map((op, index) => (
+          <option key={`${op}-${index}`} value={op}>
             {op}
           </option>
         ))}
