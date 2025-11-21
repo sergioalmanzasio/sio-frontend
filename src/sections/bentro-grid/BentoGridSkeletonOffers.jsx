@@ -5,7 +5,7 @@ import SkeletonCard from "../../components/card/SkeletonCard";
 // Genera un array de 20 elementos nulos para simular las 20 tarjetas
 const SKELETON_ITEMS = Array.from({ length: 20 }, (_, i) => i);
 
-export default function BentoGridSkeleton() {
+export default function BentoGridSkeletonOffers() {
   return (
     <section className="py-20 px-6 bg-gray-50">
       {/* Loading animation with text */}
