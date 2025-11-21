@@ -32,13 +32,13 @@ export default function HeroSection() {
           
           {/* Action Buttons with Magic UI style */}
           <div className="flex flex-row md:flex-row justify-center gap-6">
-            <PrimaryButton className="px-10 py-3 text-md cursor-pointer" onClick={() => navigate('/offers')}>
+            <PrimaryButton className="px-10 py-3 text-md cursor-pointer bg-gradient-to-b from-[#06b6d4] via-[#2563eb] to-[#6366f1]" onClick={() => navigate('/offers')}>
                 Ver Ofertas
             </PrimaryButton>
             
             { !isAuthenticated && (
               <SecondaryButton 
-                className="bg-white text-blue-600 px-10 py-3 text-md cursor-pointer"
+                className="bg-white text-blue-600 px-10 py-3 text-md cursor-pointer "
                 onClick={() => setIsModalOpen(true)}
               >
                 Registrarse
