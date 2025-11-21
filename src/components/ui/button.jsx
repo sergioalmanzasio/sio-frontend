@@ -33,7 +33,7 @@ export const PrimaryButton = React.forwardRef(
     return (
       <button
         className={
-          "bg-blue-600 text-white px-5 py-2 rounded-lg font-medium hover:bg-blue-700 transition-all duration-300 shadow-lg shadow-blue-500/50 cursor-pointer" +
+          "bg-blue-600 text-white px-5 py-2 rounded-lg font-medium hover:bg-blue-700 transition-all duration-300 shadow-lg shadow-blue-500/50 cursor-pointer " +
           className
         }
         ref={ref}
@@ -86,6 +86,23 @@ export const SkeletonButton = React.forwardRef(
       <button
         className={
           "bg-gray-200 px-5 py-2 rounded-lg font-medium animate-pulse transition-all duration-300 w-24 h-24" +
+          className
+        }
+        ref={ref}
+        {...props}
+      >
+        {children}
+      </button>
+    );
+  }
+);
+
+export const ButtonCard = React.forwardRef(
+  ({ className, children, ...props }, ref) => {
+    return (
+      <button
+        className={
+          "text-white px-5 py-2 rounded-lg font-medium hover:scale-[1.05] transition-all duration-300 cursor-pointer " +
           className
         }
         ref={ref}
