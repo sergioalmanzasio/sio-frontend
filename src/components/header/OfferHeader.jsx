@@ -1,15 +1,17 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Select from "../ui/select";
 import { Search } from "lucide-react";
 import ToastAlert from "../alerts/ToastAlert";
+import useOperator from "../../hooks/useOperator";
+import useCategory from "../../hooks/useCategory";
 
 const OfferHeader = ({isLoadingOffers = true}) => {
-  const [operator, setOperator] = useState("");
   const [service, setService] = useState("");
+  const [operator, setOperator] = useState("");
 
-  const OPERATORS = ["Claro", "Movistar", "Tigo", "WON"];
-  const SERVICES = ["Internet", "Movil", "TV", "Todos"];
+  const { operators: fetchedOperators, loading: loadingOperators, getOperators } = useOperator();
+  const { categories: fetchedCategories, loading: loadingCategories, getCategories } = useCategory();
 
   // Validar que los campos no estén vacíos
   const handleSearch = () => {
@@ -26,6 +28,22 @@ const OfferHeader = ({isLoadingOffers = true}) => {
     // TODO: Implementar la lógica de búsqueda 
   };
 
+  // Get Operator to select
+  useEffect(() => {
+    getOperators();
+    getCategories();
+  }, [getOperators, getCategories]);
+
+
+  // Si deseas mantener una lista por defecto hasta que carguen:
+  const OPERATORS_LIST = fetchedOperators && fetchedOperators.length > 0
+    ? fetchedOperators.map(op => op.name) // Ajusta esta línea según la estructura de los datos que devuelve tu API.
+    : [];
+
+  const SERVICES_LIST = fetchedCategories && fetchedCategories.length > 0
+    ? fetchedCategories.map(cat => cat.name) // Ajusta esta línea según la estructura de los datos que devuelve tu API.
+    : [];
+  
   const resetForm = () => {
     setOperator("");
     setService("");
@@ -38,12 +56,20 @@ const OfferHeader = ({isLoadingOffers = true}) => {
         
         {/* Select operadores (w-1/3 del grupo) */}
         <div className="w-full md:w-1/3">
-          <Select options={OPERATORS} label="operador" value={operator} onChange={(e) => setOperator(e.target.value)} />
+          <Select 
+            options={OPERATORS_LIST} 
+            label="operador" 
+            value={operator} 
+            onChange={(e) => setOperator(e.target.value)} />
         </div>
         
         {/* Select servicios (w-1/3 del grupo) */}
         <div className="w-full md:w-1/3">
-          <Select options={SERVICES} label="servicio" value={service} onChange={(e) => setService(e.target.value)} />
+          <Select 
+            options={SERVICES_LIST} 
+            label="servicio" 
+            value={service} 
+            onChange={(e) => setService(e.target.value)} />
         </div>
         
         {/* Button search (w-1/3 del grupo) */}
