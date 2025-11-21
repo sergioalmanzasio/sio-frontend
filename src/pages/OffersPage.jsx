@@ -1,31 +1,17 @@
 
-import Navbar from "../components/Navbar";
-import BentoGridSection from "../sections/bentro-grid/BentoGridSection";
-import BentoGridSkeleton from "../sections/bentro-grid/BentoGridSkeleton";
 import { useEffect, useState } from "react";
+import BentoGridSectionOffers from "../sections/bentro-grid/BentoGridSectionOffers";
+import BentoGridSkeletonOffers from "../sections/bentro-grid/BentoGridSkeletonOffers";
+import Navbar from "../components/Navbar";
 import OfferHeader from "../components/header/OfferHeader";
-// import { getUserData } from "../shared/auth";
-// import { useNavigate } from "react-router-dom";
+import useOffer from "../hooks/useOffer";
 
 const OffersPage = () => {
-  // const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(true);
-
-  // useEffect(() => {
-  //   const userData = getUserData();
-  //   if (!userData) {
-  //     navigate('/');
-  //   }
-  //   setIsLoading(false);
-  // }, []);
-
-
+  const { offers: fetchedOffers, loading: loadingOffers, getOffers } = useOffer();
+  
   useEffect(() => {
-    // Simula una carga de datos
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000); // Simula una carga de datos que toma 2 segundos
-  }, []);
+    getOffers();
+  }, [getOffers]); 
 
   return (
     <>
@@ -39,8 +25,12 @@ const OffersPage = () => {
           Una plataforma, infinitas soluciones organizadas para ti.
         </p>
       </div>
-      <OfferHeader isLoadingOffers={isLoading} />
-      {isLoading ? <BentoGridSkeleton /> : <BentoGridSection />}
+      <OfferHeader isLoadingOffers={loadingOffers} />
+      {
+        loadingOffers 
+        ? <BentoGridSkeletonOffers />
+        : <BentoGridSectionOffers  offers={fetchedOffers}/> 
+      }
       </section>
     </>
   );
