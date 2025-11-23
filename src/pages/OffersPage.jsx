@@ -7,11 +7,32 @@ import OfferHeader from "../components/header/OfferHeader";
 import useOffer from "../hooks/useOffer";
 
 const OffersPage = () => {
-  const { offers: fetchedOffers, loading: loadingOffers, getOffers } = useOffer();
-  
+  const { offers: fetchedOffers, loading: loadingOffers, getOffers, getOffersByOperator, getOffersByService, getOffersByOperatorAndService } = useOffer();
+  const [selectedOperator, setSelectedOperator] = useState(null);
+  const [selectedService, setSelectedService] = useState(null);  
   useEffect(() => {
     getOffers();
-  }, [getOffers]); 
+  }, [getOffers, getOffersByOperator, getOffersByService, getOffersByOperatorAndService]); 
+
+  const getOffersByFilters = ( operatorId, serviceId ) => {
+    setSelectedOperator(operatorId);
+    setSelectedService(serviceId);
+    if (operatorId || serviceId) {
+      if ( (operatorId !== "Todos" && operatorId !== null) && (!serviceId || serviceId === "Todos" || serviceId === null )) {
+        getOffersByOperator(operatorId);
+      } else if ( (serviceId !== "Todos" && serviceId !== null) && (!operatorId || operatorId === "Todos" || operatorId === null )) {
+        getOffersByService(serviceId);
+      } else if ( operatorId === "Todos" && serviceId === "Todos" ) {
+        getOffers();
+      } else if( (operatorId === "Todos" || !serviceId) || (serviceId === "Todos" || !operatorId) ) {
+        getOffers();
+      } else {
+        getOffersByOperatorAndService(operatorId, serviceId);
+      }
+    }else{
+      getOffers();
+    }
+  }
 
   return (
     <>
@@ -25,11 +46,16 @@ const OffersPage = () => {
           Una plataforma, infinitas soluciones organizadas para ti.
         </p>
       </div>
-      <OfferHeader isLoadingOffers={loadingOffers} />
+      <OfferHeader isLoadingOffers={loadingOffers} 
+                   onSearch={(operatorId, serviceId) => {
+                    getOffersByFilters(operatorId, serviceId);
+                  }} 
+      />
+      <div className="h-px w-full bg-gray-200 my-4 mt-10"></div>
       {
         loadingOffers 
         ? <BentoGridSkeletonOffers />
-        : <BentoGridSectionOffers  offers={fetchedOffers}/> 
+        : <BentoGridSectionOffers  offers={fetchedOffers}/>   
       }
       </section>
     </>
