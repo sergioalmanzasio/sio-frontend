@@ -46,7 +46,7 @@ const LoginForm = ({ onClickForgotPassword, onClose }) => {
         position: "top",
         timer: 1800,
         icon: "success",
-        title: "Sesión iniciada correctamente.",
+        title: "Bienvenido(a) de vuelta a tu cuenta.",
         isColored: false
       });
       onClose();
