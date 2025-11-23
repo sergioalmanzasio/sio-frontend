@@ -100,16 +100,12 @@ export default function OfferBuyBottomModal({ isOpen, onClose, children, title, 
 
   return (
     <>
-     
-
       <div className="fixed inset-0 flex items-end justify-center z-50 bg-black/40 backdrop-blur-sm animate-fadeIn">
         <div className="w-full md:w-1/3 bg-white rounded-t-3xl p-6 shadow-xl animate-slideUp">
           <h2 className="text-2xl font-semibold mb-4 text-gray-800 text-center">
             {title}
           </h2>
           <div className="text-gray-700">{children}</div>
-
-
           <div className="flex flex-row items-center gap-1 mt-4">
             <input 
               className="w-5 h-5 border border-gray-200 rounded-md p-0 cursor-pointer" 
