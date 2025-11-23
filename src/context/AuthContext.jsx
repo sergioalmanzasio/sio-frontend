@@ -1,7 +1,7 @@
 // src/context/AuthContext.jsx
 
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { getUserData, clearUserData, saveUserData } from "../shared/auth";
+import { getUserData, clearUserData } from "../shared/auth";
 import useSignin from "../hooks/useSignin"; // Importamos el hook que maneja la API
 
 // 1. Crear el Contexto
@@ -37,6 +37,7 @@ export const AuthProvider = ({ children }) => {
     // actualizamos el estado global aquí.
     if (success) {
       const data = getUserData(); // Volvemos a leer los datos recién guardados
+
       setUserData(data);
       setIsAuthenticated(true);
     }
