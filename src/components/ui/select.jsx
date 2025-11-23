@@ -1,27 +1,39 @@
-// src/components/Select.jsx (o donde lo hayas creado)
+import { ChevronDown, TabletSmartphone } from "lucide-react";
+import React from "react";
 
-import { Briefcase, ChevronDown, TabletSmartphone } from "lucide-react";
-import React from 'react'; // Asegúrate de importar React
-
-// El componente ahora espera 'value' y 'onChange' del padre
 const Select = ({ options, label, value, onChange }) => {
-  // Eliminamos el useState, ya que el estado es manejado por el padre
-  
-  // Puedes usar una prop 'icon' para hacerlo más dinámico
-  const Icon = TabletSmartphone; 
+  const Icon = TabletSmartphone;
+
+  const isSelected = value && value.length > 0;
 
   return (
-    <div className="relative">
-      <label htmlFor={`select-${label}`} className="sr-only">
-        {label}
+    <div className="relative w-full">
+      
+      {/* Label visible sobre el Select */}
+      <label
+        htmlFor={`select-${label}`}
+        className={`
+          absolute left-3 
+          transition-all duration-200 
+          pointer-events-none
+          bg-white px-1
+          text-gray-500
+          -top-2 text-xs
+        `}
+      >
+        {label.charAt(0).toUpperCase() + label.slice(1)}
       </label>
+
+      {/* SELECT */}
       <select
-        // Usamos el 'value' que viene del padre
-        value={value} 
-        // Usamos la función 'onChange' que viene del padre
+        value={value}
         onChange={onChange}
-        id={`select-${label}`} 
-        className="appearance-none w-full p-2 pl-10 border border-gray-300 rounded-lg text-gray-700 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-300 bg-white"
+        id={`select-${label}`}
+        className="appearance-none w-full p-3 pt-5 pl-10 
+                   border border-gray-300 rounded-lg text-gray-700 
+                   outline-none focus:border-blue-500 focus:ring-1 
+                   focus:ring-blue-500 transition duration-300 
+                   bg-white"
       >
         <option value="" disabled>
           Selecciona {label}
@@ -32,12 +44,14 @@ const Select = ({ options, label, value, onChange }) => {
           </option>
         ))}
       </select>
-      
-      {/* Usamos la prop Icon */}
+
+      {/* ICONO IZQUIERDO */}
       <Icon
         size={18}
-        className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+        className="absolute left-3 top-1/2 -translate-y-1/4 text-gray-400 pointer-events-none"
       />
+
+      {/* FLECHA DERECHA */}
       <ChevronDown
         size={18}
         className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
