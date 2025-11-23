@@ -4,7 +4,7 @@
  */
 
 export const saveUserData = (data) => {
-  const { role_id, role_name, person, username } = data.data;
+  const { role_id, role_name, person, username, email } = data.data;
   const userData = {
     firstName: person.first_name,
     middleName: person.middle_name,
@@ -12,6 +12,7 @@ export const saveUserData = (data) => {
     roleId: role_id,
     roleName: role_name,
     username: username,
+    email: person.email,
   };
   localStorage.setItem("userData", JSON.stringify(userData));
 };
