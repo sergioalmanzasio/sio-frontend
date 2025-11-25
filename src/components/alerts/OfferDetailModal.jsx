@@ -7,13 +7,15 @@ export default function OfferDetailModal({
   confirmText, 
   cancelText, 
   confirmCallback, 
-  cancelCallback 
+  cancelCallback,
+  isCancelButtonVisible = true,
+  footerText =  "Tienes dudas, contacta a ventas al 3123456789."
 }) {
   return Swal.fire({
     title,
     html,
     icon,
-    showCancelButton: true,
+    showCancelButton: isCancelButtonVisible,
     confirmButtonText: confirmText,
     cancelButtonText: cancelText,
     customClass: {
@@ -21,7 +23,7 @@ export default function OfferDetailModal({
       cancelButton: "btn-cancel",
     },
     buttonsStyling: false,
-    footer: "Tienes dudas, contacta a ventas al 3123456789.",
+    footer: footerText,
     showCloseButton: true,
     allowOutsideClick: false,
 
