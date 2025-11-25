@@ -2,11 +2,15 @@ import { useState, useCallback } from "react"; // ⬅️ Importar useCallback
 import ToastAlert from "../components/alerts/ToastAlert";
 import { API_BASE_URL } from "../shared/constanst";
 import { useAuth } from "../context/AuthContext";
+import { sessionExpiredToast } from "../shared/utils";
+
 
 const useRequest = () => {
   const { logout } = useAuth();
   const [loading, setLoading] = useState(false);
   const [loadingAddRequest, setLoadingAddRequest] = useState(false);
+  const [loadingServiceRequestClient, setLoadingServiceRequestClient] = useState(false);
+  const [loadingServiceRequestDetail, setLoadingServiceRequestDetail] = useState(false);
   const [error, setError] = useState(null);
 
   const addServiceRequest = useCallback(async (requestData, options = {}) => {
@@ -25,18 +29,12 @@ const useRequest = () => {
       const data = await response.json();
       if (!response.ok) {
          if (response.status === 401) {
-          // Manejar el caso de sesión expirada
-          ToastAlert({
-            position: "top",
-            timer: 2000,
-            icon: "warning",
-            title: "Su sesión ha expirado. Por favor, inicie sesión de nuevo.",
-          });
-          // Redirigir al login o manejar la expiración de sesión
-          setTimeout(() => {
-            logout();
-            window.location.href = '/';
-          }, 2000);
+          sessionExpiredToast(
+            logout, 
+            () => {
+              window.location.href = '/';
+            }
+          );
           return { process: 'session-expired' };
         }
         // throw new Error(data.message || "Error en la solicitud");
@@ -74,18 +72,13 @@ const useRequest = () => {
       const data = await response.json();
       if (!response.ok) {
         if (response.status === 401) {
-          // Manejar el caso de sesión expirada
-          ToastAlert({
-            position: "top",
-            timer: 2000,
-            icon: "warning",
-            title: "Su sesión ha expirado. Por favor, inicie sesión de nuevo.",
-          });
-          // Redirigir al login o manejar la expiración de sesión
-          setTimeout(() => {
-            logout();
-            window.location.href = '/';
-          }, 2000);
+          // Manejar el caso de sesión expirada 
+         sessionExpiredToast(
+            logout, 
+            () => {
+              window.location.href = '/';
+            }
+          );
           return { process: 'session-expired' };
         }
         throw new Error(data.message || "Error en la solicitud");
@@ -105,7 +98,98 @@ const useRequest = () => {
     }
   }, []);
 
-  return { loading, loadingAddRequest, error, addServiceRequest, validateClienteRequestPending };
+  const getServiceRequestByClient = useCallback(async (email, options = {}) => {
+    setLoadingServiceRequestClient(true);
+    setError(null);
+    try {
+      const response = await fetch(`${API_BASE_URL}/request/client`, {
+        ...options,
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email })
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        if (response.status === 401) {
+          sessionExpiredToast(
+            logout, 
+            () => {
+              window.location.href = '/';
+            }
+          );
+          return { process: 'session-expired' };
+        }
+        throw new Error(data.message || "Error en la solicitud");
+      }
+      return data;
+    } catch (err) {
+      setError(err.message);
+      ToastAlert({
+        position: "top",
+        timer: 1800,
+        icon: "error",
+        title: err.message || "Error de red, inténtelo más tarde",
+      });
+      throw err;
+    } finally {
+      setLoadingServiceRequestClient(false);
+    }
+  }, []);
+
+  const getServiceRequestDetailByID = useCallback(async (id) => {
+    setLoadingServiceRequestDetail(true);
+    setError(null);
+    try {
+      const response = await fetch(`${API_BASE_URL}/request/details`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ service_request_id: id })
+      });
+      
+      // Add timeout to prevent hanging
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Tiempo de espera agotado, intente nuevamente o contáctese con soporte técnico.')), 5000);
+      });
+      
+      const data = await Promise.race([
+        response.json(),
+        timeoutPromise
+      ]);
+      
+      if (!response.ok) {
+        if (response.status === 401) {
+          sessionExpiredToast(
+            logout, 
+            () => {
+              window.location.href = '/';
+            }
+          );
+          return { process: 'session-expired' };
+        }
+        throw new Error(data.message || "Error en la solicitud");
+      }
+      return data;
+    } catch (err) {
+      setError(err.message);
+      ToastAlert({
+        position: "top",
+        timer: 1800,
+        icon: "error",
+        title: err.message || "Error de red, inténtelo más tarde",
+      });
+      throw err;
+    } finally {
+      setLoadingServiceRequestDetail(false);
+    }
+  }, []);
+
+  return { loading, loadingAddRequest, loadingServiceRequestClient, loadingServiceRequestDetail, error, addServiceRequest, validateClienteRequestPending, getServiceRequestByClient, getServiceRequestDetailByID };
 };
 
 export default useRequest;
