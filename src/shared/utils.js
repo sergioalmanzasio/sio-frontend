@@ -2,6 +2,7 @@ import claroLogo from "../assets/logos/CLAROLOGO.png";
 import movistarLogo from "../assets/logos/MOVISTARLOGO.png";
 import womLogo from "../assets/logos/WOMLOGO.png";
 import tigoLogo from "../assets/logos/TIGOLOGO.png";
+import ToastAlert from "../components/alerts/ToastAlert";
 
 
 export const getColorOpertator = (nameOperator) => {
@@ -59,6 +60,33 @@ export const OPERATORS_LOGOS = {
   MOVISTAR: movistarLogo,
   WOM: womLogo,
   TIGO: tigoLogo,
+};
+
+export const sessionExpiredToast = (logout, redirectToHome) => {
+  ToastAlert({
+    position: "top",
+    timer: 2000,
+    icon: "warning",
+    title: "Su sesión ha expirado. Por favor, inicie sesión de nuevo.",
+  });
+  
+  setTimeout(() => {
+    logout();
+    redirectToHome();
+  }, 2000);
+};
+
+
+export const chipServiceRequestStatus = (status) => {
+  const statusMap = {
+    'pending': '<Chip class="bg-purple-100 text-purple-800 px-2 py-1 rounded-md text-xs font-semibold">Pendiente</Chip>',
+    'in_progress': '<Chip class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-md text-xs font-semibold">En progreso</Chip>',
+    'approved': '<Chip class="bg-blue-100 text-blue-800 px-2 py-1 rounded-md text-xs font-semibold">Aprobado</Chip>',
+    'completed': '<Chip class="bg-green-100 text-green-800 px-2 py-1 rounded-md text-xs font-semibold">Completado</Chip>',
+    'cancelled': '<Chip class="bg-red-100 text-red-800 px-2 py-1 rounded-md text-xs font-semibold">Cancelado</Chip>',
+    'rejected': '<Chip class="bg-red-100 text-red-800 px-2 py-1 rounded-md text-xs font-semibold">Rechazado</Chip>'
+  };
+  return statusMap[status.toLowerCase()] || status;
 };
 
 
