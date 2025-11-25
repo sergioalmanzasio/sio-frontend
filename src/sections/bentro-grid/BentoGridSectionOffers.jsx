@@ -33,7 +33,6 @@ export default function BentoGridSectionOffers( { offers = [] } ) {
         title: `Detalle de la oferta`,
         html: `
         <div class="flex flex-col gap-2 text-left">
-          
           <div class="w-full flex flex-col align-left md:flex-row justify-left items-center">
             <img src="${OPERATORS_LOGOS[offerOperator.toUpperCase()] ?? OPERATORS_LOGOS.CLARO}" alt="${offerOperator}" class="w-48 h-14 object-contain">
             <div class="w-full">
@@ -59,9 +58,7 @@ export default function BentoGridSectionOffers( { offers = [] } ) {
         
         confirmText: "Adquirir",
         cancelText: "Salir", 
-        confirmCallback: () => {
-          // Do nothing
-        },
+        confirmCallback: () => handleBuyClick(offerId, offerTitle, offerDescription, offerPrice, offerOperator),
         cancelCallback: () => {
           // Do nothing
         }
