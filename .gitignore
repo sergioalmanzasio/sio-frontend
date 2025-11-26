@@ -25,3 +25,6 @@ dist-ssr
 
 #Ignora archivos de configuración
 .env
+
+#Ignora archivos de dependencias
+package-lock.json
