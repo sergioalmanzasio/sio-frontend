@@ -199,7 +199,7 @@ export default function BentoGridSectionOffers( { offers = [] } ) {
           <div className="h-px w-full bg-gray-200 my-4"></div>
           <p className="text-md text-gray-600 font-normal text-left">¿Recibió apoyo de un asesor?, por favor digite el código del asesor.</p>
           <div className="flex flex-row items-center gap-2">
-            <input className="w-full border border-gray-200 rounded-md p-4" type="text" id="code" name="code" value={code} placeholder="Código del asesor" onChange={handleCodeChange}/>
+            <input className="w-full border border-gray-200 rounded-md p-4" type="text" id="code" name="code" value={code} placeholder="Código del asesor" autoComplete="off" onChange={handleCodeChange}/>
           </div>
         </div>
       </OfferBuyBottomModal>
