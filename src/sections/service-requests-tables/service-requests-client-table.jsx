@@ -6,12 +6,15 @@ import ModalAlertConfirm from "../../components/alerts/ModalAlertConfirm";
 import ToastAlert from "../../components/alerts/ToastAlert";
 import OfferDetailModal from "../../components/alerts/OfferDetailModal";
 import { OPERATORS_LOGOS, chipServiceRequestStatus } from "../../shared/utils";
+import FullScrreenLoader from "../../components/loader/FullScreenLoader"; 
 
 const ServiceRequestsClientTable = () => {
 
-  const { loadingServiceRequestClient, getServiceRequestByClient, loadingServiceRequestDetail, getServiceRequestDetailByID } = useRequest();
-   const { isAuthenticated, userData, logout } = useAuth();
+  const { loadingServiceRequestClient, getServiceRequestByClient, loadingServiceRequestDetail, getServiceRequestDetailByID, loadingCancelServiceRequestClient, cancelServiceRequestByClient } = useRequest();
+  const { isAuthenticated, userData, logout } = useAuth();
   const [serviceRequests, setServiceRequests] = useState([]);
+  // 🔑 NUEVO ESTADO: Contador para forzar la recarga
+    const [refreshCounter, setRefreshCounter] = useState(0);
   
   const buttomDetails = (id) => (
     <button 
@@ -66,14 +69,14 @@ const ServiceRequestsClientTable = () => {
         return <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Completado</span>;
       case 'cancelled':
         return <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Cancelado</span>;
-      case 'rejected':
-        return <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Rechazado</span>;  
+      case 'rejected_client':
+        return <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Cancelado por el solicitante</span>;  
       default:
         return <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">Desconocido</span>;
     }
   };
 
-  const handleCancelServiceRequest = (id) => {
+  const handleCancelServiceRequest = async (id) => {
     console.log('Cancel service request:', id);
     ModalAlertConfirm({
       title: 'Confirmar cancelación',
@@ -81,15 +84,20 @@ const ServiceRequestsClientTable = () => {
       icon: 'warning',
       confirmText: 'Sí, cancelar',
       cancelText: 'Cancelar',
-      confirmCallback: () => {
+      confirmCallback: async () => {
         // Here you would typically make an API call to cancel the service request
-        ToastAlert({
-          position: "center",
-          timer: 1800,
-          icon: "success",
-          title: "Solicitud cancelada exitosamente",
-        });
-        getServiceRequests();
+        let cancelServiceRequestByClientResponse = await cancelServiceRequestByClient(id, userData.email);
+
+        if( cancelServiceRequestByClientResponse ) {
+          // await getServiceRequests();
+          setRefreshCounter(prev => prev + 1);
+          ToastAlert({
+            position: "center",
+            timer: 1800,
+            icon: "success",
+            title: "Solicitud cancelada exitosamente",
+          });
+        }
       }
     });
   };
@@ -169,6 +177,7 @@ const ServiceRequestsClientTable = () => {
   };
 
   const getServiceRequests = async () => {
+    console.log('Obteniendo solicitudes de servicio...');
     try {
       if (!userData || !userData.email) {
         ToastAlert({
@@ -185,7 +194,9 @@ const ServiceRequestsClientTable = () => {
         return;
       }
       const result = await getServiceRequestByClient(userData.email);
+      console.log(result);
       setServiceRequests(result);
+      return result;
     } catch (error) {
       console.error('Error fetching service requests:', error);
     }
@@ -196,11 +207,14 @@ const ServiceRequestsClientTable = () => {
       return;
     }
     getServiceRequests();
-  }, [isAuthenticated, userData]);
+  }, [isAuthenticated, userData, refreshCounter]);
 
   useEffect(() => {
-    console.log('Service request detail loading:', loadingServiceRequestDetail);
   }, [loadingServiceRequestDetail]);
+
+  useEffect(() => {
+    console.log('Service request cancel client loading:', loadingCancelServiceRequestClient);
+  }, [loadingCancelServiceRequestClient]);
 
   if (loadingServiceRequestClient) {
     return <ServiceRequestsTableSkeleton />;
@@ -208,6 +222,7 @@ const ServiceRequestsClientTable = () => {
 
   return (
     <>
+      <FullScrreenLoader isLoading={loadingCancelServiceRequestClient} message="Cancelando solicitud de servicio..." />
       <div className="w-full md:w-3/4 mt-0 md:mt-4 mx-auto p-4 md:p-0">
         <div className="overflow-x-auto bg-white shadow-lg rounded-xl">
           <table className="min-w-full divide-y divide-gray-200">
@@ -258,7 +273,7 @@ const ServiceRequestsClientTable = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <div className="flex flex-col space-y-2 sm:flex-row sm:space-x-2 sm:space-y-0 justify-center">
                         { loadingServiceRequestDetail ? buttomLoading() : buttomDetails(request.service_request_id)}
-                        { request.status === 'completed' || request.status === 'rejected' ? buttomDisabled() : buttomCancel(request.service_request_id)}
+                        { request.status.toLowerCase() === 'completed' || request.status.toLowerCase() === 'rejected_client' ? buttomDisabled() : buttomCancel(request.service_request_id)}
                       </div>
                     </td>
                     </tr>
