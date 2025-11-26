@@ -84,7 +84,7 @@ export const chipServiceRequestStatus = (status) => {
     'approved': '<Chip class="bg-blue-100 text-blue-800 px-2 py-1 rounded-md text-xs font-semibold">Aprobado</Chip>',
     'completed': '<Chip class="bg-green-100 text-green-800 px-2 py-1 rounded-md text-xs font-semibold">Completado</Chip>',
     'cancelled': '<Chip class="bg-red-100 text-red-800 px-2 py-1 rounded-md text-xs font-semibold">Cancelado</Chip>',
-    'rejected': '<Chip class="bg-red-100 text-red-800 px-2 py-1 rounded-md text-xs font-semibold">Rechazado</Chip>'
+    'rejected_client': '<Chip class="bg-red-100 text-red-800 px-2 py-1 rounded-md text-xs font-semibold">Cancelado por el solicitante</Chip>'
   };
   return statusMap[status.toLowerCase()] || status;
 };
