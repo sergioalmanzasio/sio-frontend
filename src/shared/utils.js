@@ -88,6 +88,3 @@ export const chipServiceRequestStatus = (status) => {
   };
   return statusMap[status.toLowerCase()] || status;
 };
-
-
-
