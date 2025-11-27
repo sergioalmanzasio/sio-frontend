@@ -1,9 +1,10 @@
 import Swal from "sweetalert2";
 
-export default function ModalAlertConfirm({ title, text, icon, confirmText, cancelText, confirmCallback, cancelCallback, isShowConfirmButton = true, isShowCancelButton = true, isAllowOutsideClick = false }) {
+export default function ModalAlertConfirm({ title, text, icon, confirmText, cancelText, confirmCallback, cancelCallback, isShowConfirmButton = true, isShowCancelButton = true, isAllowOutsideClick = false, isText = true }) {
   return Swal.fire({
     title: title,
-    text: text,
+    text: isText ? text : null,
+    html: !isText ? text : null,
     icon: icon,
     showConfirmButton: isShowConfirmButton,
     showCancelButton: isShowCancelButton,
