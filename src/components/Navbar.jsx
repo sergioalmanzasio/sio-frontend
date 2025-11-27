@@ -83,6 +83,10 @@ export default function Navbar() {
                   setShowLogin(false);
                   setShowForgotPassword(true);
                 }}
+                onClickRegister={() => {
+                  setShowLogin(false);
+                  navigate('/signup');
+                }}
                 onClose={() => setShowLogin(false)}
                 />
               )}
