@@ -7,10 +7,15 @@ import RegistrationModal from "../components/RegistrationModal";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
+
 export default function HeroSection() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
+
+  const handleRegister = () => {
+    navigate('/signup');
+  };
 
   return (
     <>
@@ -39,7 +44,7 @@ export default function HeroSection() {
             { !isAuthenticated && (
               <SecondaryButton 
                 className="bg-white text-blue-600 px-10 py-3 text-md cursor-pointer "
-                onClick={() => setIsModalOpen(true)}
+                onClick={() => handleRegister()}
               >
                 Registrarse
               </SecondaryButton>
