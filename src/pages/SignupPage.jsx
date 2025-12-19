@@ -1,33 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { User, Phone, Mail, Lock, Building, CreditCard, MapPin, Home, IdCard, UserSearch } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import TransversalHeader from '../components/header/TransversalHeader';
 import { PrimaryButton, SecondaryButton } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import Select from '../components/ui/select';
-import { User, Phone, Mail, Lock, Building, CreditCard, MapPin, Home } from 'lucide-react';
 import ToastAlert from '../components/alerts/ToastAlert';
 import ModalAlertConfirm from '../components/alerts/ModalAlertConfirm';
+import BottomModal from '../components/modals/BottomModal';
 import OTPInput from '../components/ui/OTPInput';
+import { getRolesToSignUp, getDocumentTypes } from '../shared/utils';
+import useSignUp  from '../hooks/useSignUp';
+import usePerson from '../hooks/usePerson';
+import useReferral from '../hooks/useReferral';
+import FullScreenLoader from '../components/ui/FullScreenLoader';
+import { getDepartments, getCitiesByDepartmentId } from '../shared/utils';
 
-const ROLES = [
-  { id: 'referral', label: 'Plan referido', description: 'Recomienda servicios y gana comisiones.' },
-  { id: 'client', label: 'Soy cliente', description: 'Solicita y gestiona tus servicios.' },
-  { id: 'advisor', label: 'Soy asesor/a', description: 'Brinda asesoría y gestiona solicitudes.' },
-];
+const ROLES = getRolesToSignUp();
+const DOCUMENT_TYPES = getDocumentTypes();
 
-const DOCUMENT_TYPES = ["Cédula de ciudadanía", "Cédula de extranjería", "Pasaporte"];
 const BANKS = ["Bancolombia", "Davivienda", "Banco de Bogotá", "BBVA", "Nequi", "Daviplata"];
 const HOUSING_TYPES = ["Casa", "Apartamento", "Edificio", "Oficina"];
 
 export default function SignupPage() {
   const navigate = useNavigate();
+  const { generateOTP, loadingGenerateOTP, errorGenerateOTP,
+    verifyOTP, loadingVerifyOTP, errorVerifyOTP, signUp, loadingSignUp, errorSignUp
+  } = useSignUp();
+  const { validatePersonByDocument, loadingValidatePersonExistByDocument, errorValidatePersonExistByDocument,
+    addPerson, loadingAddPerson, errorAddPerson
+   } = usePerson();
+  const { addReferralExistCustomer, loadingReferralExistCustomer, errorReferralExistCustomer } = useReferral();
   const [step, setStep] = useState(1);
   const [selectedRole, setSelectedRole] = useState(null);
   const [showBankInfo, setShowBankInfo] = useState(false);
+  const [isValidateClient, setIsValidateClient] = useState(false);
+  const [departments, setDepartments] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [departamentCodeSelected, setDepartamentCodeSelected] = useState("");
+  
+  
+  // Ref to track previous loading state for OTP generation
+  const prevLoadingGenerateOTP = useRef(false);
 
   // Form States - Personal Info
   const [documentType, setDocumentType] = useState("");
+  const [documentNumber, setDocumentNumber] = useState("");
   const [firstName, setFirstName] = useState("");
   const [secondName, setSecondName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -38,8 +57,11 @@ export default function SignupPage() {
   const [accountNumber, setAccountNumber] = useState("");
   const [codeToResgitration, setCodeToResgitration] = useState("");
   const [isShowOTPSection, setIsShowOTPSection] = useState(false);
+  const [isRegistering, setIsRegistering] = useState(false);
 
   // Form States - Client Info (for Referral)
+  const [clientDocumentType, setClientDocumentType] = useState("");
+  const [clientDocumentNumber, setClientDocumentNumber] = useState("");
   const [clientFirstName, setClientFirstName] = useState("");
   const [clientLastName, setClientLastName] = useState("");
   const [clientEmail, setClientEmail] = useState("");
@@ -47,6 +69,9 @@ export default function SignupPage() {
   const [clientAddress, setClientAddress] = useState("");
   const [clientHousingType, setClientHousingType] = useState("");
   const [clientObservations, setClientObservations] = useState("");
+  const [clientDepartment, setClientDepartment] = useState("");
+  const [clientCity, setClientCity] = useState("");
+  const [clientNeighborhood, setClientNeighborhood] = useState("");
 
   const handleRoleSelect = (roleId) => {
     setSelectedRole(roleId);
@@ -70,20 +95,20 @@ export default function SignupPage() {
         title: 'Términos y Condiciones',
         text: `
           <h2 class="text-xl font-bold text-purple-600 italic">Genera ingreso por tus referidos</h2>
-          <h5 class="text-xl font-semibold mt-4 mb-4 text-left">Condiciones</h5>
+          <h5 class="text-xl font-semibold mt-4 mb-4 text-left text-sm">Condiciones</h5>
           <ul class="list-disc pl-4 space-y-2 justify-left mb-4">
-            <li class="text-left">Nuestra app SIO te ofrece la posibilidad de generar ingresos adicionales solo refiriendo a posibles clientes que necesiten algunos de nuestros productos fijos o móviles.</li>
-            <li class="text-left">La metodología es muy sencilla: solo regístrate con tus datos personales y envíanos los de los posibles clientes; nosotros hacemos el resto.</li>
-            <li class="text-left">Una vez enviada la información, te llegará una notificación por mensaje de texto o correo con el estado del proceso de tu venta.</li>
-            <li class="text-left">Una vez instalado el servicio, se procederá a la cancelación de tu comisión por venta.</li>
-            <li class="text-left">En el siguiente link encontrarás las tablas de comisiones.</li>
-            <li class="text-left">Los desembolsos de las comisiones se realizan todos los sábados, teniendo en cuenta el día de instalación del producto.</li>
-            <li class="text-left">El desembolso se hará directamente a tu cuenta registrada en nuestra base de datos.</li>
+            <li class="text-left text-sm">Nuestra app SIO te ofrece la posibilidad de generar ingresos adicionales solo refiriendo a posibles clientes que necesiten algunos de nuestros productos fijos o móviles.</li>
+            <li class="text-left text-sm">La metodología es muy sencilla: solo regístrate con tus datos personales y envíanos los de los posibles clientes; nosotros hacemos el resto.</li>
+            <li class="text-left text-sm">Una vez enviada la información, te llegará una notificación por mensaje de texto o correo con el estado del proceso de tu venta.</li>
+            <li class="text-left text-sm">Una vez instalado el servicio, se procederá a la cancelación de tu comisión por venta.</li>
+            <li class="text-left text-sm">En el siguiente link encontrarás las tablas de comisiones.</li>
+            <li class="text-left text-sm">Los desembolsos de las comisiones se realizan todos los sábados, teniendo en cuenta el día de instalación del producto.</li>
+            <li class="text-left text-sm">El desembolso se hará directamente a tu cuenta registrada en nuestra base de datos.</li>
           </ul>
           <p class="text-left text-sm italic">Al continuar como referido, aceptas nuestros términos y condiciones de uso, política de privacidad y tratamiento de datos personales. <span class="font-semibold">¿Deseas continuar?</span></p>
         
         `, 
-        icon: 'info',
+        // icon: 'info',
         confirmText: 'Continuar',
         cancelText: 'Cancelar',
         isText: false,
@@ -96,27 +121,33 @@ export default function SignupPage() {
 
   const validateStep2 = () => {
     if( showBankInfo ){
-      if (!documentType || !firstName || !lastName || !email || !phone || !password || !bank || !accountNumber) {
+      if (!documentType || !documentNumber || !firstName || !lastName || !email || !phone || !password || !bank || !accountNumber) {
         ToastAlert({ 
-          position: 'top',
+          position: 'center',
           timer: 1800,
-          icon: 'error', 
+          icon: 'info', 
           title: 'Por favor completa todos los campos obligatorios.' 
         });
         return false;
       }
     }else{
-      if (!documentType || !firstName || !lastName || !email || !phone || !password) {
+      if (!documentType || !documentNumber || !firstName || !lastName || !email || !phone || !password) {
         ToastAlert({ 
-          position: 'top',
+          position: 'center',
           timer: 1800,
-          icon: 'error', 
+          icon: 'info', 
           title: 'Por favor completa todos los campos obligatorios.' 
         });
         return false;
       }
     }
-    setIsShowOTPSection(true);
+    // setIsShowOTPSection(true);
+    generateOTP({
+      email,
+      document: documentNumber,
+      name: firstName + ' ' + lastName,
+      phone,
+    });
     // return true;
   };
 
@@ -133,35 +164,79 @@ export default function SignupPage() {
   };
 
   const validateStep3 = () => {
-    if (!clientFirstName || !clientLastName || !clientEmail || !clientPhone || !clientAddress || !clientHousingType) {
-      ToastAlert({ icon: 'error', title: 'Por favor completa todos los campos del cliente.' });
+    if (!clientFirstName || !clientLastName || !clientEmail || !clientPhone || !clientDepartment || !clientCity || !clientAddress || !clientHousingType || !clientNeighborhood) {
+      ToastAlert({ 
+        position: 'center',
+        timer: 1800,
+        icon: 'error', 
+        title: 'Por favor completa todos los campos del cliente.' 
+      });
       return false;
     }
     return true;
   };
 
-  const handleFinalSubmit = (e) => {
+  const handleFinalSubmit = async (e) => {
     if (e) e.preventDefault();
     
     if (selectedRole === 'referral' && !validateStep3()) {
       return;
     }
 
-    // Simulate API call
-    console.log("Registering User:", {
-      role: selectedRole,
-      personalInfo: { documentType, firstName, secondName, lastName, email, phone, bank, accountNumber },
-      clientInfo: selectedRole === 'referral' ? { clientFirstName, clientLastName, clientEmail, clientPhone, clientAddress, clientHousingType, clientObservations } : null
-    });
-
-    ModalAlertConfirm({
-      title: 'Registro Exitoso',
-      text: 'Tu registro se ha realizado correctamente y está en proceso de revisión.',
-      icon: 'success',
-      confirmText: 'Ir al Inicio',
-      isShowCancelButton: false,
-      confirmCallback: () => navigate('/'),
-    });
+    if (selectedRole === 'referral') {
+      setIsRegistering(true);
+      
+      try {
+        const addPersonResponse = await addPerson({
+          document: clientDocumentNumber,
+          document_type_acronym: clientDocumentType,
+          name: clientFirstName,
+          last_name: clientLastName,
+          email: clientEmail,
+          phone: clientPhone,
+          department: clientDepartment,
+          city: clientCity,
+          neighborhood: clientNeighborhood,
+          address: clientAddress,
+          type_of_housing: clientHousingType,
+          observations: clientObservations,
+          referral_email: email
+        });
+        
+        if (addPersonResponse.process !== 'success') {
+          setIsRegistering(false);
+          return false;
+        }
+        
+        const addReferralExistCustomerResponse = await addReferralExistCustomer({
+          document_client: clientDocumentNumber,
+          email_user: email,
+        });
+        
+        if (addReferralExistCustomerResponse.process !== 'success') {
+          setIsRegistering(false);
+          ToastAlert({
+            position: 'center',
+            timer: 2000,
+            icon: 'error',
+            title: addReferralExistCustomerResponse.message,
+          });
+          return false;
+        }
+        
+        setIsRegistering(false);
+        ToastAlert({
+          position: 'center',
+          timer: 2000,
+          icon: 'success',
+          title: 'La referenciación del cliente se ha realizado correctamente.',
+        });
+        setTimeout(() => navigate('/'), 2000);
+      } catch (error) {
+        setIsRegistering(false);
+        console.error('Error during registration:', error);
+      }
+    }
   };
 
   const roleSelectedLabelToShow = () => {
@@ -171,8 +246,22 @@ export default function SignupPage() {
           role => role.id === selectedRole).label.split(' ')[1].slice(1);
   }
 
+  const handleVerifyCode = () => {
+    if (!codeToResgitration || codeToResgitration.length !== 6) {
+      ToastAlert({ 
+        icon: 'error', 
+        position: 'center',
+        timer: 1800,
+        title: 'Por favor ingresa el código de confirmación.' });
+      return;
+    }
+    
+    verifyOTP({ email, code: codeToResgitration });
+  } 
+
   const clearFormPersonalInfo = () => {
     setDocumentType('');
+    setDocumentNumber('');
     setFirstName('');
     setSecondName('');
     setLastName('');
@@ -181,6 +270,7 @@ export default function SignupPage() {
     setBank('');
     setAccountNumber('');
     setPassword('');
+    setIsShowOTPSection(false);
   }
 
   const clearFormClientInfo = () => {
@@ -191,7 +281,196 @@ export default function SignupPage() {
     setClientAddress('');
     setClientHousingType('');
     setClientObservations('');
+    setClientDepartment('');
+    setClientCity('');
+    setClientNeighborhood('');
   }
+
+  // useEffect(() => {
+  //   if (errorGenerateOTP) {
+  //     ToastAlert({
+  //       position: 'top',
+  //       timer: 1800,
+  //       icon: 'error',
+  //       title: 'Error al generar OTP',
+  //       description: errorGenerateOTP,
+  //     });
+  //   }
+  // }, [errorGenerateOTP]);
+
+  const handleValidateClientDocumentNumber = async () => {
+    setIsValidateClient(false);
+    clearFormClientInfo();
+    if (clientDocumentNumber === '') {
+      ToastAlert({
+        position: 'center',
+        timer: 1800,
+        icon: 'error',
+        title: 'Por favor ingresa el número de documento.',
+      });
+      return false;
+    }
+    const validatePersonByDocumentResponse = await validatePersonByDocument({ document: clientDocumentNumber });
+    if (validatePersonByDocumentResponse.process === 'person-found') {
+      setIsValidateClient(false);
+      ModalAlertConfirm({
+        title: 'Cliente encontrado',
+        text: 'Hemos encontrado un cliente con el número de documento ingresado. ¿Deseas referenciarlo?',
+        icon: 'info',
+        confirmText: 'Referenciar',
+        cancelText: 'Cancelar',
+        isShowCancelButton: true,
+        isAllowOutsideClick: false,
+        confirmCallback: () => {
+          // setIsValidateClient(true);
+          addReferralExistCustomer({
+            document_client: clientDocumentNumber,
+            email_user: email,
+          });
+        },
+        cancelCallback: () => setIsValidateClient(false),
+      });
+      return false;
+    }
+    if (validatePersonByDocumentResponse.process === 'person-not-found') {
+      setIsValidateClient(true);
+      return false;
+    }
+    // return true;
+  } 
+
+  const handleCancelAddClient = () => {
+    ModalAlertConfirm({
+      title: 'Cancelar referenciación',
+      text: '¿Estás seguro(a) que desea realizar la referenciación del cliente más tarde?',
+      icon: 'info',
+      confirmText: 'Si',
+      cancelText: 'No',
+      isShowCancelButton: true,
+      isAllowOutsideClick: false,
+      confirmCallback: () => {
+        clearFormClientInfo();
+        setIsValidateClient(false);
+        navigate('/');
+      },
+      cancelCallback: () => setIsValidateClient(false),
+    });
+    return false;
+  }
+
+  useEffect(() => {
+    // Show modal only when loading transitions from true to false (OTP generation completed)
+    if (prevLoadingGenerateOTP.current && !loadingGenerateOTP && !errorGenerateOTP) {
+      ModalAlertConfirm({
+        title: 'Generación de código',
+        text: 'Se ha generado un código de confirmación, revise su correo electrónico y confirme el código a continuación.',
+        icon: 'info',
+        confirmText: 'Continuar',
+        isShowCancelButton: false,
+        isAllowOutsideClick: false,
+        confirmCallback: () => setIsShowOTPSection(true),
+      });
+    }
+    
+    // Update the ref with current loading state
+    prevLoadingGenerateOTP.current = loadingGenerateOTP;
+  }, [loadingGenerateOTP, errorGenerateOTP]);
+
+  useEffect(() => {
+    if (loadingVerifyOTP && !errorVerifyOTP) {
+      // Do nothing while loading
+    } else if (!loadingVerifyOTP && !errorVerifyOTP && codeToResgitration) {
+       // Only proceed if loading finished, no error, and we have a code (meaning verification was successful)
+       // Note: ideally verifyOTP should return success status or we should track verification success state
+       // Assuming verifyOTP throws on error, so if we are here and loading is false and no error, it succeeded.
+       // However, verifyOTP is async. The state updates might happen after.
+       // Better reliance: verifyOTP promise resolution.
+       // But sticking to the requested pattern of using state:
+       
+      ToastAlert({
+        position: 'center',
+        timer: 3000,
+        icon: 'success',
+        title: 'Código verificado correctamente, procederé al registro, espere por favor...',
+      });
+
+      signUp({
+        document: documentNumber,
+        document_type_acronym: documentType,
+        name: firstName,
+        middle_name: secondName,
+        last_name: lastName,
+        email: email,
+        phone: phone,
+        password: password,
+        roleName: selectedRole,
+      });
+    } else if (errorVerifyOTP) {
+       // Stop process if error
+       return;
+    }
+  }, [loadingVerifyOTP, errorVerifyOTP]);
+
+
+  useEffect(() => {
+    if (loadingSignUp) {
+      ToastAlert({
+        position: 'center',
+        timer: 2000,
+        icon: 'success',
+        title: 'Usuario registrado.',
+      });
+      if (selectedRole === 'referral') {
+        setStep(3);
+      } else {
+        handleFinalSubmit();
+      }
+    }
+    
+  }, [loadingSignUp]);
+
+  useEffect(() => {
+    if (loadingValidatePersonExistByDocument) {
+      
+    }
+    
+  }, [loadingValidatePersonExistByDocument]);
+
+  useEffect(() => {
+    if (loadingReferralExistCustomer) {
+      // Redirect to home
+      ToastAlert({
+        position: 'center',
+        timer: 2000,
+        icon: 'success',
+        title: 'Cliente asociado correctamente.',
+      });
+      setTimeout(() => {
+        navigate('/');
+      }, 2000);
+    }else {
+     
+    }
+    
+  }, [loadingReferralExistCustomer]);
+
+  useEffect(() => {
+    const getColombianDepartments = async () => {
+      const departments = await getDepartments();
+      setDepartments(departments);
+    };
+    getColombianDepartments();
+  }, []);
+
+  useEffect(() => {
+    if (!departamentCodeSelected || departamentCodeSelected === '') return;
+    const getCitiesByDepartment = async () => {
+      setCities([]);
+      const cities = await getCitiesByDepartmentId(departamentCodeSelected);
+      setCities(cities);
+    };
+    getCitiesByDepartment();
+  }, [departamentCodeSelected]);
 
   return (
     <div className="min-h-screen bg-gray-50 pb-12">
@@ -253,25 +532,32 @@ export default function SignupPage() {
               <h2 className="text-2xl font-bold text-center text-gray-800">Información Personal</h2>
               <p className="text-center text-gray-600">Perfil seleccionado: {roleSelectedLabelToShow()}</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="md:col-span-2">
-                  <Select options={DOCUMENT_TYPES} label="Tipo de documento" value={documentType} onChange={(e) => setDocumentType(e.target.value)} />
+                <div className="md:col-span-1">
+                  <Select options={DOCUMENT_TYPES.map((docType) => docType.label)} label="Tipo de documento" value={documentType} onChange={(e) => {
+                    // setDocumentType(e.target.value.acronym);
+                    setDocumentType(DOCUMENT_TYPES.find((docType) => docType.label === e.target.value).acronym);
+                  }} />
                 </div>
-                <Input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="Primer nombre" icon={User} />
-                <Input type="text" value={secondName} onChange={(e) => setSecondName(e.target.value)} placeholder="Segundo nombre (Opcional)" icon={User} />
-                <Input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Apellidos" icon={User} />
-                <Input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Teléfono" icon={Phone} />
-                <div className="md:col-span-2">
+                <div className="md:col-span-1">
+                  <Input type="text" value={documentNumber} onChange={(e) => setDocumentNumber(e.target.value.replace(/[^0-9]/g, ''))} placeholder="Número de documento" icon={IdCard} className="md:col-span-1"/>
+                  <span className="offset-1 text-xs text-purple-500 italic">Digita numero de documento sin puntos</span>
+                </div>
+                <Input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value.replace(/\b\w/g, (c) => c.toUpperCase()))} placeholder="Primer nombre" icon={User} />
+                <Input type="text" value={secondName} onChange={(e) => setSecondName(e.target.value.replace(/\b\w/g, (c) => c.toUpperCase()))} placeholder="Segundo nombre (Opcional)" icon={User} />
+                <Input type="text" value={lastName} onChange={(e) => setLastName(e.target.value.replace(/\b\w/g, (c) => c.toUpperCase()))} placeholder="Apellidos" icon={User} />
+                <Input type="tel" value={phone} onChange={(e) => setPhone(e.target.value.replace(/[^0-9]/g, ''))} placeholder="Teléfono" icon={Phone} />
+                <div className="md:col-span-1">
                   <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Correo electrónico" icon={Mail} />
                 </div>
-                <div className="md:col-span-2">
+                <div className="md:col-span-1">
                   <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Contraseña" icon={Lock} />
                 </div>
                 {/* Solo es visible para role 'referral' o 'advisor' */}
-                { console.log('selectedRole', selectedRole) }
                 {showBankInfo && (
-                <>  
+                <>       
                   <div className="md:col-span-2 border-t border-gray-100 my-2 pt-4">
                     <h3 className="text-lg font-semibold text-gray-700 mb-4">Datos Bancarios</h3>
+                    <p className='text-sm text-gray-500 italic'>Aquí se acreditarán tus comisiones por referidos cuando una compra sea completada.</p>
                   </div>
                   <Select options={BANKS} label="Banco" value={bank} onChange={(e) => setBank(e.target.value)} />
                   <Input type="text" value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} placeholder="Número de cuenta" icon={CreditCard} />
@@ -279,21 +565,42 @@ export default function SignupPage() {
                 )}
               </div>
 
-              {/* Section to write OTP code for register confirmation */}
-              <div className={`flex flex-col gap-2 items-center justify-center bg-blue-50 p-4 rounded-xl ${isShowOTPSection ? 'block' : 'hidden'}`}>
-                <h3 className="text-lg font-semibold text-gray-700">Confirmación de registro</h3>
-                <p className="text-sm text-gray-500">Por favor, ingresa el código de confirmación enviado a tu correo electrónico.</p>
-                <OTPInput length={6} onComplete={(code) =>{
-                  console.log(code);
-                  setCodeToResgitration(code);
+              <BottomModal
+                isOpen={!errorGenerateOTP && isShowOTPSection}
+                onClose={() => setIsShowOTPSection(false)}
+                title="Confirmación de registro"
+                description="Por favor, ingresa el código de confirmación enviado a tu correo electrónico."
+              >
+                <div className="flex flex-col gap-4 items-center">
+                  <OTPInput length={6} onComplete={(code) =>{
+                    setCodeToResgitration(code);
+                  }} />
+                  
+                  <div className="text-center space-y-2">
+                    <p className="text-sm text-gray-500 italic">El código de confirmación es válido por 10 minutos.</p>
+                    <p className="text-sm text-gray-500">
+                      ¿No has recibido el código?{' '}
+                      <span 
+                        className="text-blue-600 font-semibold cursor-pointer hover:underline" 
+                        onClick={() => {
+                          console.log('Solicitar reenvío de código de registro');
+                          // Add resend logic here
+                        }}
+                      >
+                        Reenviar
+                      </span>
+                    </p>
+                  </div>
 
-                }} />
-                <p className="text-sm text-gray-500 italic">El código de confirmación es válido por 5 minutos.</p>
-                <p className="text-sm text-gray-500">No has recibido el código de confirmación? <span className="text-blue-500 cursor-pointer" onClick={() => {
-                  console.log('Solicitar reenvío de código de registro');
-                }}>Reenviar</span></p>
-                
-              </div>
+                  <PrimaryButton 
+                    type="button" 
+                    className="w-full mt-4"
+                    onClick={ () => handleVerifyCode() }
+                  >
+                    Verificar Código
+                  </PrimaryButton>
+                </div>
+              </BottomModal>
 
               <div className="flex justify-between pt-4">
                 <SecondaryButton onClick={() => {
@@ -312,23 +619,53 @@ export default function SignupPage() {
           {step === 3 && selectedRole === 'referral' && (
             <form onSubmit={handleFinalSubmit} className="space-y-6 animate-fadeIn">
               <h2 className="text-2xl font-bold text-center text-gray-800">Agregar Cliente</h2>
-              <p className="text-center text-gray-500 text-sm">Ingresa los datos del cliente que estás refiriendo.</p>
+              <p className="text-justify text-gray-500 text-sm">Tienes la opción de referir un cliente de inmediato o realizarlo más tarde desde tu panel de control cuando de autentiques.</p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Input type="text" value={clientFirstName} onChange={(e) => setClientFirstName(e.target.value)} placeholder="Nombre(s)" icon={User} />
-                <Input type="text" value={clientLastName} onChange={(e) => setClientLastName(e.target.value)} placeholder="Apellidos" icon={User} />
-                <Input type="email" value={clientEmail} onChange={(e) => setClientEmail(e.target.value)} placeholder="Correo electrónico" icon={Mail} />
-                <Input type="tel" value={clientPhone} onChange={(e) => setClientPhone(e.target.value)} placeholder="Teléfono" icon={Phone} />
-                <div className="md:col-span-2">
-                  <Input type="text" value={clientAddress} onChange={(e) => setClientAddress(e.target.value)} placeholder="Dirección" icon={MapPin} />
+                <Select options={DOCUMENT_TYPES.map((docType) => docType.label)} label="Tipo de documento" value={clientDocumentType} onChange={(e) => {
+                  setClientDocumentType(DOCUMENT_TYPES.find((docType) => docType.label === e.target.value).acronym);
+                }} disabled={!isValidateClient}/>
+                <div className="md:col-span-1">
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-3 items-center">
+                    <div className="md:col-span-3">
+                      <Input type="text" value={clientDocumentNumber} onChange={(e) => setClientDocumentNumber(e.target.value.replace(/[^0-9]/g, ''))} placeholder="Número de documento" icon={IdCard} className="w-full h-12" inputClassName="h-12" />
+                    </div>
+
+                    <div className="md:col-span-1">
+                      <PrimaryButton type="button" className="w-full h-14 flex items-center justify-center" onClick={() => handleValidateClientDocumentNumber()}><UserSearch /></PrimaryButton>
+                    </div>
+                  </div>
+                  <div className={"md:col-span-1" + (isValidateClient ? ' hidden' : '')}>
+                    <span className="text-sm text-gray-500 italic">Valida número de documento para continuar.</span>
+                  </div>
+                </div>
+                <Input type="text" value={clientFirstName} onChange={(e) => setClientFirstName(e.target.value.replace(/\b\w/g, (c) => c.toUpperCase()))} placeholder="Nombre(s)" icon={User} disabled={!isValidateClient} className={`${isValidateClient ? 'bg-gray-100' : ''}`}/>
+                <Input type="text" value={clientLastName} onChange={(e) => setClientLastName(e.target.value.replace(/\b\w/g, (c) => c.toUpperCase()))} placeholder="Apellidos" icon={User} disabled={!isValidateClient}/>
+                <Input type="email" value={clientEmail} onChange={(e) => setClientEmail(e.target.value)} placeholder="Correo electrónico" icon={Mail} disabled={!isValidateClient}/>
+                <Input type="tel" value={clientPhone} onChange={(e) => setClientPhone(e.target.value)} placeholder="Teléfono" icon={Phone} disabled={!isValidateClient}/>
+                <Select options={departments.map((department) => department.name )} label="Departamento" value={clientDepartment} onChange={(e) => { 
+                  setClientDepartment(e.target.value);
+                  setDepartamentCodeSelected('');
+                  // setCities([]);
+                  setTimeout(() => {
+                    setDepartamentCodeSelected(departments.find((department) => department.name === e.target.value).id);
+                  }, 1500);
+                }} disabled={!isValidateClient}/>
+                <Select options={ departamentCodeSelected ? cities.map((city) => city.name ) : ['Obteniendo ciudades...'] } label="Ciudad" value={clientCity} onChange={(e) => setClientCity(e.target.value)} disabled={!isValidateClient || !departamentCodeSelected}/>
+                <div className="md:col-span-1"> 
+                  <Input type="text" value={clientNeighborhood} onChange={(e) => setClientNeighborhood(e.target.value)} placeholder="Barrio" icon={MapPin} disabled={!isValidateClient}/>
+                </div>  
+                <div className="md:col-span-1">
+                  <Input type="text" value={clientAddress} onChange={(e) => setClientAddress(e.target.value)} placeholder="Dirección" icon={MapPin} disabled={!isValidateClient}/>
                 </div>
                 <div className="md:col-span-2">
-                  <Select options={HOUSING_TYPES} label="Tipo de vivienda" value={clientHousingType} onChange={(e) => setClientHousingType(e.target.value)} />
+                  <Select options={HOUSING_TYPES} label="Tipo de vivienda" value={clientHousingType} onChange={(e) => setClientHousingType(e.target.value)} disabled={!isValidateClient}/>
                 </div>
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Observaciones</label>
+                  <label className={isValidateClient ? 'block text-sm font-medium text-gray-700 mb-1' : 'block text-sm font-medium text-gray-700 mb-1 opacity-50 cursor-not-allowed'}>Observaciones</label>
                   <textarea 
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                    disabled={!isValidateClient}
+                    className={`w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all ${!isValidateClient ? 'opacity-50 cursor-not-allowed' : ''}`}
                     rows="3"
                     value={clientObservations}
                     onChange={(e) => setClientObservations(e.target.value)}
@@ -338,17 +675,20 @@ export default function SignupPage() {
               </div>
 
               <div className="flex justify-between pt-4">
-                <SecondaryButton onClick={() => {
+                {/* <SecondaryButton onClick={() => {
                   clearFormClientInfo();
                   setStep(2)
-                }} type="button" className="w-full md:w-auto px-8 cursor-pointer">Atrás</SecondaryButton>
+                }} type="button" className="w-full md:w-auto px-8 cursor-pointer">Atrás</SecondaryButton> */}
                 <PrimaryButton type="submit">Agregar Cliente y Finalizar</PrimaryButton>
+                <SecondaryButton onClick={() => handleCancelAddClient()} type="button" className="w-full md:w-auto px-8 cursor-pointer">Más tarde</SecondaryButton>
               </div>
             </form>
           )}
 
         </div>
       </div>
+      <FullScreenLoader show={loadingGenerateOTP || isRegistering} 
+        message={isRegistering ? "Procesando registro, espere un momento..." : "Validando información, espere un momento."} />
     </div>
   );
 }
