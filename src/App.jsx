@@ -8,6 +8,8 @@ import CoordinatorServiceRequests from "./pages/CoordinatorServiceRequests";
 import ServiceCoordinatorDashboard from "./pages/ServiceCoordinatorDashboard";
 import AuthRedirect from "./pages/AuthRedirect";
 import SignupPage from "./pages/SignupPage";
+import ConfigPage from "./pages/ConfigPage";
+import MyReferralsPage from "./pages/MyReferralsPage";
 import { AuthProvider } from "./context/AuthContext";
 
 function App() {
@@ -24,6 +26,8 @@ function App() {
           <Route path="/coordinator/dashboard" element={<ServiceCoordinatorDashboard />} />
           <Route path="/auth-redirect" element={<AuthRedirect />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/config" element={<ConfigPage />} />
+          <Route path="/my-referrals" element={<MyReferralsPage />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>
