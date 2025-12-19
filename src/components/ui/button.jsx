@@ -32,8 +32,10 @@ export const PrimaryButton = React.forwardRef(
   ({ className, children, ...props }, ref) => {
     return (
       <button
+        disabled={props.disabled}
         className={
-          "bg-blue-600 text-white px-5 py-2 rounded-lg font-medium hover:bg-blue-700 transition-all duration-300 shadow-lg shadow-blue-500/50 cursor-pointer " +
+          "bg-blue-600 text-white px-5 py-2 rounded-lg font-medium hover:bg-blue-700 transition-all duration-300 shadow-lg shadow-blue-500/50 cursor-pointer " + 
+          // props.disabled && "opacity-50 cursor-not-allowed" +
           className
         }
         ref={ref}

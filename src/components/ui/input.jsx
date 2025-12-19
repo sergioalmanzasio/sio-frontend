@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 // Asumimos que estás usando lucide-react para los iconos
 import { Eye, EyeOff } from 'lucide-react'; 
 
-export const Input = React.forwardRef(({ className, icon: Icon, type, ...props }, ref) => {
+export const Input = React.forwardRef(({ className, icon: Icon, type, disabled = false, ...props }, ref) => {
   
   // 1. Estado para controlar si se muestra la contraseña
   const [showPassword, setShowPassword] = useState(false);
@@ -19,7 +19,7 @@ export const Input = React.forwardRef(({ className, icon: Icon, type, ...props }
 
   return (
     // Ajuste: usar paréntesis para envolver la cadena para mejor lectura
-    <div className={"relative flex items-center w-full" + className}>
+    <div className={"relative flex items-center w-full" + className + (disabled ? " opacity-50 cursor-not-allowed" : "")}>
       
       {/* Icono Prefijo (el candado o mail) */}
       {Icon && (
@@ -30,6 +30,7 @@ export const Input = React.forwardRef(({ className, icon: Icon, type, ...props }
       <input
         // Usamos el tipo dinámico
         type={inputType}
+        disabled={disabled}
         className={
           "w-full p-2 h-14 border border-gray-300 rounded-lg text-gray-700 placeholder-gray-500 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-300" +
           // Ajuste de padding izquierdo

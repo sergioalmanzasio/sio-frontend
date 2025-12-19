@@ -1,13 +1,13 @@
 import { ChevronDown, TabletSmartphone } from "lucide-react";
 import React from "react";
 
-const Select = ({ options, label, value, onChange }) => {
+const Select = ({ options, label, value, onChange, disabled = false }) => {
   const Icon = TabletSmartphone;
 
   const isSelected = value && value.length > 0;
 
   return (
-    <div className="relative w-full">
+    <div className={"relative w-full" + (disabled ? " opacity-50 cursor-not-allowed" : "")}>
       
       {/* Label visible sobre el Select */}
       <label
@@ -29,6 +29,7 @@ const Select = ({ options, label, value, onChange }) => {
         value={value}
         onChange={onChange}
         id={`select-${label}`}
+        disabled={disabled}
         className="appearance-none w-full p-3 pt-5 pl-10 
                    border border-gray-300 rounded-lg text-gray-700 
                    outline-none focus:border-blue-500 focus:ring-1 
