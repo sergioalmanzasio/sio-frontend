@@ -19,3 +19,12 @@
          cursor-pointer
          hover:opacity-90 transition;
 }
+
+
+.swal2-styled.swal2-cancel {
+  order: 1; /* Botón cancelar al final */
+  margin-right: auto;
+}
+.swal2-styled.swal2-confirm {
+  order: 2; /* Botón confirmar primero */
+}
