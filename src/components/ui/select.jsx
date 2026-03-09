@@ -1,10 +1,15 @@
-import { ChevronDown, TabletSmartphone } from "lucide-react";
+import { ChevronDown, TabletSmartphone, IdCardLanyard, Building2, MapPin } from "lucide-react";
 import React from "react";
 
-const Select = ({ options, label, value, onChange, disabled = false }) => {
-  const Icon = TabletSmartphone;
+const ICONS = {
+  "Tipo de documento": IdCardLanyard,
+  "Tipo de vivienda": Building2,
+  "Departamento": MapPin,
+  "Ciudad": MapPin,
+};
 
-  const isSelected = value && value.length > 0;
+const Select = ({ options, label, value, onChange, disabled = false, icon }) => {
+  const Icon = icon || ICONS[label] || TabletSmartphone;
 
   return (
     <div className={"relative w-full" + (disabled ? " opacity-50 cursor-not-allowed" : "")}>
