@@ -16,7 +16,6 @@ export default function BonusModal() {
     })
       .then(res => res.json())
       .then(data => {
-        console.log("Bono activo:", data)
         if (data) {
           setBonus(data.data);
           setOpen(true);
