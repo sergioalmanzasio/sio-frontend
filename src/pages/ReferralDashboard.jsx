@@ -100,12 +100,7 @@ export default function ReferralDashboard() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-
-      <BonusModal
-        title="🎉 Bono especial"
-        description="Por cada venta terminada o servicio instalado recibirás un bono adicional"
-        amount={10000}
-      />
+      <BonusModal />
       
       <main className="container mx-auto px-4 py-8 mt-0">
         <div className="mb-8">
