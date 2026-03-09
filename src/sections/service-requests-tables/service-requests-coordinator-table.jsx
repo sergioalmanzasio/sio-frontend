@@ -44,7 +44,7 @@ const ServiceRequestsCoordinatorTable = () => {
   const buttonFillingNumber = (id) => (
     <button 
       className="text-purple-600 hover:text-white bg-purple-100 hover:bg-purple-600 px-3 py-1 rounded-md text-xs font-semibold transition duration-150 cursor-pointer" 
-      onClick={() => console.log(id)}
+      onClick={() => handleRequestServiceShowMore(id)}
     >
       Radicado
     </button>
@@ -53,7 +53,7 @@ const ServiceRequestsCoordinatorTable = () => {
   const buttonComment = (id) => (
     <button 
       className="text-amber-600 hover:text-white bg-amber-100 hover:bg-amber-600 px-3 py-1 rounded-md text-xs font-semibold transition duration-150 cursor-pointer" 
-      onClick={() => console.log(id)}
+      onClick={() => handleRequestServiceShowMore(id)}
     >
       Comentario
     </button>
@@ -81,7 +81,6 @@ const ServiceRequestsCoordinatorTable = () => {
   };
 
   const handleRequestServiceShowMore = (id) => {
-    console.log('Service Request ID:', id);
     OfferDetailModal({
       title: 'Solicitud de Servicio',
       html: `
@@ -132,7 +131,7 @@ const ServiceRequestsCoordinatorTable = () => {
   };
 
   const getServiceRequests = async () => {
-    console.log('Obteniendo solicitudes de servicio para coordinador...');
+    
     try {
       if (!userData || !userData.email) {
         ToastAlert({
@@ -149,7 +148,6 @@ const ServiceRequestsCoordinatorTable = () => {
         return;
       }
       const result = await getServiceRequestsByServiceCoordinator(userData.email);
-      console.log(result);
       setServiceRequests(result);
       return result;
     } catch (error) {
