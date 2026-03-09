@@ -23,7 +23,8 @@ const MenuUser = ({ onClose, onCloseSession }) => {
   useEffect(() => {
     getMenu();
   }, [roleID]);
-
+  
+  const displayMenus = menus ? [...menus] : [];
 
   return (
     <div className="absolute right-0 mt-4 w-80 md:w-100 bg-white border border-gray-100 rounded-xl shadow-2xl p-6 origin-top-right transform scale-100 transition-all duration-300 ease-out animate-fadeIn">
@@ -37,8 +38,8 @@ const MenuUser = ({ onClose, onCloseSession }) => {
       </button>     
       <ul className="space-y-2">
         {
-          menus && menus.length > 0 ? (
-            menus?.map((menu) => (
+          displayMenus && displayMenus.length > 0 ? (
+            displayMenus?.map((menu) => (
               <li key={menu.id} className="flex items-center gap-2 cursor-pointer ">
                 <span className="text-gray-600 hover:text-blue-600 transition" onClick={() => navigate(menu.url)}>
                   {menu.name}</span>
