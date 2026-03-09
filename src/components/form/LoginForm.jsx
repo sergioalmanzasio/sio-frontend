@@ -29,7 +29,6 @@ const LoginForm = ({ onClickForgotPassword, onClickRegister, onClose }) => {
 
   // NUEVA LÓGICA: Reaccionar cuando isLogin cambie a true
   useEffect(() => {
-    console.log('3. AUTH:::: ', isAuthenticated)
     if (isAuthenticated) {
       // 1. Notificar al Navbar para que cierre el dropdown y actualice isAuthenticated
       if (onClose) {
