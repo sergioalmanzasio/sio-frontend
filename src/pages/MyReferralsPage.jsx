@@ -8,7 +8,7 @@ export default function MyReferralsPage() {
     <div className="min-h-screen bg-gray-50 ">
       <Navbar />
       <TransversalHeader
-        title="Mis Referidos"
+        title="Mis clientes"
         description="Gestiona y visualiza todos tus clientes referidos."
       />
       <MyReferralsTable />
