@@ -23,6 +23,7 @@ import CommissionWithdrawalsPage from "./pages/CommissionWithdrawalsPage";
 import CommissionsHistoryPage from "./pages/CommissionsHistoryPage";
 import CommissionPaymentsPage from "./pages/CommissionPaymentsPage";
 import AdminServiceRequestsPage from "./pages/AdminServiceRequestsPage";
+import AdminBonusesPage from "./pages/AdminBonusesPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -54,6 +55,7 @@ function App() {
             <Route path="/commissions/history" element={<CommissionsHistoryPage />} />
             <Route path="/commission-payments" element={<CommissionPaymentsPage />} />
             <Route path="/admin/service-requests" element={<AdminServiceRequestsPage />} />
+            <Route path="/admin/bonuses" element={<AdminBonusesPage />} />
           </Route>
 
 
