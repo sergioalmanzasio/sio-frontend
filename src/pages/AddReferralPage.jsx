@@ -11,7 +11,7 @@ export default function AddReferralPage() {
     <div className="min-h-screen bg-gray-50">
       <Navbar />
       <TransversalHeader
-         title="Agregar Referido"
+         title="Agregar cliente"
          description="Ingresa los datos del cliente que deseas referir."
       />
       <main className="container mx-auto px-4 mt-0 md:mt-2">
