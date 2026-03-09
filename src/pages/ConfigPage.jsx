@@ -1,38 +1,20 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Phone, Mail, MapPin, IdCard, Edit2, Save, X, Building, ShieldUser, CreditCard } from 'lucide-react';
+import { User, Phone, Mail, MapPin, IdCard, Edit2, Save, X, Building, ShieldUser, CreditCard, IdCardLanyard, Landmark, MapPinHouse, Building2, Pencil, UserPen, BanknoteArrowUp, MapPinPen } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import TransversalHeader from '../components/header/TransversalHeader';
-import { PrimaryButton, SecondaryButton } from '../components/ui/button';
+import { Button, PrimaryButton, SecondaryButton } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import Select from '../components/ui/select';
 import ToastAlert from '../components/alerts/ToastAlert';
 import FullScreenLoader from '../components/loader/FullScreenLoader';
-import { getDocumentTypes, getDepartments, getCitiesByDepartmentId } from '../shared/utils';
+import { getDocumentTypes, getDepartments, getCitiesByDepartmentId, getBanks } from '../shared/utils';
+import usePerson from '../hooks/usePerson';
+import { getUserData } from '../shared/auth';
 
 const DOCUMENT_TYPES = getDocumentTypes();
 const HOUSING_TYPES = ["Casa", "Apartamento", "Edificio", "Oficina"];
-const BANKS = ["Bancolombia", "Davivienda", "Banco de Bogotá", "BBVA", "Nequi", "Daviplata"];
-
-// Simulated user data
-const MOCK_USER_DATA = {
-  documentType: "CC",
-  documentNumber: "1234567890",
-  firstName: "Juan",
-  secondName: "Carlos",
-  lastName: "Pérez González",
-  email: "juan.perez@example.com",
-  phone: "3001234567",
-  department: "Cundinamarca",
-  city: "Bogotá",
-  neighborhood: "Chapinero",
-  address: "Calle 45 # 12-34",
-  housingType: "Apartamento",
-  bank: "Nequi",
-  accountNumber: "3001234567",
-  role: "Referido",
-  roleColor: "bg-gradient-to-r from-purple-500 to-pink-500"
-};
+const BANKS = getBanks();
 
 export default function ConfigPage() {
   const navigate = useNavigate();
@@ -47,7 +29,8 @@ export default function ConfigPage() {
   const [documentNumber, setDocumentNumber] = useState("");
   const [firstName, setFirstName] = useState("");
   const [secondName, setSecondName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [lastName1, setLastName1] = useState("");
+  const [lastName2, setLastName2] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [department, setDepartment] = useState("");
@@ -62,38 +45,75 @@ export default function ConfigPage() {
 
   // Backup for cancel functionality
   const [backupData, setBackupData] = useState({});
+  const { getPersonInfo, updatePersonInfo, loadingUpdatePersonInfo, updateBankInfo, loadingUpdateBankInfo, updateLocationInfo, loadingUpdateLocationInfo } = usePerson();
 
-  // Simulate data loading
+  // Load user data
   useEffect(() => {
     const loadUserData = async () => {
       setLoading(true);
       
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 2500));
-      
-      // Load mock data
-      setDocumentType(MOCK_USER_DATA.documentType);
-      setDocumentNumber(MOCK_USER_DATA.documentNumber);
-      setFirstName(MOCK_USER_DATA.firstName);
-      setSecondName(MOCK_USER_DATA.secondName);
-      setLastName(MOCK_USER_DATA.lastName);
-      setEmail(MOCK_USER_DATA.email);
-      setPhone(MOCK_USER_DATA.phone);
-      setDepartment(MOCK_USER_DATA.department);
-      setCity(MOCK_USER_DATA.city);
-      setNeighborhood(MOCK_USER_DATA.neighborhood);
-      setAddress(MOCK_USER_DATA.address);
-      setHousingType(MOCK_USER_DATA.housingType);
-      setBank(MOCK_USER_DATA.bank);
-      setAccountNumber(MOCK_USER_DATA.accountNumber);
-      setRole(MOCK_USER_DATA.role);
-      setRoleColor(MOCK_USER_DATA.roleColor);
-      
-      setLoading(false);
+      try {
+        const userDataSession = getUserData();
+        if(!userDataSession?.email) {
+            setLoading(false);
+            return;
+        }
+
+        const response = await getPersonInfo(userDataSession.email);
+
+        if(response.process === "success") {
+            const { person_info, data_location, data_bank } = response.data;
+
+            // Map document type name to acronym
+            const docType = DOCUMENT_TYPES.find(dt => dt.label === person_info.document_type_name);
+            setDocumentType(docType ? docType.acronym : "");
+
+            setDocumentNumber(person_info.document_number);
+            setFirstName(person_info.first_name);
+            setSecondName(person_info.middle_name);
+            setLastName1(person_info.last_name_1);
+            setLastName2(person_info.last_name_2);
+            setEmail(person_info.email);
+            setPhone(person_info.phone);
+            setRole(person_info.role_name);
+            
+            // Location
+            if(data_location.is_data_location === false) {
+                 // Fields remain empty or we can show a message
+            } else {
+                 setDepartment(data_location.department == 'Pendiente' ? "" : data_location.department);
+                 setCity(data_location.city == 'Pendiente' ? "" : data_location.city);
+                 setNeighborhood(data_location.neighborhood);
+                 setAddress(data_location.address);
+                 setHousingType(data_location.type_of_housing);
+            }
+
+            // Bank
+            if(data_bank.is_data_bank === false) {
+                // Fields remain empty
+            } else {
+                 setBank(data_bank.name); // Assuming field name
+                 setAccountNumber(data_bank.account_number); // Assuming field name
+            }
+
+        } else {
+             ToastAlert({
+                position: 'center',
+                timer: 2000,
+                icon: 'error',
+                title: response.message || 'Error al cargar información.'
+              });
+        }
+
+      } catch (error) {
+        console.error("Error loading user info", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     loadUserData();
-  }, []);
+  }, [getPersonInfo]);
 
   // Load department code when department is set (for initial load)
   useEffect(() => {
@@ -133,7 +153,8 @@ export default function ConfigPage() {
         documentNumber,
         firstName,
         secondName,
-        lastName,
+        lastName1,
+        lastName2,
         email,
         phone,
         department,
@@ -154,7 +175,8 @@ export default function ConfigPage() {
     setDocumentNumber(backupData.documentNumber);
     setFirstName(backupData.firstName);
     setSecondName(backupData.secondName);
-    setLastName(backupData.lastName);
+    setLastName1(backupData.lastName1);
+    setLastName2(backupData.lastName2);
     setEmail(backupData.email);
     setPhone(backupData.phone);
     setDepartment(backupData.department);
@@ -170,7 +192,7 @@ export default function ConfigPage() {
 
   const handleSave = () => {
     // Validate required fields
-    if (!firstName || !lastName || !email || !phone) {
+    if (!firstName || !lastName1 || !email || !phone) {
       ToastAlert({
         position: 'center',
         timer: 2000,
@@ -189,6 +211,133 @@ export default function ConfigPage() {
     });
     
     setIsEditMode(false);
+  };
+
+  const handleUpdatePersonalInfo = async () => {
+    // Validate required fields
+    if (!firstName || !lastName1 || !email || !phone || !documentType || !documentNumber) {
+      ToastAlert({
+        position: 'center',
+        timer: 2000,
+        icon: 'error',
+        title: 'Por favor completa todos los campos obligatorios.'
+      });
+      return;
+    }
+
+    try {
+      // Map acronym to full document type name
+      const docType = DOCUMENT_TYPES.find(dt => dt.acronym === documentType);
+      const documentTypeName = docType ? docType.label : documentType;
+
+      const response = await updatePersonInfo({
+        email,
+        documentTypeName,
+        documentNumber,
+        name: firstName,
+        middleName: secondName,
+        lastNameOne: lastName1,
+        lastNameTwo: lastName2,
+        phone,
+      });
+
+      if (response.process === 'success') {
+        ToastAlert({
+          position: 'center',
+          timer: 2000,
+          icon: 'success',
+          title: response.message || 'Información personal actualizada correctamente.'
+        });
+      } else {
+        ToastAlert({
+          position: 'center',
+          timer: 2000,
+          icon: 'error',
+          title: response.message || 'Error al actualizar la información personal.'
+        });
+      }
+    } catch (error) {
+      console.error('Error updating personal info:', error);
+    }
+  };
+
+  const handleUpdateBankInfo = async () => {
+    if (!bank || !accountNumber) {
+      ToastAlert({
+        position: 'center',
+        timer: 2000,
+        icon: 'error',
+        title: 'Por favor completa el banco y el número de cuenta.'
+      });
+      return;
+    }
+
+    try {
+      const response = await updateBankInfo({
+        email,
+        bankName: bank,
+        accountNumber,
+      });
+
+      if (response.process === 'success') {
+        ToastAlert({
+          position: 'center',
+          timer: 2000,
+          icon: 'success',
+          title: response.message || 'Información bancaria actualizada correctamente.'
+        });
+      } else {
+        ToastAlert({
+          position: 'center',
+          timer: 2000,
+          icon: 'error',
+          title: response.message || 'Error al actualizar la información bancaria.'
+        });
+      }
+    } catch (error) {
+      console.error('Error updating bank info:', error);
+    }
+  };
+
+  const handleUpdateLocationInfo = async () => {
+    if (!department || !city || !address) {
+      ToastAlert({
+        position: 'center',
+        timer: 2000,
+        icon: 'error',
+        title: 'Por favor completa departamento, ciudad y dirección.'
+      });
+      return;
+    }
+
+    try {
+      const response = await updateLocationInfo({
+        email,
+        department,
+        city,
+        neighborhood,
+        address,
+        type_of_housing: housingType,
+      });
+
+      if (response.process === 'success') {
+        ToastAlert({
+          position: 'center',
+          timer: 2000,
+          icon: 'success',
+          title: response.message || 'Información de ubicación actualizada correctamente.'
+        });
+      } else {
+        ToastAlert({
+          position: 'center',
+          timer: 2000,
+          icon: 'error',
+          title: response.message || 'Error al actualizar la información de ubicación.'
+        });
+      }
+    } catch (error) {
+      console.error('Error updating location info:', error);
+    }
   };
 
   const handleDepartmentChange = (value) => {
@@ -212,7 +361,7 @@ export default function ConfigPage() {
         description="Gestiona tu información personal y preferencias de cuenta."
       />
 
-      <FullScreenLoader show={loading} message="Cargando información del perfil..." />
+      <FullScreenLoader show={loading || loadingUpdatePersonInfo || loadingUpdateBankInfo || loadingUpdateLocationInfo} message={loadingUpdateLocationInfo ? "Actualizando información de ubicación..." : loadingUpdateBankInfo ? "Actualizando información bancaria..." : loadingUpdatePersonInfo ? "Actualizando información personal..." : "Cargando información del perfil..."} />
 
       {!loading && (
         <div className="container mx-auto px-4 mt-8 max-w-6xl">
@@ -224,18 +373,14 @@ export default function ConfigPage() {
               <div className="flex justify-between items-center">
                 <div>
                   <h2 className="text-3xl font-bold mb-2 text-gray-800">
-                    {firstName} {secondName} {lastName}
+                    {firstName} {secondName} {lastName1} {lastName2}
                   </h2>
                   <p className="text-gray-800 flex items-center gap-2">
                     <Mail className="w-4 h-4" />
                     {email}
                   </p>
-                  <p className="text-gray-800 flex items-center gap-2">
-                    <ShieldUser className="w-4 h-4" />
-                    {role}
-                  </p>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 hidden">
                   {!isEditMode ? (
                     <button
                       onClick={handleEditToggle}
@@ -284,7 +429,7 @@ export default function ConfigPage() {
                         const selected = DOCUMENT_TYPES.find(dt => dt.label === e.target.value);
                         if (selected) setDocumentType(selected.acronym);
                       }}
-                      disabled={!isEditMode}
+                      icon={IdCardLanyard}
                     />
                   </div>
 
@@ -295,7 +440,6 @@ export default function ConfigPage() {
                       onChange={(e) => setDocumentNumber(e.target.value.replace(/[^0-9]/g, ''))}
                       placeholder="Número de documento"
                       icon={IdCard}
-                      disabled={!isEditMode}
                     />
                   </div>
 
@@ -306,7 +450,6 @@ export default function ConfigPage() {
                       onChange={(e) => setFirstName(e.target.value.replace(/\b\w/g, c => c.toUpperCase()))}
                       placeholder="Primer nombre *"
                       icon={User}
-                      disabled={!isEditMode}
                     />
                   </div>
 
@@ -317,18 +460,26 @@ export default function ConfigPage() {
                       onChange={(e) => setSecondName(e.target.value.replace(/\b\w/g, c => c.toUpperCase()))}
                       placeholder="Segundo nombre"
                       icon={User}
-                      disabled={!isEditMode}
                     />
                   </div>
 
                   <div>
                     <Input
                       type="text"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value.replace(/\b\w/g, c => c.toUpperCase()))}
-                      placeholder="Apellidos *"
+                      value={lastName1}
+                      onChange={(e) => setLastName1(e.target.value.replace(/\b\w/g, c => c.toUpperCase()))}
+                      placeholder="Primer apellido *"
                       icon={User}
-                      disabled={!isEditMode}
+                    />
+                  </div>
+
+                  <div>
+                    <Input
+                      type="text"
+                      value={lastName2}
+                      onChange={(e) => setLastName2(e.target.value.replace(/\b\w/g, c => c.toUpperCase()))}
+                      placeholder="Segundo apellido"
+                      icon={User}
                     />
                   </div>
 
@@ -339,8 +490,17 @@ export default function ConfigPage() {
                       onChange={(e) => setPhone(e.target.value.replace(/[^0-9]/g, ''))}
                       placeholder="Teléfono *"
                       icon={Phone}
-                      disabled={!isEditMode}
                     />
+                  </div>
+                  <div className='md:col-span-2'>
+                    <PrimaryButton 
+                      onClick={handleUpdatePersonalInfo}
+                      >
+                      <div className='flex items-center gap-2'>
+                        <UserPen className='w-4 h-4 mr-2' />   
+                        Actualizar datos personales
+                      </div>
+                    </PrimaryButton>
                   </div>
                 </div>
               </div>
@@ -352,27 +512,49 @@ export default function ConfigPage() {
               <div>
                 <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
                   <CreditCard className="w-6 h-6 text-green-600" />
-                  Información Bancaria
+                  Información bancaria
                 </h3>
+                {(!bank || !accountNumber) && !isEditMode ? (
+                    <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
+                        <div className="flex">
+                            <div className="ml-3">
+                                <p className="text-sm text-yellow-700">
+                                    El usuario no cuenta con información bancaria registrada.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                ) : null}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <Select
                       options={BANKS}
                       label="Banco"
-                      value={bank}
+                      value={bank || ""}
                       onChange={(e) => setBank(e.target.value)}
-                      disabled={!isEditMode}
+                      
+                      icon={Landmark}
                     />
                   </div>
                   <div>
                     <Input
                       type="text"
-                      value={accountNumber}
+                      value={accountNumber || ""}
                       onChange={(e) => setAccountNumber(e.target.value.replace(/[^0-9]/g, ''))}
                       placeholder="Número de Cuenta"
                       icon={CreditCard}
-                      disabled={!isEditMode}
+                      
                     />
+                  </div>
+                  <div>
+                    <PrimaryButton 
+                      onClick={handleUpdateBankInfo}                      
+                      >
+                        <div className='flex items-center gap-2'>
+                          <BanknoteArrowUp className='w-4 h-4 mr-2' />   
+                          Actualizar datos bancario
+                        </div>
+                    </PrimaryButton>
                   </div>
                 </div>
               </div>
@@ -380,20 +562,31 @@ export default function ConfigPage() {
               {/* Divider */}
               <div className="h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent my-8"></div>
 
-              {/* Address Information */}
+            {/* Address Information */}
               <div>
                 <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
                   <MapPin className="w-6 h-6 text-purple-600" />
-                  Información de Ubicación
+                  Información de ubicación
                 </h3>
+                {(!department || !address) && !isEditMode ? (
+                    <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
+                        <div className="flex">
+                            <div className="ml-3">
+                                <p className="text-sm text-yellow-700">
+                                    El usuario no cuenta con información de ubicación registrada.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                ) : null}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <Select
                       options={departments.map(d => d.name)}
                       label="Departamento"
-                      value={department}
+                      value={department || ""}
                       onChange={(e) => handleDepartmentChange(e.target.value)}
-                      disabled={!isEditMode}
+                      icon={MapPin}
                     />
                   </div>
 
@@ -401,42 +594,51 @@ export default function ConfigPage() {
                     <Select
                       options={departmentCodeSelected ? cities.map(c => c.name) : ['Seleccione departamento primero']}
                       label="Ciudad"
-                      value={city}
+                      value={city || ""}
                       onChange={(e) => setCity(e.target.value)}
-                      disabled={!isEditMode || !departmentCodeSelected}
+                      disabled={!departmentCodeSelected}
+                      icon={MapPin}
                     />
                   </div>
 
                   <div>
                     <Input
                       type="text"
-                      value={neighborhood}
+                      value={neighborhood || ""}
                       onChange={(e) => setNeighborhood(e.target.value)}
                       placeholder="Barrio"
-                      icon={MapPin}
-                      disabled={!isEditMode}
+                      icon={MapPinHouse}
                     />
                   </div>
 
                   <div>
                     <Input
                       type="text"
-                      value={address}
+                      value={address || ""}
                       onChange={(e) => setAddress(e.target.value)}
                       placeholder="Dirección"
-                      icon={MapPin}
-                      disabled={!isEditMode}
+                      icon={MapPinHouse}
                     />
                   </div>
 
-                  <div className="md:col-span-2">
+                  <div className="md:col-span-1">
                     <Select
                       options={HOUSING_TYPES}
                       label="Tipo de Vivienda"
-                      value={housingType}
+                      value={housingType || ""}
                       onChange={(e) => setHousingType(e.target.value)}
-                      disabled={!isEditMode}
+                      icon={Building2}
                     />
+                  </div>
+                  <div className='md:col-span-2'>
+                    <PrimaryButton 
+                      onClick={handleUpdateLocationInfo}
+                      >
+                        <div className='flex items-center gap-2'>
+                          <MapPinPen className='w-4 h-4 mr-2' />   
+                          Actualizar datos de ubicación
+                        </div>
+                    </PrimaryButton>
                   </div>
                 </div>
               </div>
