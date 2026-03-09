@@ -124,6 +124,8 @@ const useSignUp = () => {
           phone: requestData.phone,
           password: requestData.password,
           roleName: requestData.roleName,
+          bankName: requestData.bankName,
+          accountNumber: requestData.accountNumber,
         }),
       });
       const data = await response.json();
