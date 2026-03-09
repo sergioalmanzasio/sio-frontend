@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Ellipsis, Info, ShieldCheck } from "lucide-react";
 import FullScreenLoader from "../../components/loader/FullScreenLoader";
 import OfferDetailModal from "../../components/alerts/OfferDetailModal";
 import BottomModal from "../../components/modals/BottomModal";
@@ -39,9 +39,10 @@ const MOCK_REFERRALS = [
 const ITEMS_PER_PAGE = 10;
 
 const MyReferralsTable = () => {
-  const { myReferrals, loadingMyReferrals } = useReferral();
+  const { myReferrals, loadingMyReferrals, getReferralGeneralInfo, loadingGetGeneralInfo } = useReferral();
   const { isAuthenticated, userData, logout } = useAuth();
   const [referrals, setReferrals] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   
   // Modal state
@@ -89,11 +90,19 @@ const MyReferralsTable = () => {
     getReferrals();
   }, [isAuthenticated, userData]);
 
-  // Pagination calculations
-  const totalPages = Math.ceil(referrals.length / ITEMS_PER_PAGE);
+  // Pagination and filtering calculations
+  const filteredReferrals = referrals.filter(referral => {
+    if (!searchTerm.trim()) return true;
+    const term = searchTerm.toLowerCase();
+    const name = (referral.full_name || "").toLowerCase();
+    const code = (referral.code || "").toLowerCase();
+    return name.includes(term) || code.includes(term);
+  });
+
+  const totalPages = Math.max(1, Math.ceil(filteredReferrals.length / ITEMS_PER_PAGE));
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
-  const currentReferrals = referrals.slice(startIndex, endIndex);
+  const currentReferrals = filteredReferrals.slice(startIndex, endIndex);
 
   const handlePreviousPage = () => {
     if (currentPage > 1) {
@@ -120,33 +129,41 @@ const MyReferralsTable = () => {
     OfferDetailModal({
       title: 'Detalles del referido',
       html: `
-        <div class="flex flex-col gap-2 text-justify mb-2">
-          <h4 class="text-lg font-bold text-justify text-blue-600">Información del cliente</h4>
-          ${itemModal('Nombre', referral.full_name)}
-          ${itemModal('Código de seguimiento', referral.code)}
-          ${itemModal('Fecha de registro', referral.created_at_formatted)}
-          ${itemModal('Estado', referral.is_active ? 'Activo' : 'Inactivo')}
+        <div class="flex flex-col gap-2 text-justify">
+          <div class="bg-gray-50 p-4 rounded-lg">
+            <h4 class="font-semibold text-gray-800 mb-2">Información del referido</h4>
+            <p class="text-sm"><span class="font-medium">Nombre:</span> ${referral.full_name}</p>
+            <p class="text-sm"><span class="font-medium">Código de referencia:</span> ${referral.code}</p>
+            <p class="text-sm"><span class="font-medium">Fecha de registro:</span> ${referral.created_at_formatted}</p>
+            <p class="text-sm"><span class="font-medium">Estado:</span> ${referral.is_active ? 'Activo' : 'Inactivo'}</p>
+          </div>  
         </div>
-        <div class="h-1 w-full bg-gray-100 my-4"></div>
-        <div class="flex flex-col gap-2 text-justify mb-2">
-          <h4 class="text-lg font-bold text-justify text-blue-600">Información de contacto</h4>
-          ${itemModal('Teléfono', '300' + referral.phone)}
-          ${itemModal('Correo', referral.email)}
-          
+
+        <div class="h-1 w-full bg-gray-100"></div>
+        <div class="flex flex-col gap-2 text-justify">
+          <div class="bg-gray-50 p-4 rounded-lg">
+            <h4 class="font-semibold text-gray-800 mb-2">Información de contacto</h4>
+            <p class="text-sm"><span class="font-medium">Teléfono:</span> ${referral.phone}</p>
+            <p class="text-sm"><span class="font-medium">Correo:</span> ${referral.email}</p>
+          </div>
         </div>
-        <div class="h-1 w-full bg-gray-100 my-4"></div>
-        <div class="flex flex-col gap-2 text-justify mb-2">
-          <h4 class="text-lg font-bold text-justify text-blue-600">Información de localización</h4>
-          ${itemModal('Departamento', referral.department)}
-          ${itemModal('Ciudad', referral.city)}
-          ${itemModal('Barrio', referral.neighborhood)}
-          ${itemModal('Dirección', referral.address)}
+        <div class="h-1 w-full bg-gray-100"></div>
+        <div class="flex flex-col gap-2 text-justify">
+          <div class="bg-gray-50 p-4 rounded-lg">
+            <h4 class="font-semibold text-gray-800 mb-2">Información de localización</h4>
+            <p class="text-sm"><span class="font-medium">Departamento:</span> ${referral.department}</p>
+            <p class="text-sm"><span class="font-medium">Ciudad:</span> ${referral.city}</p>
+            <p class="text-sm"><span class="font-medium">Barrio:</span> ${referral.neighborhood}</p>
+            <p class="text-sm"><span class="font-medium">Dirección:</span> ${referral.address}</p>
+          </div>
         </div>
-        <div class="h-1 w-full bg-gray-100 my-4"></div>
-        <div class="flex flex-col gap-2 text-justify mb-2">
-          <h4 class="text-lg font-bold text-justify text-blue-600">Información de compras</h4>
-          ${itemModal('Compras realizadas', 'PENDIENTE DE REALIZAR')}
-        </div>
+        <div class="h-1 w-full bg-gray-100 hidden"></div>
+        <div class="flex flex-col gap-2 text-justify hidden">
+          <div class="bg-gray-50 p-4 rounded-lg">
+            <h4 class="font-semibold text-gray-800 mb-2">Gestión del referido</h4>
+            <p class="text-sm"><span class="font-medium"><a href="#" class="text-blue-500 hover:underline">Ver historial de solicitudes</a></span></p>
+          </div>
+        </div> 
       `,
       confirmText: 'Cerrar',
       isCancelButtonVisible: false,
@@ -154,6 +171,74 @@ const MyReferralsTable = () => {
         console.log('Modal cerrado');
       },
     });
+  };
+
+  const handleShowGeneralInfo = async (referral) => {
+    try {
+      const response = await getReferralGeneralInfo(referral.code);
+      
+      if (response && response.process === 'success' && response.data) {
+        const data = response.data;
+        const comments = response.comments || [];
+
+        const commentsHtml = comments.length > 0 ? comments.map(comment => `
+          <div class="border-b border-gray-200 pb-2 last:border-0 last:pb-0 mb-3">
+            <p class="text-xs text-gray-500 flex justify-between">
+              <span>${comment.created_at_formatted}</span>
+              <span class="font-medium">${comment.registered_by}</span>
+            </p>
+            <p class="text-sm text-gray-700 mt-1">${comment.comment}</p>
+          </div>
+        `).join('') : '<p class="text-sm text-gray-500 text-center py-4">No hay comentarios registrados.</p>';
+
+        OfferDetailModal({
+          title: 'Detalle de la solicitud activa',
+          html: `
+            <div class="flex flex-col gap-2 text-justify">
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <h4 class="font-semibold text-gray-800 mb-2">Detalles de la solicitud</h4>
+                <p class="text-sm"><span class="font-medium">Radicado:</span> ${data.filing_number}</p>
+                <p class="text-sm"><span class="font-medium">Estado:</span> 
+                  <span class="
+                    ${data.description.toLowerCase() === 'terminada' ? 'bg-green-100 text-green-800' :
+                        data.description.toLowerCase() === 'aprobada' ? 'bg-cyan-100 text-cyan-800' :
+                        data.description.toLowerCase() === 'en proceso' ? 'bg-pink-100 text-pink-800' :
+                        data.description.toLowerCase() === 'no aprobada' ? 'bg-red-100 text-red-800' :
+                        data.description.toLowerCase() === 'suspendida' ? 'bg-violet-100 text-violet-800' :
+                      'text-gray-500'}
+                  font-semibold px-2 py-1/2 rounded-lg">${data.description}</span></p>
+                <p class="text-sm"><span class="font-medium">Fecha de registro:</span> ${data.created_at_formatted}</p>
+              </div>  
+            </div> 
+            <div class="h-1 w-full bg-gray-100"></div>
+            <div class="flex flex-col gap-2 text-justify">
+              <div class="bg-gray-50 p-4 rounded-lg">
+                <h4 class="font-semibold text-gray-800 mb-2">Información de la oferta</h4>
+                <p class="text-sm"><span class="font-medium">Nombre:</span> ${data.offer_name}</p>
+                <p class="text-sm"><span class="font-medium">Descripción:</span> ${data.offer_description}</p>
+                <p class="text-sm"><span class="font-medium">Operador:</span> ${data.operator_name}</p>
+                <p class="text-sm"><span class="font-medium">Precio:</span> $ ${parseInt(data.offer_price).toLocaleString('es-CO')}</p>
+              </div>
+            </div>
+            <div class="h-1 w-full bg-gray-100 mb-2"></div>
+            <div class="flex flex-col gap-2 text-justify">
+              <h4 class="text-lg font-bold text-justify text-black">Seguimiento del servicio</h4>
+              <div class="bg-gray-50 p-4 rounded-lg max-h-60 overflow-y-auto w-full">
+                ${commentsHtml}
+              </div>
+            </div>
+          `,
+          confirmText: 'Cerrar',
+          isCancelButtonVisible: false,
+          confirmCallback: () => {
+            console.log('Modal cerrado');
+          },
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching general info:', error);
+      // ToastAlert handled in hook
+    }
   };
 
   const tagStatus = (status) => {
@@ -169,7 +254,16 @@ const MyReferralsTable = () => {
       className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition duration-150 cursor-pointer shadow-md hover:shadow-lg transform hover:scale-105" 
       onClick={() => handleShowMore(referral)}
     >
-      Ver más
+      <Ellipsis className="w-4 h-4" />
+    </button>
+  );
+
+  const buttonHistory = (referral) => (
+    <button 
+      className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition duration-150 cursor-pointer shadow-md hover:shadow-lg transform hover:scale-105 ml-2" 
+      onClick={() => handleShowGeneralInfo(referral)}
+    >
+      <ShieldCheck className="w-4 h-4" />
     </button>
   );
 
@@ -180,18 +274,30 @@ const MyReferralsTable = () => {
   return (
     <>
       <div className="w-full md:w-3/4 mt-0 md:mt-4 mx-auto p-4 md:p-0">
-        <GradientButton
-          onClick={() => setIsModalOpen(true)}
-          className="px-8 py-3 cursor-pointer transform hover:scale-105 transition-transform mb-4"
-        >
-          Agregar referido
-        </GradientButton>
+        <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
+          <GradientButton
+            onClick={() => setIsModalOpen(true)}
+            className="px-8 py-3 cursor-pointer transform hover:scale-105 transition-transform w-full md:w-auto"
+          >
+            Agregar cliente
+          </GradientButton>
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1);
+            }}
+            placeholder="Buscar por nombre o código de referencia..."
+            className="w-full md:w-2/4 px-4 py-3 border border-gray-300 rounded-lg text-sm text-gray-700 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
         <div className="overflow-x-auto bg-white shadow-lg rounded-sm">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-blue-400 text-white">
               <tr>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Nombre del Cliente</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell">Código de Seguimiento</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Cliente</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell">Código de referencia</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden lg:table-cell">Fecha de Registro</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden sm:table-cell">Estado</th>
                 <th scope="col" className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Acciones</th>
@@ -226,8 +332,9 @@ const MyReferralsTable = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 hidden lg:table-cell">{referral.created_at_formatted}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 hidden sm:table-cell">{tagStatus(referral.is_active)}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                    <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium ">
                       {buttonDetails(referral)}
+                      {buttonHistory(referral)}
                     </td>
                   </tr>
                 ))
@@ -266,9 +373,9 @@ const MyReferralsTable = () => {
             <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
               <div>
                 <p className="text-sm text-gray-700">
-                  Mostrando <span className="font-medium">{startIndex + 1}</span> a{' '}
-                  <span className="font-medium">{Math.min(endIndex, referrals.length)}</span> de{' '}
-                  <span className="font-medium">{referrals.length}</span> resultados
+                  Mostrando <span className="font-medium">{filteredReferrals.length > 0 ? startIndex + 1 : 0}</span> a{' '}
+                  <span className="font-medium">{Math.min(endIndex, filteredReferrals.length)}</span> de{' '}
+                  <span className="font-medium">{filteredReferrals.length}</span> resultados
                 </p>
               </div>
               <div>
@@ -309,7 +416,7 @@ const MyReferralsTable = () => {
       <BottomModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title="Agregar Cliente Referido"
+        title="Agregar cliente"
         sizeContentMD="md:w-2/3"
       >
         <AddClientForm
