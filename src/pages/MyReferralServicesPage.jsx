@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Swal from "sweetalert2";
 import Navbar from '../components/Navbar';
-import { MessageSquareText, PenLine, WholeWord } from 'lucide-react';
+import { MessageSquareText, PenLine, WholeWord, ChevronLeft, ChevronRight } from 'lucide-react';
 import TransversalHeader from '../components/header/TransversalHeader';
 import ServiceRequestsTableSkeleton from '../sections/service-requests-tables/service-requests-table-skeleton';
 import useRequest from '../hooks/useRequest';
@@ -26,7 +26,10 @@ export default function MyReferralServicesPage() {
   } = useRequest();
   const { calculateCommission } = useReferral();
   const [serviceRequests, setServiceRequests] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
   const [selectedRequest, setSelectedRequest] = useState(null);
+  const ITEMS_PER_PAGE = 10;
   const [showEditModal, setShowEditModal] = useState(false);
 
   // Service request states
@@ -614,13 +617,13 @@ export default function MyReferralServicesPage() {
                             className={`text-${bgButton}-600 hover:text-white bg-${bgButton}-100 hover:bg-${bgButton}-600 px-3 py-1 rounded-md text-xs font-semibold transition duration-150 cursor-pointer`}
                           >
                             <span className="absolute 
-    -top-8 
-    right-0 
-    opacity-0 group-hover:opacity-100
-    bg-gray-900 text-white text-xs px-2 py-1 rounded
-    transition duration-200
-    whitespace-nowrap
-    z-50">
+                                -top-8 
+                                right-0 
+                                opacity-0 group-hover:opacity-100
+                                bg-gray-900 text-white text-xs px-2 py-1 rounded
+                                transition duration-200
+                                whitespace-nowrap
+                                z-50">
                               {toolTipText}
                             </span>
                             {
@@ -652,6 +655,16 @@ export default function MyReferralServicesPage() {
       />
 
       <div className="w-full md:w-3/4 mt-0 md:mt-4 mx-auto p-4 md:p-0">
+        {/* Search Filter */}
+        <div className="mb-4">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
+            placeholder="Buscar por nombre de cliente, orden de seguimiento o radicado..."
+            className="w-full md:w-2/4 px-4 py-3 border border-gray-300 rounded-lg text-sm text-gray-700 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
         <div className="overflow-x-auto bg-white shadow-lg rounded-xl">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-blue-600 text-white">
@@ -680,14 +693,30 @@ export default function MyReferralServicesPage() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-100">
-              {!serviceRequests || serviceRequests.length === 0 ? (
-                <tr>
-                  <td colSpan="7" className="px-6 py-4 text-center text-sm text-gray-500">
-                    No hay solicitudes de servicios disponibles.
-                  </td>
-                </tr>
-              ) : (
-                serviceRequests.map((request, index) => (
+              {(() => {
+                const filteredRequests = (serviceRequests || []).filter((request) => {
+                  if (!searchTerm.trim()) return true;
+                  const term = searchTerm.toLowerCase();
+                  const clientName = (request.client.name || "").toLowerCase();
+                  const trackingCode = (request.client.tracking_code || "").toLowerCase();
+                  const filingNumber = (request.service_request.filing_number || "").toLowerCase();
+                  return clientName.includes(term) || trackingCode.includes(term) || filingNumber.includes(term);
+                });
+                const totalPages = Math.ceil(filteredRequests.length / ITEMS_PER_PAGE);
+                const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+                const paginatedRequests = filteredRequests.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+                
+                // Store for pagination UI
+                window.__paginationMeta = { filteredRequests, totalPages, startIndex };
+                
+                return paginatedRequests.length === 0 ? (
+                  <tr>
+                    <td colSpan="7" className="px-6 py-4 text-center text-sm text-gray-500">
+                      No hay solicitudes de servicios disponibles.
+                    </td>
+                  </tr>
+                ) : (
+                  paginatedRequests.map((request, index) => (
                   <tr key={index} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       <div className="flex flex-col">
@@ -767,11 +796,76 @@ export default function MyReferralServicesPage() {
                       </div>
                     </td>
                   </tr>
-                ))
-              )}
+                  ))
+                );
+              })()}
             </tbody>
           </table>
         </div>
+
+        {/* Pagination */}
+        {(() => {
+          const meta = window.__paginationMeta;
+          if (!meta || meta.filteredRequests.length === 0) return null;
+          const { filteredRequests, totalPages, startIndex } = meta;
+          const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, filteredRequests.length);
+          return (
+            <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 mt-4 rounded-lg shadow-md">
+              <div className="flex-1 flex justify-between sm:hidden">
+                <button
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className={`relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md ${
+                    currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'
+                  }`}
+                >
+                  Anterior
+                </button>
+                <button
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className={`ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md ${
+                    currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'
+                  }`}
+                >
+                  Siguiente
+                </button>
+              </div>
+              <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-sm text-gray-700">
+                    Mostrando <span className="font-medium">{startIndex + 1}</span> a <span className="font-medium">{endIndex}</span> de <span className="font-medium">{filteredRequests.length}</span> resultados
+                  </p>
+                </div>
+                <div>
+                  <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                    <button
+                      onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                      disabled={currentPage === 1}
+                      className={`relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 text-sm font-medium ${
+                        currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-500 hover:bg-gray-50'
+                      }`}
+                    >
+                      <ChevronLeft className="h-5 w-5" />
+                    </button>
+                    <span className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+                      Página {currentPage} de {totalPages}
+                    </span>
+                    <button
+                      onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                      disabled={currentPage === totalPages}
+                      className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 text-sm font-medium ${
+                        currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-500 hover:bg-gray-50'
+                      }`}
+                    >
+                      <ChevronRight className="h-5 w-5" />
+                    </button>
+                  </nav>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
       </div>
     </div>
   );
