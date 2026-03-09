@@ -5,6 +5,8 @@ import ToastAlert from "../../components/alerts/ToastAlert";
 import useReferral from "../../hooks/useReferral";
 import { useAuth } from "../../context/AuthContext";
 import OfferDetailModal from "../../components/alerts/OfferDetailModal";
+import InlineAlert from "../../components/alert/InlineAlert";
+
 
 const ITEMS_PER_PAGE = 10;
 
@@ -105,24 +107,15 @@ const CommissionsTable = () => {
 
   return (
     <div className="w-full md:w-3/4 mt-0 md:mt-4 mx-auto p-4 md:p-0">
-      {/* Total Commission Banner */}
-      <div className="bg-gradient-to-r from-indigo-100 to-indigo-100 text-white rounded-lg shadow-lg p-4 mb-6 w-full md:w-1/4 ">
-        <div className="flex flex-col sm:flex-row items-center justify-between">
-          <div>
-            <p className="text-3xl font-bold mt-1 text-black">{totalCommission}</p>
-            <p className="text-sm font-medium opacity-90 text-black">Total disponible para retirar</p>
-            {/* <button 
-              className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition duration-150 cursor-pointer shadow-md hover:shadow-lg transform hover:scale-105 mt-2"
-              onClick={() => handleRequestPayment()}
-            >
-              Solicitar pago
-            </button> */}
-          </div>
-        </div>
-      </div>
+      
+      <InlineAlert
+        title="Comisión disponible"
+        message={<span>Total comisión disponible para retirar <span class="font-bold text-blue-400 text-lg">{totalCommission}</span></span>}
+        type="info"
+      />
 
       {/* Table */}
-      <div className="overflow-x-auto bg-white shadow-lg rounded-sm">
+      <div className="overflow-x-auto bg-white shadow-lg rounded-sm mt-4">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-blue-400 text-white">
             <tr>
@@ -139,7 +132,7 @@ const CommissionsTable = () => {
                 <tr key={index} className="hover:bg-gray-50 transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     <div className="flex flex-col">
-                      <span className="font-bold text-green-600">{item.commission_amount_formmated}</span>
+                      <span className="font-bold text-indigo-600">{item.commission_amount_formmated}</span>
                       <span className="text-xs text-gray-500 sm:hidden mt-1">{item.created_at_formatted}</span>
                       <span className="text-xs text-gray-500 sm:hidden mt-1">{textForAvailablePaymentDate} {item.available_payment_date}</span>
                       <span className="text-xs text-gray-500 md:hidden mt-1">{item.offer_name}</span>
