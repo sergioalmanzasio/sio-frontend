@@ -1,5 +1,6 @@
 // src/components/Navbar.jsx
 
+import sioLogo from "../assets/SIO-logo.png";
 import { useState } from "react";
 import { GradientButton } from "./ui/button";
 import ForgotPasswordModal from "./modals/ForgotPasswordModal";
@@ -10,6 +11,7 @@ import ModalAlertConfirm from "./alerts/ModalAlertConfirm";
 import { useAuth } from "../context/AuthContext";
 import { Menu, X } from "lucide-react";
 import MenuUser from "./menu/MenuUser";
+
 
 export default function Navbar() {
   const [showLogin, setShowLogin] = useState(false);
@@ -42,7 +44,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
         {/* Logo */}
         <div className="text-3xl font-extrabold text-blue-600 tracking-wider cursor-pointer" onClick={() => navigate('/')}>
-          <img src="/src/assets/SIO-logo.png" className="w-24 h-16" alt="" />
+          <img src={sioLogo} className="w-24 h-16" alt="" />
         </div>
         {/* Icono de menu */}
 
