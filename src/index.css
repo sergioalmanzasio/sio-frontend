@@ -1,16 +1,18 @@
 @import "tailwindcss";
 
 .btn-gradient {
-  @apply px-4 py-2 rounded-md font-semibold text-white mr-2
-         bg-linear-to-bl from-red-500 to-green-600 
+  @apply px-4 py-2 rounded-md font-normal text-white mr-2
+         bg-gradient-to-r from-indigo-500 to-blue-500
          cursor-pointer
          hover:opacity-90 transition;
+         font-size: 14px;
 }
 
 .btn-cancel {
   @apply px-4 py-2 rounded-lg font-semibold text-gray-700 
          cursor-pointer
          bg-gray-200 hover:bg-gray-300 transition;
+         font-size: 14px;
 }
 
 .btn-gradient-secondary {
@@ -27,4 +29,36 @@
 }
 .swal2-styled.swal2-confirm {
   order: 2; /* Botón confirmar primero */
+}
+
+textarea {
+  resize: none;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 3s infinite linear;
 }
