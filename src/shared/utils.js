@@ -63,7 +63,7 @@ export const OPERATORS_LOGOS = {
   TIGO: tigoLogo,
 };
 
-export const sessionExpiredToast = (logout, redirectToHome) => {
+export const sessionExpiredToast = (logoutInstance, redirectToHome) => {
   ToastAlert({
     position: "top",
     timer: 2000,
@@ -72,7 +72,7 @@ export const sessionExpiredToast = (logout, redirectToHome) => {
   });
 
   setTimeout(() => {
-    logout();
+    logoutInstance();
     redirectToHome();
   }, 2000);
 };
@@ -93,8 +93,8 @@ export const chipServiceRequestStatus = (status) => {
 export const getRolesToSignUp = () => {
   return [
     { id: 'referral', label: 'Plan referido', description: 'Recomienda servicios y gana comisiones.' },
-    { id: 'client', label: 'Soy cliente', description: 'Solicita y gestiona tus servicios.' },
-    { id: 'advisor', label: 'Soy asesor/a', description: 'Brinda asesoría y gestiona solicitudes.' },
+    { id: 'client', label: 'Soy cliente', description: 'Activa tus servicios hoy.' },
+    // { id: 'advisor', label: 'Soy asesor/a', description: 'Brinda asesoría y gestiona solicitudes.' },
   ];
 };
 
@@ -106,8 +106,12 @@ export const getDocumentTypes = () => {
   ];
 };
 
+export const getBanks = () => {
+  return ["Bancolombia", "Davivienda", "Banco de Bogotá", "BBVA", "Nequi", "Daviplata"];
+}
+
 export const getDepartments = async () => {
-  const urlAPI = `${API_COLOMBIA}/v1/Department`;
+  const urlAPI = `${API_COLOMBIA}/v1/Department?sortBy=name&sortDirection=asc`;
   const response = await fetch(urlAPI);
   const data = await response.json();
   const departmentList = data.map((department) => ({
@@ -118,7 +122,7 @@ export const getDepartments = async () => {
 }
 
 export const getCitiesByDepartmentId = async (departmentId) => {
-  const urlAPI = `${API_COLOMBIA}/v1/Department/${departmentId}/cities`;
+  const urlAPI = `${API_COLOMBIA}/v1/Department/${departmentId}/cities?sortBy=name&sortDirection=asc`;
   const response = await fetch(urlAPI);
   const data = await response.json();
   const cityList = data.map((city) => ({
@@ -126,4 +130,13 @@ export const getCitiesByDepartmentId = async (departmentId) => {
     name: city.name,
   }));
   return cityList;
+}
+
+export const getHousingTypes = () => {
+  return [
+    { id: 'Apartamento', label: 'Apartamento' },
+    { id: 'Casa', label: 'Casa' },
+    { id: 'Edificio', label: 'Edificio' },
+    { id: 'Oficina', label: 'Oficina' },
+  ];
 }
