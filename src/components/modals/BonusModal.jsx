@@ -1,31 +1,28 @@
 import { useEffect, useState } from "react";
+import { API_BASE_URL } from "../../shared/constanst";
 
-export default function BonusModal({
-  title = "Bono activo",
-  description = "Por cada venta aprobada recibirás un bono adicional.",
-  amount = 10000
-}) {
+export default function BonusModal() {
 
   const [open, setOpen] = useState(false);
-  // const [bonus, setBonus] = useState(null);
-
-  // useEffect(() => {
-  //   fetch("/api/bonuses/active")
-  //     .then(res => res.json())
-  //     .then(data => {
-  //       if (data) {
-  //         setBonus(data);
-  //         setOpen(true);
-  //       }
-  //     });
-  // }, [])
+  const [bonus, setBonus] = useState(null);
 
   useEffect(() => {
     const seen = localStorage.getItem("bonus_seen");
+    if (seen) return;
 
-    if (!seen) {
-      setOpen(true);
-    }
+    fetch(`${API_BASE_URL}/bonus/active`, {
+      method: "GET",
+      credentials: "include",
+    })
+      .then(res => res.json())
+      .then(data => {
+        console.log("Bono activo:", data)
+        if (data) {
+          setBonus(data.data);
+          setOpen(true);
+        }
+      })
+      .catch(err => console.error("Error al obtener bono activo:", err));
   }, []);
 
   const handleClose = () => {
@@ -33,8 +30,7 @@ export default function BonusModal({
     setOpen(false);
   };
 
-  if (!open) return null;
-  // if (!open || !bonus) return null;
+  if (!open || !bonus) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm ">
@@ -42,11 +38,11 @@ export default function BonusModal({
       <div className="bg-white rounded-xl shadow-xl w-[90%] max-w-md p-6 animate-fade-in text-white p-5 rounded-xl mb-6">
 
         <h2 className="text-xl font-bold text-gray-800 mb-2">
-          {title}
+          {bonus.title}
         </h2>
 
         <p className="text-gray-600 text-sm mb-4">
-          {description}
+          {bonus.description}
         </p>
 
         <div className="bg-purple-100 border rounded-lg p-4 text-center mb-6">
@@ -55,13 +51,13 @@ export default function BonusModal({
           </p>
 
           <p className="text-4xl font-bold text-purple-600 mt-1">
-            $ {new Intl.NumberFormat("es-CO").format(amount)}
+            {bonus.bonus_amount_formatted}
           </p>
         </div>
 
         <div className="rounded-xl mb-6 text-gray-600 text-center">
           <p className="text-sm opacity-90">
-            Vigencia: 01 Ene 2026 - 31 Mar 2026
+            Vigencia: {bonus.valid_from_formatted} - {bonus.valid_until_formatted}
           </p>
         </div>
 
