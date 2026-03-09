@@ -1,14 +1,15 @@
 import React from 'react';
-import { ArrowUpRight, ArrowDownRight, Users, Activity, DollarSign } from 'lucide-react';
+import { ArrowUpRight, ArrowDownRight, Users, Activity, DollarSign, Star, Puzzle } from 'lucide-react';
 
 const icons = {
   users: Users,
-  activity: Activity,
+  activity: Star,
   dollar: DollarSign,
+  pending: Puzzle,
 };
 
 export default function DashboardCard({ title, value, iconName, trend, trendValue, color = "blue" }) {
-  const Icon = icons[iconName] || Activity;
+  const Icon = icons[iconName] || Activity; 
   
   const colorClasses = {
     blue: "bg-blue-50 text-blue-600",
@@ -25,12 +26,6 @@ export default function DashboardCard({ title, value, iconName, trend, trendValu
         <div className={`p-3 rounded-lg ${colorClasses[color]}`}>
           <Icon size={24} />
         </div>
-        {trend && (
-          <div className={`flex items-center gap-1 text-sm font-medium ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
-            {isPositive ? <ArrowUpRight size={16} /> : <ArrowDownRight size={16} />}
-            <span>{trendValue}</span>
-          </div>
-        )}
       </div>
       
       <div>
