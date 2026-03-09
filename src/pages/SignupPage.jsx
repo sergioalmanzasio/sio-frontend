@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Phone, Mail, Lock, Building, CreditCard, MapPin, Home, IdCard, UserSearch } from 'lucide-react';
+import { User, Phone, Mail, Lock, Building, CreditCard, MapPin, Home, IdCard, UserSearch, ScanSearch, Search } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import TransversalHeader from '../components/header/TransversalHeader';
 import { PrimaryButton, SecondaryButton } from '../components/ui/button';
@@ -8,6 +8,7 @@ import { Input } from '../components/ui/input';
 import Select from '../components/ui/select';
 import ToastAlert from '../components/alerts/ToastAlert';
 import ModalAlertConfirm from '../components/alerts/ModalAlertConfirm';
+import InlineAlert from '../components/alert/InlineAlert';
 import BottomModal from '../components/modals/BottomModal';
 import OTPInput from '../components/ui/OTPInput';
 import { getRolesToSignUp, getDocumentTypes } from '../shared/utils';
@@ -15,12 +16,12 @@ import useSignUp  from '../hooks/useSignUp';
 import usePerson from '../hooks/usePerson';
 import useReferral from '../hooks/useReferral';
 import FullScreenLoader from '../components/ui/FullScreenLoader';
-import { getDepartments, getCitiesByDepartmentId } from '../shared/utils';
+import { getDepartments, getCitiesByDepartmentId, getBanks } from '../shared/utils';
 
 const ROLES = getRolesToSignUp();
 const DOCUMENT_TYPES = getDocumentTypes();
 
-const BANKS = ["Bancolombia", "Davivienda", "Banco de Bogotá", "BBVA", "Nequi", "Daviplata"];
+const BANKS = getBanks();
 const HOUSING_TYPES = ["Casa", "Apartamento", "Edificio", "Oficina"];
 
 export default function SignupPage() {
@@ -29,7 +30,7 @@ export default function SignupPage() {
     verifyOTP, loadingVerifyOTP, errorVerifyOTP, signUp, loadingSignUp, errorSignUp
   } = useSignUp();
   const { validatePersonByDocument, loadingValidatePersonExistByDocument, errorValidatePersonExistByDocument,
-    addPerson, loadingAddPerson, errorAddPerson
+    addPerson, loadingAddPerson, errorAddPerson, addClient
    } = usePerson();
   const { addReferralExistCustomer, loadingReferralExistCustomer, errorReferralExistCustomer } = useReferral();
   const [step, setStep] = useState(1);
@@ -87,9 +88,6 @@ export default function SignupPage() {
       return;
     }
 
-    /*
-    
-    */
     if (selectedRole === 'referral') {
       ModalAlertConfirm({
         title: 'Términos y Condiciones',
@@ -115,7 +113,11 @@ export default function SignupPage() {
         confirmCallback: () => setStep(2),
       });
     } else {
-      setStep(2);
+      if (selectedRole === 'client'){
+        setStep(3);
+      }else{
+        setStep(2);
+      }
     }
   };
 
@@ -131,7 +133,7 @@ export default function SignupPage() {
         return false;
       }
     }else{
-      if (!documentType || !documentNumber || !firstName || !lastName || !email || !phone || !password) {
+      if (!documentType || !documentNumber || !firstName || !lastName || !email || !phone) {
         ToastAlert({ 
           position: 'center',
           timer: 1800,
@@ -141,23 +143,21 @@ export default function SignupPage() {
         return false;
       }
     }
-    // setIsShowOTPSection(true);
+    
     generateOTP({
       email,
       document: documentNumber,
       name: firstName + ' ' + lastName,
       phone,
     });
-    // return true;
   };
 
   const handleNextStep2 = (e) => {
     e.preventDefault();
     if (validateStep2()) {
-      if (selectedRole === 'referral') {
+      if (selectedRole === 'referral' || selectedRole === 'client') {
         setStep(3);
       } else {
-        // Submit for Client/Advisor
         handleFinalSubmit();
       }
     }
@@ -179,8 +179,61 @@ export default function SignupPage() {
   const handleFinalSubmit = async (e) => {
     if (e) e.preventDefault();
     
-    if (selectedRole === 'referral' && !validateStep3()) {
+    if ((selectedRole === 'referral' || selectedRole === 'client') && !validateStep3()) {
       return;
+    }
+
+    if (selectedRole === 'client') {
+      setIsRegistering(true);
+      console.log('Datos del cliente:', {
+        document: clientDocumentNumber,
+        document_type_acronym: clientDocumentType,
+        name: clientFirstName,
+        last_name: clientLastName,
+        email: clientEmail,
+        phone: clientPhone,
+        department: clientDepartment,
+        city: clientCity,
+        neighborhood: clientNeighborhood,
+        address: clientAddress,
+        type_of_housing: clientHousingType,
+        observations: clientObservations,
+      });
+      try {
+        const addClientResponse = await addClient({
+          document: clientDocumentNumber,
+          document_type_acronym: clientDocumentType,
+          name: clientFirstName,
+          last_name: clientLastName,
+          email: clientEmail,
+          phone: clientPhone,
+          department: clientDepartment,
+          city: clientCity,
+          neighborhood: clientNeighborhood,
+          address: clientAddress,
+          type_of_housing: clientHousingType,
+          observations: clientObservations,
+        });
+
+        console.log('addClientResponse', addClientResponse);
+        
+        if (addClientResponse.process !== 'success') {
+          setIsRegistering(false);
+          return false;
+        }
+        
+        setIsRegistering(false);
+        ToastAlert({
+          position: 'center',
+          timer: 2000,
+          icon: 'success',
+          title: 'Datos del cliente registrados correctamente.',
+        });
+        setTimeout(() => navigate('/'), 2000);
+      } catch (error) {
+        setIsRegistering(false);
+        console.error('Error during client registration:', error);
+      }
     }
 
     if (selectedRole === 'referral') {
@@ -340,10 +393,16 @@ export default function SignupPage() {
   } 
 
   const handleCancelAddClient = () => {
+    const title = selectedRole === 'client' 
+      ? 'Cancelar registro' 
+      : 'Cancelar referenciación';
+    const text = selectedRole === 'client' 
+      ? '¿Estás seguro(a) que deseas cancelar el registro?' 
+      : '¿Estás seguro(a) que desea realizar la referenciación del cliente más tarde?';  
     ModalAlertConfirm({
-      title: 'Cancelar referenciación',
-      text: '¿Estás seguro(a) que desea realizar la referenciación del cliente más tarde?',
-      icon: 'info',
+      title: title,
+      text: text,
+      icon: '',
       confirmText: 'Si',
       cancelText: 'No',
       isShowCancelButton: true,
@@ -379,32 +438,38 @@ export default function SignupPage() {
   useEffect(() => {
     if (loadingVerifyOTP && !errorVerifyOTP) {
       // Do nothing while loading
-    } else if (!loadingVerifyOTP && !errorVerifyOTP && codeToResgitration) {
-       // Only proceed if loading finished, no error, and we have a code (meaning verification was successful)
-       // Note: ideally verifyOTP should return success status or we should track verification success state
-       // Assuming verifyOTP throws on error, so if we are here and loading is false and no error, it succeeded.
-       // However, verifyOTP is async. The state updates might happen after.
-       // Better reliance: verifyOTP promise resolution.
-       // But sticking to the requested pattern of using state:
-       
-      ToastAlert({
-        position: 'center',
-        timer: 3000,
-        icon: 'success',
-        title: 'Código verificado correctamente, procederé al registro, espere por favor...',
-      });
+    } else if (!loadingVerifyOTP && !errorVerifyOTP && codeToResgitration) {       
+      if (selectedRole === 'client') {
+        ToastAlert({
+          position: 'center',
+          timer: 3000,
+          icon: 'success',
+          title: 'Código verificado correctamente. Por favor completa tus datos...',
+        });
+        setIsShowOTPSection(false);
+        setStep(3);
+      } else {
+        ToastAlert({
+          position: 'center',
+          timer: 3000,
+          icon: 'success',
+          title: 'Código verificado correctamente, procederé al registro, espere por favor...',
+        });
 
-      signUp({
-        document: documentNumber,
-        document_type_acronym: documentType,
-        name: firstName,
-        middle_name: secondName,
-        last_name: lastName,
-        email: email,
-        phone: phone,
-        password: password,
-        roleName: selectedRole,
-      });
+        signUp({
+          document: documentNumber,
+          document_type_acronym: documentType,
+          name: firstName,
+          middle_name: secondName,
+          last_name: lastName,
+          email: email,
+          phone: phone,
+          password: password,
+          roleName: selectedRole,
+          bankName: bank,
+          accountNumber: accountNumber,
+        });
+      }
     } else if (errorVerifyOTP) {
        // Stop process if error
        return;
@@ -420,7 +485,7 @@ export default function SignupPage() {
         icon: 'success',
         title: 'Usuario registrado.',
       });
-      if (selectedRole === 'referral') {
+      if (selectedRole === 'referral' || selectedRole === 'client') {
         setStep(3);
       } else {
         handleFinalSubmit();
@@ -480,7 +545,7 @@ export default function SignupPage() {
         description="Completa los pasos para crear tu cuenta en SIO."
       />
 
-      <div className="container mx-auto px-4 mt-8 max-w-3xl">
+      <div className="container mx-auto px-4 mt-8 max-w-6xl">
         {/* Progress Steps */}
         <div className="flex justify-center mb-8">
           <div className="flex items-center space-x-4">
@@ -502,7 +567,7 @@ export default function SignupPage() {
           {step === 1 && (
             <div className="space-y-6 animate-fadeIn">
               <h2 className="text-2xl font-bold text-center text-gray-800">Selecciona tu perfil</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {ROLES.map((role) => (
                   <div 
                     key={role.id}
@@ -514,11 +579,22 @@ export default function SignupPage() {
                   </div>
                 ))}
               </div>
-              <div className="flex justify-end pt-4 gap-2">
-                <SecondaryButton onClick={() => navigate('/')} className="w-full md:w-auto px-8 cursor-pointer">
+              <div className="flex items-start gap-3 bg-cyan-50 border border-cyan-200 border-l-4 border-l-cyan-400 rounded-lg p-4">
+                <div className="flex-shrink-0 mt-0.5">
+                  <svg className="w-5 h-5 text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-cyan-700">Próximamente</p>
+                  <p className="text-sm text-cyan-600 mt-0.5">¡Muy pronto podrás registrarte como <b>asesor/a</b> y comenzar a crecer con nosotros!</p>
+                </div>
+              </div>
+              <div className="flex justify-center md:justify-end pt-4 gap-2">
+                <SecondaryButton onClick={() => navigate('/')} className="w-full md:w-auto px-8 cursor-pointer btn-cancel shadow-none">
                   Volver
                 </SecondaryButton>
-                <PrimaryButton onClick={handleNextStep1} className="w-full md:w-auto px-8 cursor-pointer">
+                <PrimaryButton onClick={handleNextStep1} className="w-full md:w-auto px-8 cursor-pointer btn-primary shadow-none">
                   Siguiente
                 </PrimaryButton>
                 
@@ -530,7 +606,7 @@ export default function SignupPage() {
           {step === 2 && (
             <form onSubmit={handleNextStep2} className="space-y-6 animate-fadeIn">
               <h2 className="text-2xl font-bold text-center text-gray-800">Información Personal</h2>
-              <p className="text-center text-gray-600">Perfil seleccionado: {roleSelectedLabelToShow()}</p>
+              <InlineAlert title="Perfil seleccionado" message={`Te registrarás como ${roleSelectedLabelToShow()}`} type="info" />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="md:col-span-1">
                   <Select options={DOCUMENT_TYPES.map((docType) => docType.label)} label="Tipo de documento" value={documentType} onChange={(e) => {
@@ -540,7 +616,7 @@ export default function SignupPage() {
                 </div>
                 <div className="md:col-span-1">
                   <Input type="text" value={documentNumber} onChange={(e) => setDocumentNumber(e.target.value.replace(/[^0-9]/g, ''))} placeholder="Número de documento" icon={IdCard} className="md:col-span-1"/>
-                  <span className="offset-1 text-xs text-purple-500 italic">Digita numero de documento sin puntos</span>
+                  <span className="offset-1 text-xs text-purple-500 italic">Digita número de documento sin puntos</span>
                 </div>
                 <Input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value.replace(/\b\w/g, (c) => c.toUpperCase()))} placeholder="Primer nombre" icon={User} />
                 <Input type="text" value={secondName} onChange={(e) => setSecondName(e.target.value.replace(/\b\w/g, (c) => c.toUpperCase()))} placeholder="Segundo nombre (Opcional)" icon={User} />
@@ -549,12 +625,13 @@ export default function SignupPage() {
                 <div className="md:col-span-1">
                   <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Correo electrónico" icon={Mail} />
                 </div>
-                <div className="md:col-span-1">
-                  <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Contraseña" icon={Lock} />
-                </div>
+                
                 {/* Solo es visible para role 'referral' o 'advisor' */}
                 {showBankInfo && (
-                <>       
+                <>
+                  <div className="md:col-span-1">
+                    <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Contraseña" icon={Lock} />
+                  </div>       
                   <div className="md:col-span-2 border-t border-gray-100 my-2 pt-4">
                     <h3 className="text-lg font-semibold text-gray-700 mb-4">Datos Bancarios</h3>
                     <p className='text-sm text-gray-500 italic'>Aquí se acreditarán tus comisiones por referidos cuando una compra sea completada.</p>
@@ -606,39 +683,51 @@ export default function SignupPage() {
                 <SecondaryButton onClick={() => {
                   clearFormPersonalInfo();
                   setStep(1);
-                }} type="button" className="w-full md:w-auto px-8 cursor-pointer">Atrás</SecondaryButton>
+                }} type="button" className="w-full md:w-auto px-8 cursor-pointer btn-cancel shadow-none">Volver</SecondaryButton>
                 
-                <PrimaryButton type="submit">
+                <PrimaryButton type="submit" className="w-full md:w-auto px-8 cursor-pointer btn-primary shadow-none">
                   {selectedRole === 'referral' ? 'Siguiente' : 'Finalizar Registro'}
                 </PrimaryButton>
               </div>
             </form>
           )}
 
-          {/* STEP 3: Referral Client Form */}
-          {step === 3 && selectedRole === 'referral' && (
+          {/* STEP 3: Client Data Form */}
+          {step === 3 && (selectedRole === 'referral' || selectedRole === 'client') && (
             <form onSubmit={handleFinalSubmit} className="space-y-6 animate-fadeIn">
-              <h2 className="text-2xl font-bold text-center text-gray-800">Agregar Cliente</h2>
-              <p className="text-justify text-gray-500 text-sm">Tienes la opción de referir un cliente de inmediato o realizarlo más tarde desde tu panel de control cuando de autentiques.</p>
+              <h2 className="text-2xl font-bold text-center text-gray-800">
+                {selectedRole === 'client' ? 'Completa tus datos' : 'Agregar Cliente'}
+              </h2>
+              {/* Si roleClient show inline alert informando que se registrara como cliente */}
+              {selectedRole === 'client' && (
+                <InlineAlert type="info" title="Información" message="Estás a punto de registrarte como cliente. Completa tu información personal para activar tus servicios." />
+              )}
+              <p className="text-justify text-gray-500 text-sm">
+                {selectedRole !== 'client' 
+                  ? 'Tienes la opción de referir un cliente de inmediato o realizarlo más tarde desde tu panel de control cuando de autentiques.'
+                  : ''}
+              </p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Select options={DOCUMENT_TYPES.map((docType) => docType.label)} label="Tipo de documento" value={clientDocumentType} onChange={(e) => {
-                  setClientDocumentType(DOCUMENT_TYPES.find((docType) => docType.label === e.target.value).acronym);
-                }} disabled={!isValidateClient}/>
                 <div className="md:col-span-1">
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-3 items-center">
-                    <div className="md:col-span-3">
+                  <div className="flex flex-col md:flex-row gap-2 w-full md:items-start">
+                    <div className="md:flex-[8] w-full mb-2 md:mb-0">
                       <Input type="text" value={clientDocumentNumber} onChange={(e) => setClientDocumentNumber(e.target.value.replace(/[^0-9]/g, ''))} placeholder="Número de documento" icon={IdCard} className="w-full h-12" inputClassName="h-12" />
+                     
                     </div>
 
-                    <div className="md:col-span-1">
-                      <PrimaryButton type="button" className="w-full h-14 flex items-center justify-center" onClick={() => handleValidateClientDocumentNumber()}><UserSearch /></PrimaryButton>
+                    <div className="md:flex-1 w-full mb-2 md:mb-0 md:-mt-1">
+                      <PrimaryButton type="button" className="w-full h-14 mx-auto flex items-center justify-center" onClick={() => handleValidateClientDocumentNumber()}>
+                        <Search />
+                        <span className="ml-2">Consultar</span>
+                      </PrimaryButton>
                     </div>
                   </div>
-                  <div className={"md:col-span-1" + (isValidateClient ? ' hidden' : '')}>
-                    <span className="text-sm text-gray-500 italic">Valida número de documento para continuar.</span>
-                  </div>
                 </div>
+                <Select options={DOCUMENT_TYPES.map((docType) => docType.label)} label="Tipo de documento" value={clientDocumentType} onChange={(e) => {
+                  setClientDocumentType(DOCUMENT_TYPES.find((docType) => docType.label === e.target.value).acronym);
+                }} disabled={!isValidateClient} />
+                
                 <Input type="text" value={clientFirstName} onChange={(e) => setClientFirstName(e.target.value.replace(/\b\w/g, (c) => c.toUpperCase()))} placeholder="Nombre(s)" icon={User} disabled={!isValidateClient} className={`${isValidateClient ? 'bg-gray-100' : ''}`}/>
                 <Input type="text" value={clientLastName} onChange={(e) => setClientLastName(e.target.value.replace(/\b\w/g, (c) => c.toUpperCase()))} placeholder="Apellidos" icon={User} disabled={!isValidateClient}/>
                 <Input type="email" value={clientEmail} onChange={(e) => setClientEmail(e.target.value)} placeholder="Correo electrónico" icon={Mail} disabled={!isValidateClient}/>
@@ -674,13 +763,26 @@ export default function SignupPage() {
                 </div>
               </div>
 
-              <div className="flex justify-between pt-4">
+              <div className="flex justify-center pt-4 gap-4">
                 {/* <SecondaryButton onClick={() => {
                   clearFormClientInfo();
                   setStep(2)
                 }} type="button" className="w-full md:w-auto px-8 cursor-pointer">Atrás</SecondaryButton> */}
-                <PrimaryButton type="submit">Agregar Cliente y Finalizar</PrimaryButton>
-                <SecondaryButton onClick={() => handleCancelAddClient()} type="button" className="w-full md:w-auto px-8 cursor-pointer">Más tarde</SecondaryButton>
+                <SecondaryButton onClick={() => handleCancelAddClient()} type="button" className="w-full md:w-auto px-8 cursor-pointer btn-cancel shadow-none">
+                  {
+                    selectedRole === 'client' ? (
+                      <span>Cancelar</span>
+                    ) : (
+                      <span>Más tarde</span>
+                    )
+                  }
+                </SecondaryButton>
+                {selectedRole === 'client' ? (
+                  <PrimaryButton type="submit" className="w-full btn-primary shadow-none cursor-pointer">Registrarme</PrimaryButton>
+                ) : (
+                  <PrimaryButton type="submit" className="w-full btn-primary shadow-none cursor-pointer">Agregar cliente y finalizar</PrimaryButton>
+                )}
+                
               </div>
             </form>
           )}
