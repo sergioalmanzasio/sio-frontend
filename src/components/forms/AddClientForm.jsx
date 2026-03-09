@@ -8,12 +8,12 @@ import useReferral from "../../hooks/useReferral";
 import { useAuth } from "../../context/AuthContext";
 import ToastAlert from "../alerts/ToastAlert";
 import ModalAlertConfirm from "../alerts/ModalAlertConfirm";
-import { getDocumentTypes, getDepartments, getCitiesByDepartmentId } from "../../shared/utils";
+import { getDocumentTypes, getDepartments, getCitiesByDepartmentId, getHousingTypes } from "../../shared/utils";
 
 const DOCUMENT_TYPES = getDocumentTypes();
-const HOUSING_TYPES = ["Casa", "Apartamento", "Edificio", "Oficina"];
+const HOUSING_TYPES = getHousingTypes();
 
-export default function AddClientForm({ onSuccess, onCancel }) {
+export default function AddClientForm({ onSuccess, onCancel, hasLegend = true }) {
   const { validatePersonByDocument, loadingValidatePersonExistByDocument, addPerson, loadingAddPerson } = usePerson();
   const { addReferralExistCustomer, loadingReferralExistCustomer } = useReferral();
   const { userData } = useAuth();
@@ -31,6 +31,7 @@ export default function AddClientForm({ onSuccess, onCancel }) {
   const [clientDepartment, setClientDepartment] = useState("");
   const [clientCity, setClientCity] = useState("");
   const [clientNeighborhood, setClientNeighborhood] = useState("");
+  const [isValidateClientDocumentNumber, setIsValidateClientDocumentNumber] = useState(false);
   
   // Validation state
   const [isValidateClient, setIsValidateClient] = useState(false);
@@ -85,6 +86,7 @@ export default function AddClientForm({ onSuccess, onCancel }) {
     const currentDocNumber = clientDocumentNumber;
     clearFormClientInfo();
     setClientDocumentNumber(currentDocNumber);
+    setIsValidateClientDocumentNumber(true);
     
     if (currentDocNumber === '') {
       ToastAlert({
@@ -223,12 +225,14 @@ export default function AddClientForm({ onSuccess, onCancel }) {
   };
 
   return (
-    <form onSubmit={handleSubmitClient} className="space-y-4 max-h-[70vh] overflow-y-auto px-2">
-      <p className="text-justify text-gray-500 text-sm">
-        Agrega un nuevo cliente referido completando el siguiente formulario.
-      </p>
+    <form onSubmit={handleSubmitClient} className="space-y-4 max-h-[70vh] overflow-y-auto px-2 pb-4">
+      {hasLegend && (
+        <p className="text-justify text-gray-500 text-sm">
+          Agrega un nuevo cliente referido completando el siguiente formulario.
+        </p>
+      )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 ${!hasLegend ? 'mt-4' : ''}`}>
 
         <div className="md:col-span-1">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3 items-center">
@@ -253,9 +257,6 @@ export default function AddClientForm({ onSuccess, onCancel }) {
                 <UserSearch />
               </PrimaryButton>
             </div>
-          </div>
-          <div className={isValidateClient ? 'hidden' : ''}>
-            <span className="text-sm text-gray-500 italic">Valida número de documento para continuar.</span>
           </div>
         </div>
 
@@ -348,9 +349,9 @@ export default function AddClientForm({ onSuccess, onCancel }) {
         
         <div className="md:col-span-2">
           <Select 
-            options={HOUSING_TYPES} 
+            options={HOUSING_TYPES.map((housingType) => housingType.label)} 
             label="Tipo de vivienda" 
-            value={clientHousingType} 
+            value={clientHousingType.label} 
             onChange={(e) => setClientHousingType(e.target.value)} 
             disabled={!isValidateClient}
           />
@@ -372,13 +373,13 @@ export default function AddClientForm({ onSuccess, onCancel }) {
       </div>
 
       <div className="flex pt-4 gap-3">
-        <PrimaryButton type="submit" disabled={!isValidateClient}>
-          Agregar Cliente
+        <PrimaryButton type="submit" disabled={!isValidateClient} className="btn-gradient shadow-none">
+          Registrar
         </PrimaryButton>
         <SecondaryButton 
           onClick={onCancel} 
           type="button" 
-          className="flex-1 cursor-pointer"
+          className="flex-1 cursor-pointer btn-cancel shadow-none"
         >
           Cancelar
         </SecondaryButton>
