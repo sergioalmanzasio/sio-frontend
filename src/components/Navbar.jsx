@@ -21,9 +21,9 @@ export default function Navbar() {
 
   const handleLogout = () => {
     ModalAlertConfirm({
-      title: "¿Estás seguro(a) de cerrar sesión?",
-      text: "Esto cerrará tu sesión y te redirigirá al inicio.",
-      icon: "warning",
+      title: "¿Quieres cerrar sesión?",
+      text: "Se cerrará tu sesión y volverás al inicio.",
+      icon: "",
       confirmText: "Sí, cerrar sesión",
       cancelText: "Cancelar",
       confirmCallback: () => {
@@ -75,7 +75,7 @@ export default function Navbar() {
                 className="hidden md:flex cursor-pointer" // Hide on small screens for cleaner look
                 onClick={() => setShowLogin(!showLogin)}
               >
-                {showLogin ? "Cancelar" : "Iniciar sesión"}
+                {showLogin ? "Cancelar" : "Acceso"}
               </GradientButton>
 
               {showLogin && (
