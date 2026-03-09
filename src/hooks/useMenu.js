@@ -11,6 +11,13 @@ const useMenu = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const handleLogout = (time) => {
+    setTimeout(() => {
+      logout();
+      navigate('/');
+    }, time);
+  };
+
   const getOptionByRole = useCallback(async (roleId) => {
     setLoading(true);
     try {
@@ -25,32 +32,31 @@ const useMenu = () => {
       if (response.ok) {
         setMenus(data.data);
       } else {
-        if( response.status === 401 ) {
+        if (response.status === 401) {
           ToastAlert({
             position: "top",
             timer: 1800,
             icon: "error",
             title: data.message,
           });
-          setTimeout(() => {
-            logout(); // Llama a la función global de logout
-            navigate('/');
-          }, 1800);
+          handleLogout(1800);
         }
         ToastAlert({
-            position: "top",
-            timer: 1800,
-            icon: "error",
-            title: data.message,
-          });
+          position: "top",
+          timer: 1800,
+          icon: "error",
+          title: data.message,
+        });
       }
     } catch (error) {
+      console.log('error: ', error)
       ToastAlert({
         position: "top",
         timer: 1800,
         icon: "error",
         title: "Error de red al obtener las opciones del menú, inténtelo más tarde",
       });
+      handleLogout(1800);
     } finally {
       setLoading(false);
     }
@@ -58,5 +64,7 @@ const useMenu = () => {
 
   return { menus, loading, error, getOptionByRole };
 };
+
+
 
 export default useMenu;

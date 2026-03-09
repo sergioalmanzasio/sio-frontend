@@ -46,9 +46,9 @@ export const AuthProvider = ({ children }) => {
 
   // Función de LOGOUT centralizada
   const logout = () => {
-    clearUserData();
     setUserData(null);
     setIsAuthenticated(false);
+    clearUserData();
   };
 
   // Objeto de valor a compartir con toda la aplicación
