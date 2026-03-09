@@ -5,6 +5,7 @@ import DashboardCard from '../components/dashboard/DashboardCard';
 import useReferral from '../hooks/useReferral';
 import { useAuth } from '../context/AuthContext';
 import FullScreenLoader from '../components/loader/FullScreenLoader';
+import BonusModal from '../components/modals/BonusModal';
 
 export default function ReferralDashboard() {
   const { myReferrals, loadingMyReferrals, getTotalCommission } = useReferral();
@@ -66,14 +67,6 @@ export default function ReferralDashboard() {
     let countMonth = 0;
 
     referrals.forEach(ref => {
-        // Assuming ref.createdAt or similar exists. Based on MyReferralsTable mock, it uses registrationDate 'MM dd de YYYY'
-        // But real API might return full ISO string. Let's try to handle both or fallback to created_at_formatted parsing if needed.
-        // Looking at MyReferralsTable Mock: registrationDate: "2024-01-15".
-        // Looking at MyReferralsTable Real: referral.created_at_formatted is displayed, but raw data likely has a date field.
-        // I will assume `created_at` or `registrationDate` exists in the object. 
-        // If it comes from backend, it's usually `created_at`.
-        
-        // SAFEGUARD: checking various common date fields
         const dateString = ref.created_at_formatted || ref.registrationDate || ref.createdAt;
         if (!dateString) return;
         let dateStringHelper = dateString.replace('de', '');
@@ -107,6 +100,12 @@ export default function ReferralDashboard() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
+
+      <BonusModal
+        title="🎉 Bono especial"
+        description="Por cada venta terminada o servicio instalado recibirás un bono adicional"
+        amount={10000}
+      />
       
       <main className="container mx-auto px-4 py-8 mt-0">
         <div className="mb-8">
@@ -126,20 +125,20 @@ export default function ReferralDashboard() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
                 <div className="space-y-6">
                     <span className="inline-block px-4 py-1.5 rounded-full bg-pink-500/10 border border-pink-500/20 text-pink-400 text-sm font-semibold tracking-wide uppercase">
-                        Gana Recompensas
+                        Programa de referidos
                     </span>
                     <h2 className="text-4xl md:text-5xl font-bold text-white leading-tight">
-                        Trae a tus clientes al <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500">Futuro Digital</span>
+                        Por cada venta completada <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500">gana $50.000</span>
                     </h2>
                     <p className="text-lg text-gray-400 max-w-xl">
-                        Por cada cliente que se una a través de tu gestión enlace, recibirás comisiones exclusivas y bonificaciones especiales.
+                        Cada cliente que complete su servicio a través de tu gestión te genera una comisión fija.
                     </p>
-                    <p className="text-lg text-gray-400 max-w-xl">Válido desde el 01 de enero de 2026 hasta el 31 de marzo de 2026</p>
+                    <p className="text-lg text-gray-400 max-w-xl">Vigencia: 01 ene 2026 - 31 mar 2026</p>
                     <button 
                         onClick={() => navigate('/add-referral')}
                         className="mt-4 bg-pink-600 hover:bg-pink-700 text-white px-8 py-3.5 rounded-xl font-semibold text-lg transition-all duration-300 shadow-lg shadow-pink-500/25 hover:shadow-pink-500/40 transform hover:-translate-y-1 cursor-pointer"
                     >
-                        Registrar Referido
+                        Registrar cliente
                     </button>
                 </div>
 
@@ -167,7 +166,7 @@ export default function ReferralDashboard() {
                             </div>
                             <h3 className="text-white text-5xl font-bold tracking-tight">$ 50.000</h3>
                             <p className="text-gray-400 font-medium tracking-wide uppercase text-sm">
-                                Comisión por referido efectivo
+                                Por cada cliente que complete su servicio
                             </p>
                         </div>
 
