@@ -83,7 +83,7 @@ const ServiceRequestsClientTable = () => {
       text: '¿Estás seguro(a) de que quieres cancelar esta solicitud de servicio? Esta acción no se puede deshacer.',
       icon: 'warning',
       confirmText: 'Sí, cancelar',
-      cancelText: 'Cancelar',
+      cancelText: 'No',
       confirmCallback: async () => {
         // Here you would typically make an API call to cancel the service request
         let cancelServiceRequestByClientResponse = await cancelServiceRequestByClient(id, userData.email);
@@ -177,7 +177,6 @@ const ServiceRequestsClientTable = () => {
   };
 
   const getServiceRequests = async () => {
-    console.log('Obteniendo solicitudes de servicio...');
     try {
       if (!userData || !userData.email) {
         ToastAlert({
