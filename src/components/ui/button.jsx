@@ -34,8 +34,7 @@ export const PrimaryButton = React.forwardRef(
       <button
         disabled={props.disabled}
         className={
-          "bg-blue-600 text-white px-5 py-2 rounded-lg font-medium hover:bg-blue-700 transition-all duration-300 shadow-lg shadow-blue-500/50 cursor-pointer " + 
-          // props.disabled && "opacity-50 cursor-not-allowed" +
+          `bg-blue-600 text-white px-5 py-2 rounded-lg font-medium hover:bg-blue-700 transition-all duration-300 shadow-lg shadow-blue-500/50 cursor-pointer ${props.disabled && "opacity-50 bg-gray-400 hover:bg-gray-400 shadow-gray-400/50 cursor-not-allowed"}` + 
           className
         }
         ref={ref}
