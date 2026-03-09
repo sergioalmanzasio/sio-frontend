@@ -12,6 +12,9 @@ const AuthRedirect = () => {
       case 'client' || 'assistant':
         navigate('/offers');
         break;
+      case 'referral':
+        navigate('/referral/dashboard');
+        break;  
       case 'service coordinator':
         navigate('/coordinator/dashboard');
         break;
@@ -25,7 +28,6 @@ const AuthRedirect = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      console.log("userData: ", userData);
       redirect(userData?.roleName);
     }else{
         navigate('/');
