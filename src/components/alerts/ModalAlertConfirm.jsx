@@ -10,8 +10,10 @@ export default function ModalAlertConfirm({ title, text, icon, confirmText, canc
     showCancelButton: isShowCancelButton,
     confirmButtonText: confirmText,
     cancelButtonText: cancelText,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
+    customClass: {
+      confirmButton: "btn-gradient",
+      cancelButton: "btn-cancel",
+    },
     allowOutsideClick: isAllowOutsideClick,
   }).then(async (result) => {
     if (result.isConfirmed) {
