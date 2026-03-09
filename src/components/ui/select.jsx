@@ -1,4 +1,4 @@
-import { ChevronDown, TabletSmartphone, IdCardLanyard, Building2, MapPin } from "lucide-react";
+import { ChevronDown, TabletSmartphone, IdCardLanyard, Building2, MapPin, DollarSign, HandCoins } from "lucide-react";
 import React from "react";
 
 const ICONS = {
@@ -6,6 +6,8 @@ const ICONS = {
   "Tipo de vivienda": Building2,
   "Departamento": MapPin,
   "Ciudad": MapPin,
+  "Tipo de Bono": DollarSign,
+  "Tipo de Aplicación": HandCoins
 };
 
 const Select = ({ options, label, value, onChange, disabled = false, icon }) => {
