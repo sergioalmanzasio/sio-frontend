@@ -13,13 +13,21 @@ export const MonthlyAssignmentsChart = ({ data }) => {
           margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
         >
           <CartesianGrid strokeDasharray="3 3" vertical={false} />
-          <XAxis dataKey="name" axisLine={false} tickLine={false} />
-          <YAxis axisLine={false} tickLine={false} />
+          <XAxis dataKey="name" axisLine={false} tickLine={false} tickMargin={10} fontSize={14}/>
+          <YAxis axisLine={false} tickLine={false} tickMargin={10} fontSize={14}/>
           <Tooltip 
             cursor={{ fill: 'transparent' }}
             contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
           />
-          <Bar dataKey="asignaciones" fill="#8b5cf6" radius={[4, 4, 0, 0]} barSize={40} />
+          <Bar dataKey="asignaciones" fill="#8b5cf6" radius={[4, 4, 0, 0]} barSize={40} 
+            label={{
+              position: 'top',
+              formatter: (value) => value,
+              fill: '#6b7280',
+              fontSize: 12,
+              fontWeight: 600,
+            }}
+          />
         </BarChart>
       </ResponsiveContainer>
     </div>
