@@ -1,6 +1,6 @@
 import claroLogo from "../assets/logos/CLAROLOGO.png";
 import movistarLogo from "../assets/logos/MOVISTARLOGO.png";
-import womLogo from "../assets/logos/WOMLOGO.png";
+import womLogo from "../assets/logos/WOMLOGO2.png";
 import tigoLogo from "../assets/logos/TIGOLOGO.png";
 import ToastAlert from "../components/alerts/ToastAlert";
 import { API_COLOMBIA } from "./constanst";
