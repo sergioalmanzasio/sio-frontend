@@ -57,6 +57,7 @@ export default function BentoGridSectionOffers( { offers = [] } ) {
         </div>`,
         
         confirmText: "Adquirir",
+        isConfirmButtonVisible: false,
         cancelText: "Salir", 
         confirmCallback: () => handleBuyClick(offerId, offerTitle, offerDescription, offerPrice, offerOperator),
         cancelCallback: () => {

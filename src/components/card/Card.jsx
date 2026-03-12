@@ -60,7 +60,7 @@ export default function Card({ title, description, index, operator, price = "$ -
           Beneficios
         </ButtonCard>
 
-        <ButtonCard className={`mt-2 md:mt-4 ${getColorButtonBuy(operator)}`} onClick={onBuyClick}>
+        <ButtonCard className={`mt-2 md:mt-4 hidden ${getColorButtonBuy(operator)}`} onClick={onBuyClick}>
           Adquirir
         </ButtonCard>
       </div>
