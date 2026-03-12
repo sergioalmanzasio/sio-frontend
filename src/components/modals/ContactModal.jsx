@@ -1,5 +1,6 @@
 import { X } from "lucide-react";
 import { PrimaryButton } from "../ui/button";
+import { CONTACT_EMAIL, CONTACT_PHONE, OPENING_HOURS } from "../../shared/constanst";
 
 
 export default function ContactModal({ isOpen, onClose }) {
@@ -7,7 +8,7 @@ export default function ContactModal({ isOpen, onClose }) {
 
   return (
      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md transform transition-all duration-500 scale-100 opacity-100 animate-slideUp">
+       <div className="bg-white rounded-2xl shadow-2xl w-full md:w-full md:max-w-md transform transition-all duration-500 scale-100 opacity-100 animate-slideUp">
          {/* Modal Header */}
          <div className="flex justify-between items-center p-6 border-b border-gray-100">
            <h3 className="text-2xl font-bold text-blue-700">SIO <p className="text-xl text-gray-600">Contacto</p></h3>
@@ -21,16 +22,20 @@ export default function ContactModal({ isOpen, onClose }) {
          </div>
 
          {/* Modal Body */}
-         <div className="p-6 space-y-4">
-           <p>
-             A continuación, te brindamos la información de contacto para que puedas ponerte en contacto con nosotros.
-           </p>
-           <p><b>Correo electrónico:</b> contacto@sio.com</p>
-           <p><b>Teléfono:</b> 123-456-789</p>
+         <div className="p-6 space-y-4 text-sm">
+           <p>Si tienes dudas sobre nuestros servicios, el programa de referidos o el estado de tus comisiones, puedes comunicarte con nosotros a través de los siguientes canales:</p>
+           <h5 className="font-bold mb-1">Atención al cliente</h5>
+           <p>Celular/WhatsApp: {CONTACT_PHONE}</p>
+           <h5 className="font-bold mb-1">Correo electrónico</h5>
+           <p>{CONTACT_EMAIL}</p>
+           <h5 className="font-bold mb-1">Horario de atención</h5>
+           <p>{OPENING_HOURS}</p>
+           <h5 className="font-bold mb-1">Sitio web</h5>
+           <p>https://www.sio.com.co</p>
          </div>
 
          {/* Modal Footer */}
-         <div className="p-6 space-y-4">
+         <div className="p-6 space-y-4 text-sm">
            <PrimaryButton onClick={onClose}>Entendido</PrimaryButton>
          </div>
        </div>

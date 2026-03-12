@@ -90,25 +90,26 @@ export default function SignupPage() {
 
     if (selectedRole === 'referral') {
       ModalAlertConfirm({
-        title: 'Términos y Condiciones',
+        title: 'Términos y condiciones de uso',
         text: `
           <h2 class="text-xl font-bold text-purple-600 italic">Genera ingreso por tus referidos</h2>
-          <h5 class="text-xl font-semibold mt-4 mb-4 text-left text-sm">Condiciones</h5>
-          <ul class="list-disc pl-4 space-y-2 justify-left mb-4">
-            <li class="text-left text-sm">Nuestra app SIO te ofrece la posibilidad de generar ingresos adicionales solo refiriendo a posibles clientes que necesiten algunos de nuestros productos fijos o móviles.</li>
-            <li class="text-left text-sm">La metodología es muy sencilla: solo regístrate con tus datos personales y envíanos los de los posibles clientes; nosotros hacemos el resto.</li>
-            <li class="text-left text-sm">Una vez enviada la información, te llegará una notificación por mensaje de texto o correo con el estado del proceso de tu venta.</li>
-            <li class="text-left text-sm">Una vez instalado el servicio, se procederá a la cancelación de tu comisión por venta.</li>
-            <li class="text-left text-sm">En el siguiente link encontrarás las tablas de comisiones.</li>
-            <li class="text-left text-sm">Los desembolsos de las comisiones se realizan todos los sábados, teniendo en cuenta el día de instalación del producto.</li>
-            <li class="text-left text-sm">El desembolso se hará directamente a tu cuenta registrada en nuestra base de datos.</li>
+          <h3 class="font-bold mt-4 mb-2 text-left">Condiciones de uso</h3>
+          <ul class="list-disc space-y-2 ml-4 text-left text-sm">
+            <li>Nuestra plataforma <b>SIO</b> te ofrece la posibilidad de generar ingresos adicionales recomendando a posibles clientes interesados en nuestros servicios de conectividad, tanto <b>fijos como móviles</b>.</li>
+            <li>La metodología es muy sencilla: regístrate con tus datos personales y envíanos la información de los posibles clientes interesados. Nuestro equipo se encargará de gestionar el proceso comercial.</li>
+            <li>Una vez enviada la información, recibirás una notificación por <b>mensaje de texto o correo electrónico</b> informándote sobre el estado del proceso de tu referido.</li>
+            <li>Cuando el servicio haya sido <b>instalado y activado correctamente</b>, se procederá al pago de la <b>comisión correspondiente por la venta realizada</b>.</li>
+            <li>En el siguiente enlace podrás consultar las <b>tablas de comisiones vigentes</b>. <a href="#" class="text-blue-600 hover:text-blue-800 underline cursor-pointer">aquí</a></li>
+            <li>Los desembolsos de las comisiones se realizan <b>todos los sábados</b>, teniendo en cuenta la fecha de instalación y activación del servicio.</li>
+            <li>El pago de la comisión se realizará directamente a la <b>cuenta registrada en nuestra base de datos</b>.</li>
+            <li>Al continuar con el registro como referido, aceptas nuestros <b>Términos y Condiciones de uso</b>, la <b>Política de Privacidad</b> y el <b>tratamiento de datos personales</b>.</li>
           </ul>
-          <p class="text-left text-sm italic">Al continuar como referido, aceptas nuestros términos y condiciones de uso, política de privacidad y tratamiento de datos personales. <span class="font-semibold">¿Deseas continuar?</span></p>
+          <p class="text-left text-sm italic mt-4"><span class="font-semibold">¿Deseas continuar con el proceso de registro?</span></p>
         
         `, 
         // icon: 'info',
-        confirmText: 'Continuar',
-        cancelText: 'Cancelar',
+        confirmText: 'Si, continuar',
+        cancelText: 'No, cancelar',
         isText: false,
         confirmCallback: () => setStep(2),
       });
