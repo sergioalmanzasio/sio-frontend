@@ -1,5 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './App.css'
+import { useAuth } from "./context/AuthContext";
+import useInactivityLogout from "./hooks/useInactivityLogout";
+
 import LandingPage from "./pages/LandingPage";
 import OffersPage from "./pages/OffersPage";
 import ClientServiceRequests from "./pages/ClientServiceRequests";
@@ -11,7 +14,6 @@ import SignupPage from "./pages/SignupPage";
 import ConfigPage from "./pages/ConfigPage";
 import MyReferralsPage from "./pages/MyReferralsPage";
 import ServiceFollowUpPage from "./pages/ServiceFollowUpPage";
-import { AuthProvider } from "./context/AuthContext";
 import LandingPageV2 from "./pages/LandingPage-v2";
 import ReferralDashboard from "./pages/ReferralDashboard";
 import AddReferralPage from "./pages/AddReferralPage";
@@ -24,13 +26,15 @@ import CommissionsHistoryPage from "./pages/CommissionsHistoryPage";
 import CommissionPaymentsPage from "./pages/CommissionPaymentsPage";
 import AdminServiceRequestsPage from "./pages/AdminServiceRequestsPage";
 import AdminBonusesPage from "./pages/AdminBonusesPage";
+import AdminOffersPage from "./pages/AdminOffersPage";
 import ProtectedRoute from "./components/ProtectedRoute";
+import SessionManager from "./components/SessionManager";
 
 function App() {
 
   return (
     <BrowserRouter>
-      <AuthProvider>
+        <SessionManager />
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/signup" element={<SignupPage />} />
@@ -56,13 +60,12 @@ function App() {
             <Route path="/commission-payments" element={<CommissionPaymentsPage />} />
             <Route path="/admin/service-requests" element={<AdminServiceRequestsPage />} />
             <Route path="/admin/bonuses" element={<AdminBonusesPage />} />
+            <Route path="/admin/offers" element={<AdminOffersPage />} />
           </Route>
 
-
-          
           <Route path="/v2" element={<LandingPageV2 />} />
         </Routes>
-      </AuthProvider>
+      
     </BrowserRouter>
   )
 }
