@@ -8,6 +8,7 @@ export default function OfferDetailModal({
   cancelText, 
   confirmCallback, 
   cancelCallback,
+  isConfirmButtonVisible = true,
   isCancelButtonVisible = true,
   footerText =  "Tienes dudas, contacta a ventas al 3123456789."
 }) {
@@ -16,6 +17,7 @@ export default function OfferDetailModal({
     html,
     icon,
     showCancelButton: isCancelButtonVisible,
+    showConfirmButton: isConfirmButtonVisible,
     confirmButtonText: confirmText,
     cancelButtonText: cancelText,
     customClass: {
