@@ -5,7 +5,6 @@ import { useState } from "react";
 import { GradientButton } from "./ui/button";
 import ForgotPasswordModal from "./modals/ForgotPasswordModal";
 import LoginForm from "./form/LoginForm";
-import { LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import ModalAlertConfirm from "./alerts/ModalAlertConfirm";
 import { useAuth } from "../context/AuthContext";
