@@ -77,7 +77,6 @@ export const sessionExpiredToast = (logoutInstance, redirectToHome) => {
   }, 2000);
 };
 
-
 export const chipServiceRequestStatus = (status) => {
   const statusMap = {
     'pending': '<Chip class="bg-purple-100 text-purple-800 px-2 py-1 rounded-md text-xs font-semibold">Pendiente</Chip>',
@@ -139,4 +138,13 @@ export const getHousingTypes = () => {
     { id: 'Edificio', label: 'Edificio' },
     { id: 'Oficina', label: 'Oficina' },
   ];
+}
+
+export const getBonusApplyTypes = () => {
+  return [
+    { id: 'FIRST_SALE', label: 'Primera venta' },
+    { id: 'EVERY_SALE', label: 'Cada venta' },
+    { id: 'ONCE', label: 'Una venta por usuario' },
+    { id: 'AFTER_N_SALES', label: 'Hito/meta' }
+  ]
 }
