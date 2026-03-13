@@ -306,21 +306,13 @@ const WithdrawalsTable = () => {
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn">
-      {/* Total Banner */}
-      {/* <div className="bg-white rounded-lg shadow-md p-6 mb-6 flex flex-col items-center justify-center border-t-4 border-indigo-500">
-        <h2 className="text-xl font-bold text-gray-800 mb-2">Total a pagar</h2>
-        <div className="text-4xl font-extrabold text-indigo-600 tracking-tight">
-          {totalAmount}
-        </div>
-      </div> */}
-
       <InlineAlert
+        title="Comisiones por pagar"
         message={<span>Monto total en comisiones por pagar a la fecha: <b className="font-semibold text-lg">{totalAmount}</b>.</span>}
         type="info"
         show={true}
       />
 
-      {/* Search and Table */}
       <div className="overflow-x-auto bg-white shadow-lg rounded-sm mt-6">
         <div className="p-4 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
           <div className="relative w-full md:w-1/3">
