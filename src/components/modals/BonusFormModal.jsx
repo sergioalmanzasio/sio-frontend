@@ -3,6 +3,7 @@ import { Gift } from "lucide-react";
 import { Input } from "../ui/input";
 import Select from "../ui/select";
 import Textarea from "../ui/textarea";
+import { getBonusApplyTypes } from "../../shared/utils";
 
 export default function BonusFormModal({ isOpen, onClose, onSubmit, initialData }) {
   const [formData, setFormData] = useState({
@@ -24,22 +25,26 @@ export default function BonusFormModal({ isOpen, onClose, onSubmit, initialData 
     "Porcentaje": "PERCENTAGE"
   };
 
-  const applyTypeMapToAPI = {
-    "Primera Venta": "FIRST_SALE",
-    "Cada Venta": "EVERY_SALE",
-    "Hito/Meta": "MILESTONE"
-  };
-
   const typeMapFromAPI = {
     "MONEY": "Dinero",
     "PERCENTAGE": "Porcentaje"
   };
 
-  const applyTypeMapFromAPI = {
-    "FIRST_SALE": "Primera Venta",
-    "EVERY_SALE": "Cada Venta",
-    "MILESTONE": "Hito/Meta"
-  };
+  const applyTypeMapFromAPI = getBonusApplyTypes();
+  const optionsApplyType = applyTypeMapFromAPI.map((item) => {
+    return item.label;
+  });
+  const getApplyTypeSelected = (applyType, isValueReturn = false) => {
+    console.log('applyType received', applyType);
+    const applyTypeSelected = applyTypeMapFromAPI.find((item) => {
+      return item.label.toLowerCase() === applyType.toLowerCase();
+    });
+    if(isValueReturn) {
+      return applyTypeSelected.id;
+    }
+    console.log('applyTypeSelected', applyTypeSelected);
+    return applyTypeSelected.label;
+  }
 
   useEffect(() => {
     if (initialData) {
@@ -48,7 +53,7 @@ export default function BonusFormModal({ isOpen, onClose, onSubmit, initialData 
         description: initialData.description || "",
         bonus_type: typeMapFromAPI[initialData.bonus_type] || "Dinero",
         bonus_amount: parseCOP(initialData.bonus_amount_formatted) || "",
-        apply_type: applyTypeMapFromAPI[initialData.apply_type] || "Primera Venta",
+        apply_type: getApplyTypeSelected(initialData.apply_type) || "Primera Venta",
         max_times_per_user: initialData.max_times_per_user || "",
         min_sales_required: initialData.min_sales_required || "",
         valid_from: formatDateToDDMMYYYY(initialData.valid_from_formatted),
@@ -94,10 +99,13 @@ export default function BonusFormModal({ isOpen, onClose, onSubmit, initialData 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Preparar el data para el API
+    console.log('Form Data:', formData.apply_type);
+    console.log('Apply Type Selected:', getApplyTypeSelected(formData.apply_type, true));
     const outputData = {
         ...formData,
         bonus_type: typeMapToAPI[formData.bonus_type],
-        apply_type: applyTypeMapToAPI[formData.apply_type],
+        // apply_type: applyTypeMapToAPI[formData.apply_type],
+        apply_type: getApplyTypeSelected(formData.apply_type, true),
         is_active: formData.is_active ? true : false
     };
     onSubmit(outputData);
@@ -193,7 +201,7 @@ export default function BonusFormModal({ isOpen, onClose, onSubmit, initialData 
             <div className="mt-1 relative">
               <Select
                 label="Tipo de Aplicación"
-                options={["Primera Venta", "Cada Venta", "Hito/Meta"]}
+                options={optionsApplyType}
                 value={formData.apply_type}
                 onChange={(e) => setFormData({...formData, apply_type: e.target.value})}
               />
@@ -223,7 +231,7 @@ export default function BonusFormModal({ isOpen, onClose, onSubmit, initialData 
               <Input
                 type="number"
                 name="max_times_per_user"
-                required
+                required={formData.apply_type !== "Cada venta"}
                 value={formData.max_times_per_user}
                 onChange={handleChange}
                 placeholder="1"

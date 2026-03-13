@@ -202,7 +202,9 @@ const AdminBonusesTable = () => {
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-500">
                       <div><span className="font-medium text-gray-700">Aplica en:</span> {bonus.apply_type}</div>
-                      <div><span className="font-medium text-gray-700">Máx. veces:</span> {bonus.max_times_per_user}</div>
+                      <div><span className="font-medium text-gray-700">Máx. veces:</span> {
+                      bonus.apply_type === "Cada venta" ? "Ilimitado" : bonus.max_times_per_user
+                      }</div>
                       <div><span className="font-medium text-gray-700">Min. ventas:</span> {bonus.min_sales_required}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
