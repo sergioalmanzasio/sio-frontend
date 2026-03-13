@@ -29,6 +29,10 @@ import AdminBonusesPage from "./pages/AdminBonusesPage";
 import AdminOffersPage from "./pages/AdminOffersPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import SessionManager from "./components/SessionManager";
+import ReferralBonusesPage from "./pages/ReferralBonusesPage";
+import AdminBonusWithdrawalsPage from "./pages/AdminBonusWithdrawalsPage";
+import BonusesHistoryPage from "./pages/BonusesHistoryPage";
+import BonusPaymentsPage from "./pages/BonusPaymentsPage";
 
 function App() {
 
@@ -50,6 +54,7 @@ function App() {
             <Route path="/config" element={<ConfigPage />} />
             <Route path="/my-referrals" element={<MyReferralsPage />} />
             <Route path="/referral/dashboard" element={<ReferralDashboard />} />
+            <Route path="/referral/bonuses" element={<ReferralBonusesPage />} />
             <Route path="/add-referral" element={<AddReferralPage />} />
             <Route path="/assigned-referrals" element={<AssignedReferralsPage />} />
             <Route path="/associate-offer" element={<AssociateOfferPage />} />
@@ -57,9 +62,12 @@ function App() {
             <Route path="/my-commisions" element={<MyCommissionsPage />} />
             <Route path="/commision/withdrawals" element={<CommissionWithdrawalsPage />} />
             <Route path="/commissions/history" element={<CommissionsHistoryPage />} />
+            <Route path="/bonuses/history" element={<BonusesHistoryPage />} />
+            <Route path="/bonuses/payments" element={<BonusPaymentsPage />} />
             <Route path="/commission-payments" element={<CommissionPaymentsPage />} />
             <Route path="/admin/service-requests" element={<AdminServiceRequestsPage />} />
             <Route path="/admin/bonuses" element={<AdminBonusesPage />} />
+            <Route path="/bonuses/withdrawals" element={<AdminBonusWithdrawalsPage />} />
             <Route path="/admin/offers" element={<AdminOffersPage />} />
           </Route>
 
