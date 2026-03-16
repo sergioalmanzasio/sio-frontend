@@ -16,9 +16,12 @@ const useSignin = () => {
       const response = await fetch(`${API_BASE_URL}/auth/session-data`, {
         method: "GET",
         credentials: "include",
+        headers: {
+          'Content-Type': 'application/json',
+        }
       });
       const data = await response.json();
-      
+
       if (response.ok) {
         saveUserData(data);
         return { success: true, data: data }; // Devuelve un objeto para indicar éxito
@@ -49,7 +52,7 @@ const useSignin = () => {
     clearUserData();
     setLoading(true);
     let loginSuccessful = false; // Variable local para controlar el resultado del login
-    
+
     try {
       const response = await fetch(`${API_BASE_URL}/auth/sign-in`, {
         method: "POST",
@@ -63,10 +66,10 @@ const useSignin = () => {
         }),
       });
       const data = await response.json();
-      
+
       if (response.ok) {
         const sessionResult = await getDataForSession();
-        
+
         if (sessionResult.success) {
           setIsLogin(true); // <--- Este cambio de estado forzará la re-renderización.
           loginSuccessful = true;
@@ -78,7 +81,7 @@ const useSignin = () => {
         ToastAlert({
           position: "top",
           timer: 1800,
-          icon: "error",
+          icon: "info",
           title: data.message,
         });
         clearUserData();
@@ -95,7 +98,7 @@ const useSignin = () => {
       return loginSuccessful; // Devuelve un booleano
     }
   };
-  
+
   return { loading, isLogin, signin };
 };
 
