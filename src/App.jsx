@@ -42,10 +42,10 @@ function App() {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/offers" element={<OffersPage />} />
           <Route path="/auth-redirect" element={<AuthRedirect />} />
 
           <Route element={<ProtectedRoute />}>
-            <Route path="/offers" element={<OffersPage />} />
             <Route path="/client-service-requests" element={<ClientServiceRequests />} />
             <Route path="/sysadmin/dashboard" element={<SysAdminDashboard />} />
             <Route path="/coordinator-service-requests" element={<CoordinatorServiceRequests />} />
