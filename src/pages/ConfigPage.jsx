@@ -11,6 +11,7 @@ import FullScreenLoader from '../components/loader/FullScreenLoader';
 import { getDocumentTypes, getDepartments, getCitiesByDepartmentId, getBanks } from '../shared/utils';
 import usePerson from '../hooks/usePerson';
 import { getUserData } from '../shared/auth';
+import SkeletonCard from '../components/card/SkeletonCard';
 
 const DOCUMENT_TYPES = getDocumentTypes();
 const HOUSING_TYPES = ["Casa", "Apartamento", "Edificio", "Oficina"];
@@ -353,6 +354,13 @@ export default function ConfigPage() {
     }, 100);
   };
 
+  const SkeletonInput = () => {
+    return (
+      <div className="bg-gray-300 rounded-lg animate-pulse w-full h-10">
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 pb-12 ">
       <Navbar />
@@ -363,7 +371,7 @@ export default function ConfigPage() {
 
       <FullScreenLoader show={loading || loadingUpdatePersonInfo || loadingUpdateBankInfo || loadingUpdateLocationInfo} message={loadingUpdateLocationInfo ? "Actualizando información de ubicación..." : loadingUpdateBankInfo ? "Actualizando información bancaria..." : loadingUpdatePersonInfo ? "Actualizando información personal..." : "Cargando información del perfil..."} />
 
-      {!loading && (
+      {!loading ? (
         <div className="container mx-auto px-4 mt-8 max-w-6xl">
 
           {/* Main Card */}
@@ -653,6 +661,39 @@ export default function ConfigPage() {
             >
               Volver al Inicio
             </SecondaryButton>
+          </div>
+        </div>
+      ):(
+        <div className="container mx-auto px-4 mt-8 max-w-6xl">
+          <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
+            <div className="bg-gray-100 p-6 text-white">
+              <div className="flex justify-between items-center">
+                <div>
+                  <h2 className="text-3xl font-bold mb-2 bg-gray-300 rounded-lg animate-pulse w-120 h-8">
+                    
+                  </h2>
+                  <p className="text-gray-800 flex items-center gap-2 bg-gray-300 rounded-lg animate-pulse w-48 h-8">
+                    
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <SkeletonInput />
+                </div>
+                <div>
+                  <SkeletonInput />
+                </div>
+                <div>
+                  <SkeletonInput />
+                </div>
+                <div>
+                  <SkeletonInput />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}
