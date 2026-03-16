@@ -37,7 +37,11 @@ const MenuUser = ({ onClose, onCloseSession }) => {
         <ChevronUpCircle className="cursor-pointer"/>
       </button>     
       <ul className="space-y-2">
-        {displayMenus && displayMenus.length > 0 ? (
+        {loading ? (
+          <div className="flex items-center gap-2 cursor-pointer">
+            <span className="text-gray-600 italic transition animate-pulse text-sm">Cargando opciones del menu, espere un momento...</span>
+          </div>
+        ) : displayMenus && displayMenus.length > 0 ? (
           <>
             {displayMenus.map((menu) => (
               <li key={menu.id} className="flex items-center gap-2 cursor-pointer">
