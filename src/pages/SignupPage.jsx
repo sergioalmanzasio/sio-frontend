@@ -186,20 +186,6 @@ export default function SignupPage() {
 
     if (selectedRole === 'client') {
       setIsRegistering(true);
-      console.log('Datos del cliente:', {
-        document: clientDocumentNumber,
-        document_type_acronym: clientDocumentType,
-        name: clientFirstName,
-        last_name: clientLastName,
-        email: clientEmail,
-        phone: clientPhone,
-        department: clientDepartment,
-        city: clientCity,
-        neighborhood: clientNeighborhood,
-        address: clientAddress,
-        type_of_housing: clientHousingType,
-        observations: clientObservations,
-      });
       try {
         const addClientResponse = await addClient({
           document: clientDocumentNumber,
@@ -215,8 +201,6 @@ export default function SignupPage() {
           type_of_housing: clientHousingType,
           observations: clientObservations,
         });
-
-        console.log('addClientResponse', addClientResponse);
         
         if (addClientResponse.process !== 'success') {
           setIsRegistering(false);

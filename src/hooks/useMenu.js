@@ -55,7 +55,6 @@ const useMenu = () => {
         });
       }
     } catch (error) {
-      console.log('error: ', error)
       ToastAlert({
         position: "top",
         timer: 1800,

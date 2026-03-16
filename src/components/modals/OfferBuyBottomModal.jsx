@@ -41,7 +41,7 @@ export default function OfferBuyBottomModal({ isOpen, onClose, children, title, 
       cancelButtonText: 'Cancelar',
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      onConfirm: () => console.log('Compra confirmada'),
+      onConfirm: () => {},
     });
   };
 
@@ -49,11 +49,6 @@ export default function OfferBuyBottomModal({ isOpen, onClose, children, title, 
     const codeText = code ? ' Código de asesor: ' + code : 'NO-CODE';
     // onClose();
     const is_assisted = !!code;
-    // console.log('Datos para realizar la solicitud de compra:');
-    // console.log('Offer ID:', offerID);
-    // console.log('Email:', email);
-    // console.log('Code:', code);
-    // console.log('Asistido:', is_assisted );
     
     // TODO: Implement actual API call to register the purchase
     const response = await addServiceRequest({
@@ -62,7 +57,6 @@ export default function OfferBuyBottomModal({ isOpen, onClose, children, title, 
       is_assisted: is_assisted, 
       assistant_code: code ? code : 'NO-CODE'
     });
-    // console.log('Full response from API:', response);
     if (!response || response.process !== 'success') {
       Swal.fire({
         icon: 'error',
@@ -91,7 +85,6 @@ export default function OfferBuyBottomModal({ isOpen, onClose, children, title, 
   const [termsAccepted, setTermsAccepted] = React.useState(false);
 
   useEffect(() => {
-     console.log("Loading state changed:", loadingAddRequest);
     if (typeof onLoadingChange === "function") {
       onLoadingChange(loadingAddRequest);
       

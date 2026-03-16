@@ -98,7 +98,6 @@ const CommissionsTable = () => {
         }
       },
       cancelCallback: () => {
-        console.log('Cancelar solicitud de pago');
       },
     })
   };

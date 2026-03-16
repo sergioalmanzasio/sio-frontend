@@ -103,7 +103,6 @@ const ServiceFollowUpTable = () => {
       confirmText: 'Cerrar',
       isCancelButtonVisible: false,
       confirmCallback: () => {
-        console.log('Modal cerrado');
       },
     });
   };

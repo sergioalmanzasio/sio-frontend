@@ -77,7 +77,6 @@ const ServiceRequestsClientTable = () => {
   };
 
   const handleCancelServiceRequest = async (id) => {
-    console.log('Cancel service request:', id);
     ModalAlertConfirm({
       title: 'Confirmar cancelación',
       text: '¿Estás seguro(a) de que quieres cancelar esta solicitud de servicio? Esta acción no se puede deshacer.',
@@ -168,10 +167,8 @@ const ServiceRequestsClientTable = () => {
       cancelText: 'Cerrar',
       isCancelButtonVisible: false,
       confirmCallback: () => {
-        console.log('Usuario aceptó el modal de detalles');
       },
       cancelCallback: () => {
-        console.log('Usuario cerró el modal de detalles');
       }
     });
   };
@@ -193,7 +190,6 @@ const ServiceRequestsClientTable = () => {
         return;
       }
       const result = await getServiceRequestByClient(userData.email);
-      console.log(result);
       setServiceRequests(result);
       return result;
     } catch (error) {
@@ -212,7 +208,6 @@ const ServiceRequestsClientTable = () => {
   }, [loadingServiceRequestDetail]);
 
   useEffect(() => {
-    console.log('Service request cancel client loading:', loadingCancelServiceRequestClient);
   }, [loadingCancelServiceRequestClient]);
 
   if (loadingServiceRequestClient) {

@@ -270,7 +270,6 @@ export default function MyReferralServicesPage() {
       ...request,
       selectedState: request.service_request.state
     });
-    console.log(request);
     ModalAlertConfirm({
       title: 'Editar estado de solicitud',
       text: buildEditModalContent(request),

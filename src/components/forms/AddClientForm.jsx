@@ -116,7 +116,6 @@ export default function AddClientForm({ onSuccess, onCancel, hasLegend = true })
             document_client: currentDocNumber,
             email_user: userData.email,
           });
-          console.log('Result', result);  
           if (result.process === 'success') {
             ToastAlert({
               position: 'center',

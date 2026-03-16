@@ -206,7 +206,6 @@ const AdminBonusWithdrawalsTable = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         const tokens = Array.from(selectedIds);
-        console.log("Tokens seleccionados para pago de bonos:", tokens);
 
         // Show loading state
         Swal.fire({

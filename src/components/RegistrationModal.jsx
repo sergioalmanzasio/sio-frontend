@@ -47,8 +47,6 @@ export default function RegistrationModal({ isOpen, onClose }) {
       return false; // Detiene el envío
     }
 
-    // Si la validación pasa
-    console.log("Datos para enviar:", { documentType, firstName, lastName, email, phone, isSeller });
     
     // Simulación de envío exitoso
     ToastAlert({

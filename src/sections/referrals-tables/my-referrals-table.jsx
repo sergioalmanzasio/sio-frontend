@@ -168,7 +168,6 @@ const MyReferralsTable = () => {
       confirmText: 'Cerrar',
       isCancelButtonVisible: false,
       confirmCallback: () => {
-        console.log('Modal cerrado');
       },
     });
   };
@@ -231,7 +230,6 @@ const MyReferralsTable = () => {
           confirmText: 'Cerrar',
           isCancelButtonVisible: false,
           confirmCallback: () => {
-            console.log('Modal cerrado');
           },
         });
       }

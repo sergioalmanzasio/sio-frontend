@@ -49,7 +49,6 @@ const AssignedReferralsTable = () => {
       isCancelButtonVisible: false,
       footerText: "",
       confirmCallback: () => {
-        console.log('Modal cerrado');
       },
     });
   };

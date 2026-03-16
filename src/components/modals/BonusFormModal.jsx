@@ -35,14 +35,12 @@ export default function BonusFormModal({ isOpen, onClose, onSubmit, initialData,
     return item.label;
   });
   const getApplyTypeSelected = (applyType, isValueReturn = false) => {
-    console.log('applyType received', applyType);
     const applyTypeSelected = applyTypeMapFromAPI.find((item) => {
       return item.label.toLowerCase() === applyType.toLowerCase();
     });
     if(isValueReturn) {
       return applyTypeSelected.id;
     }
-    console.log('applyTypeSelected', applyTypeSelected);
     return applyTypeSelected.label;
   }
 
