@@ -106,7 +106,7 @@ export const getDocumentTypes = () => {
 };
 
 export const getBanks = () => {
-  return ["Bancolombia", "Davivienda", "Banco de Bogotá", "BBVA", "Nequi", "Daviplata"];
+  return ["Bancolombia", "Davivienda", "Banco de Bogotá", "BBVA", "Nequi", "Daviplata", "Breb"];
 }
 
 export const getDepartments = async () => {
