@@ -49,7 +49,7 @@ export default function ServiceCoordinatorDashboard() {
     loadDashboardData();
   }, [loadDashboardData]);
 
-  if (loading) return <FullScreenLoader show={loading} message="Cargando panel..." />;
+  
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -58,7 +58,7 @@ export default function ServiceCoordinatorDashboard() {
         title="Panel principal"
         description="Resumen de gestión y asignaciones de servicios."
       />
-      
+      {loading ? <FullScreenLoader show={loading} message="Cargando panel..." /> : null}    
       <main className="container mx-auto px-4 py-8">
         {/* Bento Grid Layout */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[minmax(180px,auto)]">

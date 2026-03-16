@@ -95,16 +95,15 @@ const CommissionPaymentsTable = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
 
-  if (loadingDetailedPaidCommissions && commissions.length === 0) {
-    return <FullScreenLoader show={loadingDetailedPaidCommissions} message="Cargando comisiones pagadas..." />;
-  }
-
   return (
     <div className="w-full md:w-4/4 mt-0 md:mt-4 mx-auto p-4 md:p-0">
+      {loadingDetailedPaidCommissions && commissions.length === 0 && (
+        <FullScreenLoader show={loadingDetailedPaidCommissions} message="Cargando comisiones pagadas..." />
+      )}
       <div className="mb-4">
         <InlineAlert 
           title="Total pagado en comisiones" 
-          message={<span>Total pagado en comisiones a la fecha: <span class="font-bold text-blue-400 text-xl">{totalCommission}</span></span>}
+          message={<span>Total pagado en comisiones a la fecha: <span class="font-bold text-cyan-600 text-xl">{totalCommission}</span></span>}
           icon="check" 
         />
       </div>

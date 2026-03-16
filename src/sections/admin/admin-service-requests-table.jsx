@@ -108,12 +108,11 @@ const AdminServiceRequestsTable = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
 
-  if (loadingAdminServiceRequests && requests.length === 0) {
-    return <FullScreenLoader show={loadingAdminServiceRequests} message="Cargando solicitudes de servicio..." />;
-  }
-
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn">
+      {loadingAdminServiceRequests && requests.length === 0 && (
+        <FullScreenLoader show={loadingAdminServiceRequests} message="Cargando solicitudes de servicio..." />
+      )}
       <InlineAlert
         title="Información"
         message={<span>Total de solicitudes de servicio registradas hasta la fecha: <b className="font-semibold text-lg text-blue-400">{totalCount}</b></span>}

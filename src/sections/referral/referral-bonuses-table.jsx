@@ -129,13 +129,12 @@ const ReferralBonusesTable = () => {
     });
   };
 
-  if (loading && bonuses.length === 0) {
-    return <FullScreenLoader show={true} message="Cargando tus bonos..." />;
-  }
+  
 
   return (
     <div className="w-full md:w-3/4 mt-0 md:mt-4 mx-auto p-4 md:p-0">
-      {/* Inline Alert con el total */}
+
+      {loading && bonuses.length === 0 && <FullScreenLoader show={true} message="Cargando tus bonos..." />}
       <InlineAlert
         type="info"
         title="Disponible para cobrar"

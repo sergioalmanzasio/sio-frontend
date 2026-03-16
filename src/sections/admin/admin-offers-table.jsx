@@ -29,16 +29,20 @@ const AdminOffersTable = () => {
   const [sortColumn, setSortColumn] = useState(null);
   const [sortDirection, setSortDirection] = useState("asc");
 
+  const [loadingForm, setLoadingForm] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState("Cargando información...");
+
   const loadData = useCallback(async () => {
+    // setLoadingOffers(true);
+    setLoadingMessage("Obteniendo información de las ofertas...");
     const data = await getAdminOffers();
     if (data) setOffers(data);
-    
     getOperators();
-    
     const benefits = await getAllBenefits();
     const categories = await getAllCategories(); 
     if (benefits) setBenefitsList(benefits);
     if (categories) setCategoriesList(categories);
+    // setLoading(false);
   }, [getAdminOffers, getOperators, getAllBenefits]);
 
   useEffect(() => {
@@ -136,13 +140,17 @@ const AdminOffersTable = () => {
 
   const handleSubmitOffer = async (formData) => {
     setIsSubmitting(true);
+    // setLoadingForm(true);
     let result;
     if (offerToEdit) {
+      setLoadingMessage("Actualizando oferta...");
       result = await updateOffer(offerToEdit.id, formData);
     } else {
+      setLoadingMessage("Creando oferta...");
       result = await createOffer(formData);
     }
     setIsSubmitting(false);
+    // setLoadingForm(false);
     
     if (result && result.process === "success") {
       ToastAlert({
@@ -151,23 +159,33 @@ const AdminOffersTable = () => {
         icon: "success",
         title: offerToEdit ? "Oferta actualizada exitosamente." : "Oferta creada exitosamente."
       });
+
+      if (offerToEdit) {
+      // actualizar oferta en el estado
+        setOffers((prev) =>
+          prev.map((o) =>
+            o.id === offerToEdit.id ? { ...o, ...formData } : o
+          )
+        );
+      } else {
+        // agregar nueva oferta
+        setOffers((prev) => [result.data, ...prev]);
+      }
       setTimeout(() => {
         handleCloseFormModal();
-        loadData(); // Reload table data
+        // loadData(); // Reload table data
       }, 1800);
       
     }
   };
 
-  if ((loadingOffers || loadingOperators) && offers.length === 0) {
-    return <FullScreenLoader show={true} message="Cargando información..." />;
-  }
+  // if (loadingOffers || loadingOperators || loading) {
+  //   return <FullScreenLoader show={true} message={loadingMessage} />;
+  // }
 
   return (
     <div className="container mx-auto px-4 mt-4">
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
-        
-        {/* Search and Action Bar */}
         <div className="p-4 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-gray-50/50">
           <div className="relative w-full md:w-1/2">
             <input
@@ -188,168 +206,183 @@ const AdminOffersTable = () => {
           </button>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-indigo-500">
-              <tr>
-                <th 
-                  className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider cursor-pointer select-none hover:bg-indigo-600 transition-colors"
-                  onClick={() => handleSort("name")}
-                >
-                  Oferta <SortIcon column="name" />
-                </th>
-                <th 
-                  className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider cursor-pointer select-none hover:bg-indigo-600 transition-colors"
-                  onClick={() => handleSort("operator_name")}
-                >
-                  Operador <SortIcon column="operator_name" />
-                </th>
-                <th 
-                  className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider cursor-pointer select-none hover:bg-indigo-600 transition-colors"
-                  onClick={() => handleSort("category_name")}
-                >
-                  Categoria <SortIcon column="category_name" />
-                </th>
-                <th 
-                  className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider cursor-pointer select-none hover:bg-indigo-600 transition-colors"
-                  onClick={() => handleSort("price")}
-                >
-                  Precio <SortIcon column="price" />
-                </th>
-                <th 
-                  className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider cursor-pointer select-none hover:bg-indigo-600 transition-colors"
-                  onClick={() => handleSort("date_start")}
-                >
-                  Vigencia <SortIcon column="date_start" />
-                </th>
-                <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
-                  Acciones
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {currentOffers.length > 0 ? (
-                currentOffers.map((offer) => (
-                  <tr key={offer.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4">
-                      <div className="text-sm font-medium text-gray-900">{offer.name}</div>
-                      <div className="text-sm text-gray-500 line-clamp-1" title={offer.description}>
-                        {offer.description}
-                      </div>
-                      <div className={`inline-block px-2 py-1 text-xs font-semibold rounded-full mt-1.5
-                          ${offer.is_active
-                            ? "bg-green-100 text-green-700"
-                            : "bg-red-100 text-red-700"
-                          }`}>
-                        {offer.is_active ? "Activa" : "Inactiva"}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                       <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                        {offer.operator_name}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                       <div className="text-sm">
-                        {offer.category_name}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900 font-bold">
-                        ${Number(offer.price).toLocaleString("es-CO")}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <div><span className="font-medium">Inicio:</span> {new Date(offer.date_start).toLocaleDateString()}</div>
-                      <div><span className="font-medium">Fin:</span> {new Date(offer.date_end).toLocaleDateString()}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                      <button
-                        onClick={() => handleOpenDetailModal(offer)}
-                        className="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 p-2 rounded-md transition-colors inline-flex items-center cursor-pointer"
-                        title="Ver detalle"
-                      >
-                        <Eye className="h-4 w-4" />
-                      </button>
-                      
-                      <button
-                        onClick={() => handleOpenFormModal(offer)}
-                        className="text-pink-600 hover:text-pink-900 bg-pink-50 hover:bg-pink-100 p-2 rounded-md transition-colors inline-flex items-center cursor-pointer ml-2"
-                        title="Actualizar"
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="5" className="px-6 py-10 text-center text-gray-500">
-                    No hay ofertas registradas o que coincidan con la búsqueda.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Pagination */}
-        {sortedOffers.length > 0 && (
-          <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
-            <div className="flex-1 flex justify-between sm:hidden">
-              <button
-                onClick={handlePreviousPage}
-                disabled={currentPage === 1}
-                className={`relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md ${
-                  currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'
-                }`}
-              >
-                Anterior
-              </button>
-              <button
-                onClick={handleNextPage}
-                disabled={currentPage === totalPages}
-                className={`ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md ${
-                  currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'
-                }`}
-              >
-                Siguiente
-              </button>
+        {/* Skelton Loader */}
+        {loadingOffers ? (
+          <div className="p-4">
+            <div className="animate-pulse">
+              <div className="h-10 bg-gray-200 rounded w-full mb-4"></div>
+              <div className="h-10 bg-gray-200 rounded w-full mb-4"></div>
+              <div className="h-10 bg-gray-200 rounded w-full mb-4"></div>
             </div>
-            <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-              <div>
-                <p className="text-sm text-gray-700">
-                  Mostrando <span className="font-medium">{startIndex + 1}</span> a <span className="font-medium">{Math.min(startIndex + ITEMS_PER_PAGE, sortedOffers.length)}</span> de <span className="font-medium">{sortedOffers.length}</span> resultados
-                </p>
-              </div>
-              <div>
-                <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+          </div>
+        ): (
+          <>
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-indigo-500">
+                  <tr>
+                    <th 
+                      className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider cursor-pointer select-none hover:bg-indigo-600 transition-colors"
+                      onClick={() => handleSort("name")}
+                    >
+                      Oferta <SortIcon column="name" />
+                    </th>
+                    <th 
+                      className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider cursor-pointer select-none hover:bg-indigo-600 transition-colors"
+                      onClick={() => handleSort("operator_name")}
+                    >
+                      Operador <SortIcon column="operator_name" />
+                    </th>
+                    <th 
+                      className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider cursor-pointer select-none hover:bg-indigo-600 transition-colors"
+                      onClick={() => handleSort("category_name")}
+                    >
+                      Categoria <SortIcon column="category_name" />
+                    </th>
+                    <th 
+                      className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider cursor-pointer select-none hover:bg-indigo-600 transition-colors"
+                      onClick={() => handleSort("price")}
+                    >
+                      Precio <SortIcon column="price" />
+                    </th>
+                    <th 
+                      className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider cursor-pointer select-none hover:bg-indigo-600 transition-colors"
+                      onClick={() => handleSort("date_start")}
+                    >
+                      Vigencia <SortIcon column="date_start" />
+                    </th>
+                    <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
+                      Acciones
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {currentOffers.length > 0 ? (
+                    currentOffers.map((offer) => (
+                      <tr key={offer.id} className="hover:bg-gray-50">
+                        <td className="px-6 py-4">
+                          <div className="text-sm font-medium text-gray-900">{offer.name}</div>
+                          <div className="text-sm text-gray-500 line-clamp-1" title={offer.description}>
+                            {offer.description}
+                          </div>
+                          <div className={`inline-block px-2 py-1 text-xs font-semibold rounded-full mt-1.5
+                              ${offer.is_active
+                                ? "bg-green-100 text-green-700"
+                                : "bg-red-100 text-red-700"
+                              }`}>
+                            {offer.is_active ? "Activa" : "Inactiva"}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                            {offer.operator_name}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm">
+                            {offer.category_name}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900 font-bold">
+                            ${Number(offer.price).toLocaleString("es-CO")}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <div><span className="font-medium">Inicio:</span> {new Date(offer.date_start).toLocaleDateString()}</div>
+                          <div><span className="font-medium">Fin:</span> {new Date(offer.date_end).toLocaleDateString()}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                          <button
+                            onClick={() => handleOpenDetailModal(offer)}
+                            className="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 p-2 rounded-md transition-colors inline-flex items-center cursor-pointer"
+                            title="Ver detalle"
+                          >
+                            <Eye className="h-4 w-4" />
+                          </button>
+                          
+                          <button
+                            onClick={() => handleOpenFormModal(offer)}
+                            className="text-pink-600 hover:text-pink-900 bg-pink-50 hover:bg-pink-100 p-2 rounded-md transition-colors inline-flex items-center cursor-pointer ml-2"
+                            title="Actualizar"
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="5" className="px-6 py-10 text-center text-gray-500">
+                        No hay ofertas registradas o que coincidan con la búsqueda.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Pagination */}
+            {sortedOffers.length > 0 && (
+              <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+                <div className="flex-1 flex justify-between sm:hidden">
                   <button
                     onClick={handlePreviousPage}
                     disabled={currentPage === 1}
-                    className={`relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 text-sm font-medium ${
-                      currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-500 hover:bg-gray-50'
+                    className={`relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md ${
+                      currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'
                     }`}
                   >
-                    <ChevronLeft className="h-5 w-5" />
+                    Anterior
                   </button>
-                  <span className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
-                    Página {currentPage} de {totalPages}
-                  </span>
                   <button
                     onClick={handleNextPage}
                     disabled={currentPage === totalPages}
-                    className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 text-sm font-medium ${
-                      currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-500 hover:bg-gray-50'
+                    className={`ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md ${
+                      currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'
                     }`}
                   >
-                    <ChevronRight className="h-5 w-5" />
+                    Siguiente
                   </button>
-                </nav>
+                </div>
+                <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                  <div>
+                    <p className="text-sm text-gray-700">
+                      Mostrando <span className="font-medium">{startIndex + 1}</span> a <span className="font-medium">{Math.min(startIndex + ITEMS_PER_PAGE, sortedOffers.length)}</span> de <span className="font-medium">{sortedOffers.length}</span> resultados
+                    </p>
+                  </div>
+                  <div>
+                    <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                      <button
+                        onClick={handlePreviousPage}
+                        disabled={currentPage === 1}
+                        className={`relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 text-sm font-medium ${
+                          currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-500 hover:bg-gray-50'
+                        }`}
+                      >
+                        <ChevronLeft className="h-5 w-5" />
+                      </button>
+                      <span className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+                        Página {currentPage} de {totalPages}
+                      </span>
+                      <button
+                        onClick={handleNextPage}
+                        disabled={currentPage === totalPages}
+                        className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 text-sm font-medium ${
+                          currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-500 hover:bg-gray-50'
+                        }`}
+                      >
+                        <ChevronRight className="h-5 w-5" />
+                      </button>
+                    </nav>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+            )}
+          </>
         )}
+
+        
       </div>
 
       <OfferDetailModal

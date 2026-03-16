@@ -19,14 +19,14 @@ export default function SysAdminDashboard() {
     { title: "Servicios pendientes", value: dashboardCardsData.pendingRequests, iconName: "pending", trend: "up", trendValue: "8%", color: "orange" },
   ];
 
-  if (loadingDashboardCards) {
-    return <FullScreenLoader show={loadingDashboardCards} message="Cargando tablero..." />;
-  }
+ 
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-      
+       {loadingDashboardCards && (
+        <FullScreenLoader show={loadingDashboardCards} message="Cargando tablero..." />
+      )}
       <main className="container mx-auto px-4 py-8 mt-0 animate-fadeIn">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Panel principal SysAdmin</h1>

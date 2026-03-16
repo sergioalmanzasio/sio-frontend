@@ -80,14 +80,14 @@ const CommissionsHistoryTable = () => {
     );
   };
 
-  if (loadingGetCommissionsHistory) return <FullScreenLoader show={loadingGetCommissionsHistory} message="Cargando historial de comisiones..." />;
+  
 
   return (
     <div className="w-full md:w-3/4 mt-0 md:mt-4 mx-auto p-4 md:p-0">
-      
+      {loadingGetCommissionsHistory && <FullScreenLoader show={loadingGetCommissionsHistory} message="Cargando historial de comisiones..." />}
       <InlineAlert
         title="Total de comisiones cobradas"
-        message={<span>El total de tus comisiones cobradas es <span className="font-bold text-blue-400 text-lg">{totalCommission}</span></span>}
+        message={<span>El total de tus comisiones cobradas es <span className="font-bold text-cyan-700 text-lg">{totalCommission}</span></span>}
         type="info"
       />
 

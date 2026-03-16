@@ -275,12 +275,11 @@ const AdminBonusWithdrawalsTable = () => {
    });
   };
 
-  if (loading && bonuses.length === 0) {
-    return <FullScreenLoader show={true} message="Cargando solicitudes de pagos..." />;
-  }
-
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn">
+      {loading && bonuses.length === 0 && (
+        <FullScreenLoader show={true} message="Cargando solicitudes de pagos..." />
+      )}
       <InlineAlert
         title="Bonos por pagar"
         message={<span>Monto total en bonos por pagar a la fecha: <b className="font-semibold text-lg">{totalAmount}</b>.</span>}

@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import { Gift } from "lucide-react";
+import { Gift, Loader2 } from "lucide-react";
 import { Input } from "../ui/input";
 import Select from "../ui/select";
 import Textarea from "../ui/textarea";
 import { getBonusApplyTypes } from "../../shared/utils";
 
-export default function BonusFormModal({ isOpen, onClose, onSubmit, initialData }) {
+export default function BonusFormModal({ isOpen, onClose, onSubmit, initialData, loading = false }) {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -98,9 +98,6 @@ export default function BonusFormModal({ isOpen, onClose, onSubmit, initialData 
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Preparar el data para el API
-    console.log('Form Data:', formData.apply_type);
-    console.log('Apply Type Selected:', getApplyTypeSelected(formData.apply_type, true));
     const outputData = {
         ...formData,
         bonus_type: typeMapToAPI[formData.bonus_type],
@@ -230,6 +227,8 @@ export default function BonusFormModal({ isOpen, onClose, onSubmit, initialData 
               <label className="block text-sm font-medium text-gray-700 mb-1">Máx. Veces por Usuario</label>
               <Input
                 type="number"
+                onWheel={(e) => e.target.blur()}
+                pattern="[0-9]*"
                 name="max_times_per_user"
                 required={formData.apply_type !== "Cada venta"}
                 value={formData.max_times_per_user}
@@ -242,6 +241,7 @@ export default function BonusFormModal({ isOpen, onClose, onSubmit, initialData 
               <label className="block text-sm font-medium text-gray-700 mb-1">Ventas Mínimas Requeridas</label>
               <Input
                 type="number"
+                onWheel={(e) => e.target.blur()}
                 name="min_sales_required"
                 required
                 value={formData.min_sales_required}
@@ -306,9 +306,19 @@ export default function BonusFormModal({ isOpen, onClose, onSubmit, initialData 
             </button>
             <button
               type="submit"
-              className="px-8 py-2.5 rounded-lg font-medium transition-all shadow-md btn-gradient text-white hover:shadow-lg transform hover:scale-105"
+              disabled={loading}
+              className={`px-8 py-2.5 rounded-lg font-medium transition-all shadow-md btn-gradient text-white hover:shadow-lg transform hover:scale-105 ${loading ? "opacity-50 bg-gray-500 hover:bg-gray-500 cursor-not-allowed" : ""}`}
             >
-              {initialData ? "Actualizar" : "Crear bono"}
+              {loading ? (
+                <>
+                  <div className="flex items-center gap-2">
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    {initialData ? "Actualizando..." : "Creando bono..."}
+                  </div>
+                </>
+              ) : (
+                initialData ? "Actualizar" : "Crear bono"
+              )}
             </button>            
             
           </div>

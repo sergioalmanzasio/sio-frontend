@@ -103,14 +103,14 @@ const CommissionsTable = () => {
     })
   };
 
-  if (loadingGetCommissionAvailable) return <FullScreenLoader show={loadingGetCommissionAvailable} message="Cargando comisiones..." />;
+  
 
   return (
     <div className="w-full md:w-3/4 mt-0 md:mt-4 mx-auto p-4 md:p-0">
-      
+      {loadingGetCommissionAvailable && <FullScreenLoader show={loadingGetCommissionAvailable} message="Cargando información, espere un momento..." />}
       <InlineAlert
         title="Comisión disponible"
-        message={<span>Total comisión disponible para retirar <span class="font-bold text-blue-400 text-lg">{totalCommission}</span></span>}
+        message={<span>Total comisión disponible para retirar <span class="font-bold text-cyan-700 text-lg">{totalCommission}</span></span>}
         type="info"
       />
 

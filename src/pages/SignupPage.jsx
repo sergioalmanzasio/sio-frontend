@@ -673,9 +673,16 @@ export default function SignupPage() {
                   <PrimaryButton 
                     type="button" 
                     className="w-full mt-4"
+                    disabled={loadingVerifyOTP}
                     onClick={ () => handleVerifyCode() }
                   >
-                    Verificar Código
+                    {loadingVerifyOTP ? 
+                      <div className="flex items-center gap-2 cursor-pointer text-black justify-center">
+                        <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600"></div>
+                        <span className="italic transition animate-pulse text-sm">Verificando...</span>
+                      </div>
+                      : 'Verificar código'
+                    }
                   </PrimaryButton>
                 </div>
               </BottomModal>

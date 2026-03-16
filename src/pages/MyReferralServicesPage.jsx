@@ -610,11 +610,12 @@ export default function MyReferralServicesPage() {
     );
   }
 
-  const customButtonTable = (toolTipText, handleAction, icon, bgButton) => {
+  const customButtonTable = (toolTipText, handleAction, icon, bgButton, loading) => {
     return <div className="relative group">
                           <button
                             onClick={() => handleAction()}
-                            className={`text-${bgButton}-600 hover:text-white bg-${bgButton}-100 hover:bg-${bgButton}-600 px-3 py-1 rounded-md text-xs font-semibold transition duration-150 cursor-pointer`}
+                            disabled={loading}
+                            className={`text-${bgButton}-600 hover:text-white bg-${bgButton}-100 hover:bg-${bgButton}-600 px-3 py-1 rounded-md text-xs font-semibold transition duration-150 cursor-pointer ${loading ? 'opacity-50 bg-gray-100 hover:bg-gray-100 hover:text-gray-600 cursor-not-allowed' : ''}`}
                           >
                             <span className="absolute 
                                 -top-8 
@@ -627,7 +628,11 @@ export default function MyReferralServicesPage() {
                               {toolTipText}
                             </span>
                             {
-                              custonIconButtonTable(icon)
+                              loading ? (
+                                <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600"></div>
+                              ) : (
+                                custonIconButtonTable(icon)
+                              )
                             }
                           </button>
                         </div>
@@ -764,7 +769,7 @@ export default function MyReferralServicesPage() {
                     <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                       <div className="flex gap-2 justify-center items-center h-full">
                         {/* Icon button for add comment */}
-                        {customButtonTable("Agregar comentario", () => handleShowComments(request), "comment", "purple")}
+                        {customButtonTable("Agregar comentario", () => handleShowComments(request), "comment", "purple", loadingGetComments)}
                         {/* <div className="relative group">
                           <button
                             title="Agregar comentario"
@@ -778,7 +783,7 @@ export default function MyReferralServicesPage() {
                           </button>
                         </div> */}
                         {request.service_request.state !== 'Terminada' && request.service_request.state !== 'No aprobada' && request.service_request.filing_number !== 'Pendiente' && (
-                          customButtonTable("Editar", () => handleEdit(request), "edit", "blue")
+                          customButtonTable("Editar", () => handleEdit(request), "edit", "blue", loadingUpdateServiceRequestState)
                           // <button
                           //   onClick={() => handleEdit(request)}
                           //   className="text-blue-600 hover:text-white bg-blue-100 hover:bg-blue-600 px-3 py-1 rounded-md text-xs font-semibold transition duration-150 cursor-pointer"

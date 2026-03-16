@@ -74,19 +74,19 @@ const BonusesHistoryTable = () => {
     );
   };
 
-  if (loading && bonuses.length === 0) return <FullScreenLoader show={true} message="Cargando historial de bonos..." />;
+  
 
   return (
     <div className="w-full md:w-3/4 mt-0 md:mt-4 mx-auto p-4 md:p-0">
-
+      {loading && bonuses.length === 0 && <FullScreenLoader show={true} message="Cargando historial de bonos..." />}
       <InlineAlert
         title="Total de bonos cobrados"
-        message={<span>El total de tus bonos cobrados es <span className="font-bold text-teal-500 text-lg">{totalBonus}</span></span>}
+        message={<span>El total de tus bonos cobrados es <span className="font-bold text-cyan-700 text-lg">{totalBonus}</span></span>}
         type="info"
       />
 
-      {/* Status Filter */}
-      <div className="mt-4 flex items-center gap-3">
+      
+      <div className={`mt-4 flex items-center gap-3 ${bonuses.length === 0 ? "hidden" : ""}`}>
         <label htmlFor="statusFilter" className="text-sm font-medium text-gray-700">Filtrar por estado:</label>
         <select
           id="statusFilter"

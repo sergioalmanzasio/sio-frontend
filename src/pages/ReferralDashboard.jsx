@@ -93,15 +93,13 @@ export default function ReferralDashboard() {
   }, [referrals, totalCommission]);
 
 
-  if (loadingMyReferrals) {
-      return <FullScreenLoader show={loadingMyReferrals} message="Cargando estadísticas..." />;
-  }
+  
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
+      {loadingMyReferrals && <FullScreenLoader show={loadingMyReferrals} message="Cargando información, espere un momento..." />}
       <BonusModal />
-      
       <main className="container mx-auto px-4 py-8 mt-0">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Hola, {userData?.firstName || 'Referido'}</h1>

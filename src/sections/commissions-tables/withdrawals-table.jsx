@@ -300,12 +300,11 @@ const WithdrawalsTable = () => {
    });
   };
 
-  if (loadingGetPaymentRequirements) {
-    return <FullScreenLoader show={loadingGetPaymentRequirements} message="Cargando solicitudes de pagos..." />;
-  }
-
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn">
+       {loadingGetPaymentRequirements && (
+        <FullScreenLoader show={loadingGetPaymentRequirements} message="Cargando solicitudes de pagos..." />
+      )}
       <InlineAlert
         title="Comisiones por pagar"
         message={<span>Monto total en comisiones por pagar a la fecha: <b className="font-semibold text-lg">{totalAmount}</b>.</span>}

@@ -102,16 +102,15 @@ const BonusPaymentsTable = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
 
-  if (loading && bonuses.length === 0) {
-    return <FullScreenLoader show={true} message="Cargando bonos pagados..." />;
-  }
-
   return (
     <div className="w-full mt-0 md:mt-4 mx-auto p-4 md:p-0">
+      {loading && bonuses.length === 0 && (
+        <FullScreenLoader show={true} message="Cargando bonos pagados..." />
+      )}
       <div className="mb-4">
         <InlineAlert
           title="Total pagado"
-          message={<span>Total pagado en bonos a la fecha: <span className="font-bold text-blue-500 text-xl">{totalAmount}</span></span>}
+          message={<span>Total pagado en bonos a la fecha: <span className="font-bold text-cyan-600 text-xl">{totalAmount}</span></span>}
           icon="check"
         />
       </div>

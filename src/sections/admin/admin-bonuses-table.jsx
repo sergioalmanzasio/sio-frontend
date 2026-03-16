@@ -113,12 +113,11 @@ const AdminBonusesTable = () => {
     }
   };
 
-  if (loading && bonuses.length === 0) {
-    return <FullScreenLoader show={loading} message="Cargando historial de bonos..." />;
-  }
-
   return (
     <div className="container mx-auto px-4 mt-4" >
+      {loading && bonuses.length === 0 && (
+        <FullScreenLoader show={loading} message="Cargando historial de bonos..." />
+      )}
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
         
         {/* Search */}
@@ -297,6 +296,7 @@ const AdminBonusesTable = () => {
         onClose={handleCloseModal}
         onSubmit={handleSubmit}
         initialData={editingBonus}
+        loading={loading}
       />
     </div>
   );
