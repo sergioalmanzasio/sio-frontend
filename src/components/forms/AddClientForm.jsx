@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { User, Phone, Mail, MapPin, IdCard, UserSearch } from "lucide-react";
+import { User, Phone, Mail, MapPin, IdCard, UserSearch, Loader2 } from "lucide-react";
 import { Input } from "../ui/input";
 import Select from "../ui/select";
 import { PrimaryButton, SecondaryButton } from "../ui/button";
@@ -32,6 +32,7 @@ export default function AddClientForm({ onSuccess, onCancel, hasLegend = true })
   const [clientCity, setClientCity] = useState("");
   const [clientNeighborhood, setClientNeighborhood] = useState("");
   const [isValidateClientDocumentNumber, setIsValidateClientDocumentNumber] = useState(false);
+  const [loadingAssignReferral, setLoadingAssignReferral] = useState(false);
   
   // Validation state
   const [isValidateClient, setIsValidateClient] = useState(false);
@@ -92,7 +93,7 @@ export default function AddClientForm({ onSuccess, onCancel, hasLegend = true })
       ToastAlert({
         position: 'center',
         timer: 1800,
-        icon: 'error',
+        icon: 'info',
         title: 'Por favor ingresa el número de documento.',
       });
       return false;
@@ -154,13 +155,14 @@ export default function AddClientForm({ onSuccess, onCancel, hasLegend = true })
       ToastAlert({
         position: 'center',
         timer: 1800,
-        icon: 'error',
+        icon: 'info',
         title: 'Por favor completa todos los campos del cliente.'
       });
       return;
     }
 
     try {
+      setLoadingAssignReferral(true);
       const addPersonResponse = await addPerson({
         document: clientDocumentNumber,
         document_type_acronym: clientDocumentType,
@@ -178,6 +180,7 @@ export default function AddClientForm({ onSuccess, onCancel, hasLegend = true })
       });
 
       if (addPersonResponse.process !== 'success') {
+        setLoadingAssignReferral(false);
         return false;
       }
 
@@ -193,6 +196,7 @@ export default function AddClientForm({ onSuccess, onCancel, hasLegend = true })
           icon: 'error',
           title: addReferralExistCustomerResponse.message,
         });
+        setLoadingAssignReferral(false);
         return false;
       }
 
@@ -202,7 +206,7 @@ export default function AddClientForm({ onSuccess, onCancel, hasLegend = true })
         icon: 'success',
         title: 'La referenciación del cliente se ha realizado correctamente.',
       });
-      
+      setLoadingAssignReferral(false);
       clearFormClientInfo();
       onSuccess();
     } catch (error) {
@@ -225,7 +229,7 @@ export default function AddClientForm({ onSuccess, onCancel, hasLegend = true })
   };
 
   return (
-    <form onSubmit={handleSubmitClient} className="space-y-4 max-h-[70vh] overflow-y-auto px-2 pb-4">
+    <form onSubmit={handleSubmitClient} className="space-y-4 max-h-auto overflow-y-auto px-2 pb-4">
       {hasLegend && (
         <p className="text-justify text-gray-500 text-sm">
           Agrega un nuevo cliente referido completando el siguiente formulario.
@@ -249,12 +253,12 @@ export default function AddClientForm({ onSuccess, onCancel, hasLegend = true })
 
             <div className="md:col-span-1">
               <PrimaryButton 
-                disabled={false}
+                disabled={loadingValidatePersonExistByDocument}
                 type="button" 
                 className="w-full h-14 flex items-center justify-center" 
                 onClick={() => handleValidateClientDocumentNumber()}
               >
-                <UserSearch />
+                {loadingValidatePersonExistByDocument ? <Loader2 className="animate-spin" /> : <UserSearch />}
               </PrimaryButton>
             </div>
           </div>
@@ -373,8 +377,17 @@ export default function AddClientForm({ onSuccess, onCancel, hasLegend = true })
       </div>
 
       <div className="flex pt-4 gap-3">
-        <PrimaryButton type="submit" disabled={!isValidateClient} className="btn-gradient shadow-none">
-          Registrar
+        <PrimaryButton 
+          type="submit" 
+          disabled={!isValidateClient || loadingAssignReferral} 
+          className="btn-gradient shadow-none"
+        >
+          {loadingAssignReferral ? 
+            <div className="flex items-center gap-2 cursor-pointer text-blue-900 justify-center">
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600"></div>
+              <span className="italic transition animate-pulse text-sm">Registrando...</span>
+            </div>
+          : 'Registrar'}
         </PrimaryButton>
         <SecondaryButton 
           onClick={onCancel} 
