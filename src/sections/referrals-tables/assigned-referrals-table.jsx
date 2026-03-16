@@ -145,7 +145,7 @@ const AssignedReferralsTable = () => {
   };
 
   if (loadingReferralByCoordinatorService) {
-    return <ServiceRequestsTableSkeleton />;
+    return <ServiceRequestsTableSkeleton message="Cargando referidos asignados..." />;
   }
 
   return (
