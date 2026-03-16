@@ -21,6 +21,11 @@ const useMenu = () => {
   const getOptionByRole = useCallback(async (roleId) => {
     setLoading(true);
     try {
+      const menus = localStorage.getItem("menus");
+      if (menus) {
+        setMenus(JSON.parse(menus));
+        return;
+      }
       const response = await fetch(
         `${API_BASE_URL}/menu/options/${roleId}`,
         {
@@ -30,6 +35,7 @@ const useMenu = () => {
       );
       const data = await response.json();
       if (response.ok) {
+        localStorage.setItem("menus", JSON.stringify(data.data));
         setMenus(data.data);
       } else {
         if (response.status === 401) {
