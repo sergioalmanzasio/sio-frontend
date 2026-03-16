@@ -267,12 +267,11 @@ const MyReferralsTable = () => {
     </button>
   );
 
-  if (loadingMyReferrals) {
-    return <FullScreenLoader show={loadingMyReferrals} message="Cargando referidos..." />;
-  }
+  
 
   return (
     <>
+      {loadingMyReferrals && <FullScreenLoader show={loadingMyReferrals} message="Cargando clientes..." />}
       <div className="w-full md:w-3/4 mt-0 md:mt-4 mx-auto p-4 md:p-0">
         <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
           <GradientButton
