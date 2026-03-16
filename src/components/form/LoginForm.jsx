@@ -46,7 +46,7 @@ const LoginForm = ({ onClickForgotPassword, onClickRegister, onClose }) => {
         ToastAlert({
           position: "top",
           timer: 1800,
-          icon: "error",
+          icon: "info",
           title: "Todos los campos son obligatorios para iniciar sesión.",
         });
         return;
@@ -100,13 +100,21 @@ const LoginForm = ({ onClickForgotPassword, onClickRegister, onClose }) => {
           value={formData.password}
            isPasswordToggle={true} 
         />
+        {/* TODO: Agregar un loading skeleton mientras se carga el login */}
         <PrimaryButton
           type="submit"
-          className="w-full cursor-pointer"
+          className={`w-full ${loading ? 'cursor-not-allowed' : 'cursor-pointer'}`}
           onClick={handleSubmit}
+          disabled={loading}
         >
-          Acceder
+          {loading ? 
+            <div className="flex items-center gap-2 cursor-pointer text-black justify-center">
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600"></div>
+              <span className="text-gray-600 italic transition animate-pulse text-sm">Iniciando sesión...</span>
+            </div>
+          : "Acceder"}
         </PrimaryButton>
+        
       </div>
       <div className="flex flex-row space-x-4 justify-center">
           <a href="#" className="text-xs text-blue-600 mt-3 block text-center hover:text-blue-700 transition cursor-pointer"
