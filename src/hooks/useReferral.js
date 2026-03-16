@@ -237,15 +237,15 @@ const useReferral = () => {
           );
           return { process: 'session-expired' };
         }
-        throw new Error(data.message || "Error en la solicitud");
+        throw new Error(data.message || "Error en la solicitud", { cause: data.process });
       }
       return data;
     } catch (err) {
       setErrorGetCommissionAvailable(err.message);
       ToastAlert({
         position: "center",
-        timer: 1800,
-        icon: "error",
+        timer: err.cause === 'error' ? 1800 : 2500,
+        icon: err.cause ?? "error",
         title: err.message || "Error al obtener las comisiones",
       });
       throw err;
