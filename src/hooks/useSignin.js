@@ -54,11 +54,13 @@ const useSignin = () => {
     let loginSuccessful = false; // Variable local para controlar el resultado del login
 
     try {
+      const token = localStorage.getItem("auth_token");
       const response = await fetch(`${API_BASE_URL}/auth/sign-in`, {
         method: "POST",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({
           username: formData.email,
@@ -71,6 +73,7 @@ const useSignin = () => {
         const sessionResult = await getDataForSession();
 
         if (sessionResult.success) {
+          localStorage.setItem("auth_token", data.token);
           setIsLogin(true); // <--- Este cambio de estado forzará la re-renderización.
           loginSuccessful = true;
         } else {
