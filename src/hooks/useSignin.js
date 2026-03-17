@@ -13,11 +13,13 @@ const useSignin = () => {
   const getDataForSession = async () => {
     // Eliminamos el setLoading(false) de aquí, lo dejamos en el bloque finally de signin
     try {
+      const token = localStorage.getItem("auth_token");
       const response = await fetch(`${API_BASE_URL}/auth/session-data`, {
         method: "GET",
         credentials: "include",
         headers: {
           'Content-Type': 'application/json',
+          "Authorization": `Bearer ${token}`,
         }
       });
       const data = await response.json();
@@ -54,13 +56,11 @@ const useSignin = () => {
     let loginSuccessful = false; // Variable local para controlar el resultado del login
 
     try {
-      const token = localStorage.getItem("auth_token");
       const response = await fetch(`${API_BASE_URL}/auth/sign-in`, {
         method: "POST",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({
           username: formData.email,
