@@ -68,12 +68,11 @@ const useSignin = () => {
         }),
       });
       const data = await response.json();
-
       if (response.ok) {
+        localStorage.setItem("auth_token", data.token);
         const sessionResult = await getDataForSession();
 
         if (sessionResult.success) {
-          localStorage.setItem("auth_token", data.token);
           setIsLogin(true); // <--- Este cambio de estado forzará la re-renderización.
           loginSuccessful = true;
         } else {
