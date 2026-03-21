@@ -516,8 +516,9 @@ export default function MyReferralServicesPage() {
   };
 
   const handleAddFilingNumber = async (request) => {
+    const isFillingNumberPending = request.service_request.filing_number == null || request.service_request.filing_number.toLowerCase() == "pendiente";
     Swal.fire({
-      title: request.service_request.filing_number == null || request.service_request.filing_number.toLowerCase() == "pendiente" 
+      title: isFillingNumberPending 
        ? "Agregar número de radicado"
        : "Editar número de radicado",
       html: `
@@ -526,7 +527,7 @@ export default function MyReferralServicesPage() {
         </div>
       `,
       input: "text",
-      inputValue: request.service_request.filing_number == null || request.service_request.filing_number.toLowerCase() == "pendiente"
+      inputValue: isFillingNumberPending
         ? "" 
         : request.service_request.filing_number,
       inputAttributes: {
@@ -543,7 +544,7 @@ export default function MyReferralServicesPage() {
         cancelButton: "btn-cancel",
       },
       showCancelButton: true,
-      confirmButtonText: "Agregar",
+      confirmButtonText: isFillingNumberPending ? "Agregar" : "Actualizar",
       cancelButtonText: "Cancelar",
       showLoaderOnConfirm: true,
       preConfirm: async (filingNumber) => {
@@ -573,7 +574,7 @@ export default function MyReferralServicesPage() {
           position: 'center',
           timer: 2000,
           icon: 'success',
-          title: 'Número de radicado agregado exitosamente',
+          title: `Número de radicado ${isFillingNumberPending ? 'agregado.' : 'actualizado.'}`,
         });
         await fetchServiceRequests();
         setSelectedRequest(null);
@@ -658,7 +659,7 @@ export default function MyReferralServicesPage() {
         description="Gestiona las solicitudes de servicios generadas para los clientes referidos."
       />
 
-      <div className="w-full md:w-3/4 mt-0 md:mt-4 mx-auto p-4 md:p-0">
+      <div className="w-full md:w-3/4 mt-0 md:mt-4 mx-auto p-4 md:p-0 max-w-6xl">
         {/* Search Filter */}
         <div className="mb-4">
           <input
