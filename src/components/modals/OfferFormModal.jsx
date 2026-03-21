@@ -263,6 +263,7 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, operators = [], benefitsLis
                       placeholder="Describe la oferta..."
                       rows={3}
                       autoComplete="off"
+                      className="text-base"
                     />
                     {errorDescription && (
                       <span className="text-red-500 text-xs mt-1">El campo descripción es requerido</span>
