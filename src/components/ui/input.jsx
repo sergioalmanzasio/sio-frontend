@@ -32,7 +32,7 @@ export const Input = React.forwardRef(({ className, icon: Icon, type, disabled =
         type={inputType}
         disabled={disabled}
         className={
-          "w-full p-2 h-14 border border-gray-300 rounded-lg text-gray-700 placeholder-gray-500 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-300" +
+          "w-full p-2 h-14 border border-gray-300 rounded-lg text-gray-700 placeholder-gray-500 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition duration-300 text-sm" +
           // Ajuste de padding izquierdo
           (Icon ? " pl-10" : " pl-3") + 
           // Ajuste de padding derecho para el icono de sufijo
