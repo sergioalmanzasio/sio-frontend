@@ -8,11 +8,15 @@ export default function BonusModal() {
 
   useEffect(() => {
     const seen = localStorage.getItem("bonus_seen");
+    const token = localStorage.getItem("auth_token");
     if (seen) return;
 
     fetch(`${API_BASE_URL}/bonus/active`, {
       method: "GET",
-      credentials: "include",
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": `Bearer ${token}`,
+      }
     })
       .then(res => res.json())
       .then(data => {
