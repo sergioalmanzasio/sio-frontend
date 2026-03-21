@@ -9,14 +9,11 @@ const useSignin = () => {
   const [loading, setLoading] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
 
-  // Mover getDataForSession dentro de signin para mejor flujo
   const getDataForSession = async () => {
-    // Eliminamos el setLoading(false) de aquí, lo dejamos en el bloque finally de signin
     try {
       const token = localStorage.getItem("auth_token");
       const response = await fetch(`${API_BASE_URL}/auth/session-data`, {
         method: "GET",
-        credentials: "include",
         headers: {
           'Content-Type': 'application/json',
           "Authorization": `Bearer ${token}`,
@@ -31,7 +28,7 @@ const useSignin = () => {
         ToastAlert({
           position: "top",
           timer: 1800,
-          icon: "error",
+          icon: data.process,
           title: data.message,
         });
         clearUserData();
@@ -41,7 +38,7 @@ const useSignin = () => {
       ToastAlert({
         position: "top",
         timer: 1800,
-        icon: "error",
+        icon: "info",
         title: "Error al obtener la sesión, inténtelo más tarde",
       });
       clearUserData();
@@ -58,7 +55,7 @@ const useSignin = () => {
     try {
       const response = await fetch(`${API_BASE_URL}/auth/sign-in`, {
         method: "POST",
-        credentials: "include",
+        // credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -67,6 +64,7 @@ const useSignin = () => {
           password: formData.password,
         }),
       });
+
       const data = await response.json();
       if (response.ok) {
         localStorage.setItem("auth_token", data.token);
