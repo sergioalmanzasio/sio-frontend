@@ -4,7 +4,6 @@
  */
 
 export const saveUserData = (data) => {
-  console.log('SaveUserData', data);
   const { role_id, role_name, person, username, email, optionMenu } = data.data;
   const userData = {
     firstName: person.first_name,
