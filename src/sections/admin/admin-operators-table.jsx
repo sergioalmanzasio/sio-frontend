@@ -98,14 +98,12 @@ const AdminOperatorsTable = () => {
   };
 
   const handleSubmitOperator = async (formData) => {
-    setIsSubmitting(true);
     let result;
     if (operatorToEdit) {
       result = await updateOperator(operatorToEdit.id, formData);
     } else {
       result = await createOperator(formData);
     }
-    setIsSubmitting(false);
     setIsFormModalOpen(false);
     
     if (result && result.process === "success") {
