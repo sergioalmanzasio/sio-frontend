@@ -21,6 +21,7 @@ const useReferral = () => {
   const [loadingPayCommission, setLoadingPayCommission] = useState(false);
   const [errorPayCommission, setErrorPayCommission] = useState(null);
   const { logout } = useAuth();
+  const token = localStorage.getItem("auth_token");
 
   const addReferralExistCustomer = useCallback(async (requestData, options = {}) => {
     setLoadingReferralExistCustomer(true);
@@ -29,9 +30,9 @@ const useReferral = () => {
       const response = await fetch(`${API_BASE_URL}/referral/create-referred-exist-customer`, {
         ...options,
         method: "POST",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({
           referral_email: requestData.email_user,
@@ -61,9 +62,10 @@ const useReferral = () => {
       const response = await fetch(`${API_BASE_URL}/referral/my-referrals`, {
         ...options,
         method: "POST",
-        credentials: "include",
+        // credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({
           referral_email: requestData.email,
@@ -104,9 +106,9 @@ const useReferral = () => {
       const response = await fetch(`${API_BASE_URL}/referral/by-coordinator-services`, {
         ...options,
         method: "POST",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({
           coordinator_service_email: requestData.email_user,
@@ -135,9 +137,9 @@ const useReferral = () => {
       const response = await fetch(`${API_BASE_URL}/referral/general-information`, {
         ...options,
         method: "POST",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({
           referral_code: referralCode,
@@ -178,9 +180,9 @@ const useReferral = () => {
       const response = await fetch(`${API_BASE_URL}/referral/calculate-commission`, {
         ...options,
         method: "POST",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({
           referral_code: referralCode,
@@ -221,9 +223,9 @@ const useReferral = () => {
       const response = await fetch(`${API_BASE_URL}/referral/get-commission-available`, {
         ...options,
         method: "GET",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
       });
       const data = await response.json();
@@ -264,10 +266,11 @@ const useReferral = () => {
       const response = await fetch(`${API_BASE_URL}/referral/get-total-commision`, {
         ...options,
         method: "GET",
-        credentials: "include",
+        // credentials: "include",
         headers: {
-          "Content-Type": "application/json",
-        },
+          'Content-Type': 'application/json',
+          "Authorization": `Bearer ${token}`,
+        }
       });
       const data = await response.json();
       if (!response.ok) {
@@ -307,9 +310,9 @@ const useReferral = () => {
       const response = await fetch(`${API_BASE_URL}/referral/request-payment-commission`, {
         ...options,
         method: "POST",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({ tracking_code: trackingCode }),
       });
@@ -351,9 +354,9 @@ const useReferral = () => {
       const response = await fetch(`${API_BASE_URL}/payments/requeriments`, {
         ...options,
         method: "GET",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
       });
       const data = await response.json();
@@ -390,9 +393,9 @@ const useReferral = () => {
     try {
       const response = await fetch(`${API_BASE_URL}/payments/paid-commission`, {
         method: "POST",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({ commissionToken }),
       });
@@ -429,9 +432,9 @@ const useReferral = () => {
       const response = await fetch(`${API_BASE_URL}/referral/commissions/history/filter?status_name=${options.status_name}`, {
         ...options,
         method: "GET",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
       });
       const data = await response.json();
@@ -472,9 +475,9 @@ const useReferral = () => {
       const response = await fetch(`${API_BASE_URL}/payments/detailed-paid-commissions`, {
         ...options,
         method: "GET",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
       });
       const data = await response.json();
@@ -515,9 +518,9 @@ const useReferral = () => {
       const response = await fetch(`${API_BASE_URL}/admin/service-requests`, {
         ...options,
         method: "GET",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
       });
       const data = await response.json();

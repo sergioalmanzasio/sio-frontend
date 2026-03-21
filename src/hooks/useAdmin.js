@@ -16,16 +16,16 @@ const useAdmin = () => {
   paidCommissionsByMonth: [],
   usersByRole: [],
  });
-
+ const token = localStorage.getItem('auth_token');
  const getDashboardCardsData = useCallback(async () => {
   setLoadingDashboardCards(true);
   try {
    const fetchWithAuth = async (endpoint) => {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
      method: 'GET',
-     credentials: 'include',
      headers: {
       'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
      },
     });
     const data = await response.json();

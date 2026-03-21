@@ -16,6 +16,7 @@ const usePerson = () => {
   const [errorUpdateBankInfo, setErrorUpdateBankInfo] = useState(null);
   const [loadingUpdateLocationInfo, setLoadingUpdateLocationInfo] = useState(false);
   const [errorUpdateLocationInfo, setErrorUpdateLocationInfo] = useState(null);
+  const token = localStorage.getItem("auth_token");
 
   const addPerson = useCallback(async (requestData, options = {}) => {
     setLoadingAddPerson(true);
@@ -147,9 +148,9 @@ const usePerson = () => {
       const response = await fetch(`${API_BASE_URL}/person/info`, {
         ...options,
         method: "POST",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({
           email: email,
@@ -179,9 +180,9 @@ const usePerson = () => {
       const response = await fetch(`${API_BASE_URL}/person/info`, {
         ...options,
         method: "PUT",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({
           email: requestData.email,
@@ -194,7 +195,6 @@ const usePerson = () => {
         }),
       });
       const data = await response.json();
-
       return data;
     } catch (err) {
       setErrorUpdatePersonInfo(err.message);
@@ -217,9 +217,9 @@ const usePerson = () => {
       const response = await fetch(`${API_BASE_URL}/person/bank-info`, {
         ...options,
         method: "PUT",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({
           email: requestData.email,
@@ -251,9 +251,9 @@ const usePerson = () => {
       const response = await fetch(`${API_BASE_URL}/person/location-info`, {
         ...options,
         method: "PUT",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({
           email: requestData.email,

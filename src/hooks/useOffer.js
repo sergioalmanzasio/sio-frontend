@@ -1,12 +1,13 @@
-import { useState, useCallback } from "react"; // ⬅️ Importar useCallback
+import { useState, useCallback } from "react";
 import ToastAlert from "../components/alerts/ToastAlert";
 import { API_BASE_URL } from "../shared/constanst";
 
 
 const useOffer = () => {
-  const [offers, setOffers] = useState(null); // ******** 
+  const [offers, setOffers] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const token = localStorage.getItem("auth_token");
 
   const getOffers = useCallback(async () => {
     setLoading(true);
@@ -137,7 +138,10 @@ const useOffer = () => {
     try {
       const response = await fetch(`${API_BASE_URL}/admin/offers/get-all`, {
         method: "GET",
-        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
       });
       const data = await response.json();
       if (response.ok) {
@@ -170,7 +174,10 @@ const useOffer = () => {
     try {
       const response = await fetch(`${API_BASE_URL}/admin/offers/get-all-benefits`, {
         method: "GET",
-        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
       });
       const data = await response.json();
       if (response.ok) {
@@ -202,7 +209,10 @@ const useOffer = () => {
     try {
       const response = await fetch(`${API_BASE_URL}/admin/offers/get-all-categories`, {
         method: "GET",
-        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
       });
       const data = await response.json();
       if (response.ok) {
@@ -236,8 +246,8 @@ const useOffer = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
-        credentials: "include",
         body: JSON.stringify(offerData),
       });
       const data = await response.json();
@@ -272,8 +282,8 @@ const useOffer = () => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
-        credentials: "include",
         body: JSON.stringify(offerData),
       });
       const data = await response.json();
@@ -301,7 +311,110 @@ const useOffer = () => {
     }
   }, []);
 
-  return { offers, loading, error, getOffers, getOffersByOperator, getOffersByService, getOffersByOperatorAndService, getAdminOffers, getAllBenefits, getAllCategories, createOffer, updateOffer };
+  const getCompensationPlan = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_BASE_URL}/offer/compensation-offers`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      if (response.ok || data.process === "success") {
+        return data.data || [];
+      } else {
+        ToastAlert({
+          position: "top",
+          timer: 1800,
+          icon: "error",
+          title: data.message || "Error al obtener el plan de compensación",
+        });
+        return [];
+      }
+    } catch (error) {
+      ToastAlert({
+        position: "top",
+        timer: 1800,
+        icon: "error",
+        title: "Error de red",
+      });
+      return [];
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const getOfferCommissionConfig = useCallback(async (offerId) => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_BASE_URL}/admin/offers/commission-config`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({ offer_id: offerId }),
+      });
+      const data = await response.json();
+      if (response.ok || data.process === "success") {
+        return data.data || [];
+      } else {
+        ToastAlert({
+          position: "top",
+          timer: 1800,
+          icon: "error",
+          title: data.message || "Error al obtener la configuración de comisiones",
+        });
+        return null;
+      }
+    } catch (error) {
+      ToastAlert({
+        position: "top",
+        timer: 1800,
+        icon: "error",
+        title: "Error de red al obtener configuración",
+      });
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const updateOfferCommissionConfig = useCallback(async (configData) => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_BASE_URL}/admin/offers/commission-config`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify(configData),
+      });
+      const data = await response.json();
+      
+      ToastAlert({
+        position: "top",
+        timer: 2500,
+        icon: data.process === 'success' ? 'success' : (data.process === 'info' ? 'info' : 'error'),
+        title: data.message || "Operación procesada",
+      });
+      return data;
+    } catch (error) {
+      ToastAlert({
+        position: "top",
+        timer: 2000,
+        icon: "error",
+        title: "Error de red al actualizar configuración",
+      });
+      return { process: "error" };
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  return { offers, loading, error, getOffers, getOffersByOperator, getOffersByService, getOffersByOperatorAndService, getAdminOffers, getAllBenefits, getAllCategories, createOffer, updateOffer, getCompensationPlan, getOfferCommissionConfig, updateOfferCommissionConfig };
 };
 
 export default useOffer;

@@ -4,14 +4,17 @@ import { API_BASE_URL } from "../shared/constanst";
 
 const useBonus = () => {
  const [loading, setLoading] = useState(false);
+ const token = localStorage.getItem("auth_token");
 
  const getBonusHistory = useCallback(async () => {
   setLoading(true);
   try {
    const response = await fetch(`${API_BASE_URL}/bonus/history`, {
     method: "GET",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
+    headers: {
+     "Content-Type": "application/json",
+     "Authorization": `Bearer ${token}`,
+    },
    });
    const data = await response.json();
    if (response.ok) {
@@ -33,8 +36,10 @@ const useBonus = () => {
   try {
    const response = await fetch(`${API_BASE_URL}/bonus`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
+    headers: {
+     "Content-Type": "application/json",
+     "Authorization": `Bearer ${token}`,
+    },
     body: JSON.stringify(bonusData),
    });
    const data = await response.json();
@@ -58,20 +63,22 @@ const useBonus = () => {
   try {
    const response = await fetch(`${API_BASE_URL}/bonus/${id}`, {
     method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
+    headers: {
+     "Content-Type": "application/json",
+     "Authorization": `Bearer ${token}`,
+    },
     body: JSON.stringify(bonusData),
    });
    const data = await response.json();
    if (response.ok) {
-    ToastAlert({ position: "top", timer: 1800, icon: "success", title: "Bono actualizado exitosamente" });
+    ToastAlert({ position: "center", timer: 1800, icon: "success", title: "Bono actualizado exitosamente" });
     return { process: "success", data };
    } else {
-    ToastAlert({ position: "bottom", timer: 2000, icon: data.process, title: data.message || "Error al actualizar bono" });
+    ToastAlert({ position: "center", timer: 2500, icon: data.process, title: data.message || "Error al actualizar bono" });
     return { process: "error" };
    }
   } catch (error) {
-   ToastAlert({ position: "top", timer: 2000, icon: "error", title: "Error de red" });
+   ToastAlert({ position: "center", timer: 2500, icon: "error", title: "Error de red" });
    return { process: "error" };
   } finally {
    setLoading(false);
@@ -83,8 +90,10 @@ const useBonus = () => {
   try {
    const response = await fetch(`${API_BASE_URL}/referral/get-bonus-generated`, {
     method: "GET",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
+    headers: {
+     "Content-Type": "application/json",
+     "Authorization": `Bearer ${token}`,
+    },
    });
    const data = await response.json();
    if (response.ok || data.process === "success") {
@@ -108,8 +117,10 @@ const useBonus = () => {
   try {
    const response = await fetch(`${API_BASE_URL}/referral/request-payment-bonus`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
+    headers: {
+     "Content-Type": "application/json",
+     "Authorization": `Bearer ${token}`,
+    },
     body: JSON.stringify({ bonusTransactionTokens }),
    });
    const data = await response.json();
@@ -132,8 +143,10 @@ const useBonus = () => {
   try {
    const response = await fetch(`${API_BASE_URL}/bonus/requested-payment`, {
     method: "GET",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
+    headers: {
+     "Content-Type": "application/json",
+     "Authorization": `Bearer ${token}`,
+    },
    });
    const data = await response.json();
    if (response.ok || data.process === "success") {
@@ -156,8 +169,10 @@ const useBonus = () => {
 
    const response = await fetch(`${API_BASE_URL}/bonus/paid`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
+    headers: {
+     "Content-Type": "application/json",
+     "Authorization": `Bearer ${token}`,
+    },
     body: JSON.stringify({
      bonusTransactionTokens
     }),
@@ -184,8 +199,10 @@ const useBonus = () => {
    if (status_name && status_name !== "Todas") params.append("status_name", status_name);
    const response = await fetch(`${API_BASE_URL}/referral/bonuses/history/filter?${params.toString()}`, {
     method: "GET",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
+    headers: {
+     "Content-Type": "application/json",
+     "Authorization": `Bearer ${token}`,
+    },
    });
    const data = await response.json();
    if (response.ok || data.process === "success") {
@@ -207,8 +224,10 @@ const useBonus = () => {
   try {
    const response = await fetch(`${API_BASE_URL}/payments/detailed-paid-bonuses`, {
     method: "GET",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
+    headers: {
+     "Content-Type": "application/json",
+     "Authorization": `Bearer ${token}`,
+    },
    });
    const data = await response.json();
    if (response.ok || data.process === "success") {

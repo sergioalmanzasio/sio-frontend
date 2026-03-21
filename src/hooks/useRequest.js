@@ -19,6 +19,7 @@ const useRequest = () => {
   const [loadingUpdateServiceRequestState, setLoadingUpdateServiceRequestState] = useState(false);
   const [loadingGetComments, setLoadingGetComments] = useState(false);
   const [error, setError] = useState(null);
+  const token = localStorage.getItem("auth_token");
 
   const addServiceRequest = useCallback(async (requestData, options = {}) => {
     setLoadingAddRequest(true);
@@ -202,9 +203,9 @@ const useRequest = () => {
     try {
       const response = await fetch(`${API_BASE_URL}/request/cancel-by-client`, {
         method: "POST",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({
           service_request_id: id,
@@ -246,9 +247,9 @@ const useRequest = () => {
       const response = await fetch(`${API_BASE_URL}/request/service-coordinator`, {
         ...options,
         method: "POST",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({ email })
       });
@@ -287,9 +288,9 @@ const useRequest = () => {
       const response = await fetch(`${API_BASE_URL}/request/add-referral-service-request`, {
         ...options,
         method: "POST",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify(requestData)
       });
@@ -328,9 +329,9 @@ const useRequest = () => {
       const response = await fetch(`${API_BASE_URL}/request/referral-service-requests`, {
         ...options,
         method: "GET",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
       });
       const data = await response.json();
@@ -368,9 +369,9 @@ const useRequest = () => {
       const response = await fetch(`${API_BASE_URL}/request/add-comment`, {
         ...options,
         method: "POST",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({ service_request_id: serviceRequestId, ...commentData })
       });
@@ -409,9 +410,9 @@ const useRequest = () => {
       const response = await fetch(`${API_BASE_URL}/request/update-service-request-state`, {
         ...options,
         method: "POST",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify(updateData)
       });
@@ -450,9 +451,9 @@ const useRequest = () => {
       const response = await fetch(`${API_BASE_URL}/request/get-comments`, {
         ...options,
         method: "POST",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({ service_request_id: serviceRequestId })
       });
@@ -494,9 +495,9 @@ const useRequest = () => {
       const response = await fetch(`${API_BASE_URL}/request/only-filling-number`, {
         ...options,
         method: "PUT",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify(updateData)
       });
@@ -536,9 +537,9 @@ const useRequest = () => {
     try {
       const response = await fetch(`${API_BASE_URL}/coordinate-service/dashboard/service-requests/count?status=${encodeURIComponent(status)}`, {
         method: "GET",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
       });
       const data = await response.json();
@@ -577,9 +578,9 @@ const useRequest = () => {
     try {
       const response = await fetch(`${API_BASE_URL}/coordinate-service/dashboard/service-requests/count-by-month`, {
         method: "GET",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
       });
       const data = await response.json();

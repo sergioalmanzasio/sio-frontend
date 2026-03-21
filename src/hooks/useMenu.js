@@ -21,17 +21,19 @@ const useMenu = () => {
   const getOptionByRole = useCallback(async (roleId) => {
     setLoading(true);
     try {
+      const token = localStorage.getItem("auth_token");
       const menus = localStorage.getItem("menus");
       if (menus) {
         setMenus(JSON.parse(menus));
         return;
       }
-      const response = await fetch(
-        `${API_BASE_URL}/menu/options/${roleId}`,
-        {
-          method: "GET",
-          credentials: "include",
+      const response = await fetch(`${API_BASE_URL}/menu/options/${roleId}`, {
+        method: "GET",
+        headers: {
+          'Content-Type': 'application/json',
+          "Authorization": `Bearer ${token}`,
         }
+      }
       );
       const data = await response.json();
       if (response.ok) {
