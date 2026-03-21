@@ -1,27 +1,53 @@
 import { useState, useEffect } from "react";
-import { X, Check } from "lucide-react";
+import { X, Check, DollarSign } from "lucide-react";
 import { Input } from "../ui/input";
 import Select from "../ui/select";
 import Textarea from "../ui/textarea";
 
 const OfferFormModal = ({ isOpen, onClose, onSubmit, operators = [], benefitsList = [], categoriesList = [], isSubmitting = false, offerToEdit = null }) => {
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    price: "",
-    is_range: false,
-    date_start: "",
-    date_end: "",
-    operator_name: "",
-    category_name: "",
-    is_active: true,
-    benefits: []
-  });
+ 
+  let objData = {};
+  if(!offerToEdit){
+    objData = {
+      name: "",
+      description: "",
+      price: "",
+      is_range: false,
+      date_start: "",
+      date_end: "",
+      operator_name: "",
+      category_name: "",
+      is_active: true,
+      commission_type: "",
+      commission_value: "",
+      _display_commission_value: "",
+      benefits: []
+    }
+  }else{
+    objData = {
+      name: "",
+      description: "",
+      price: "",
+      is_range: false,
+      date_start: "",
+      date_end: "",
+      operator_name: "",
+      category_name: "",
+      is_active: true,
+      benefits: []
+    }
+  }
+  
+  const [formData, setFormData] = useState(objData);
   const [errorName, setErrorName] = useState(false);
   const [errorOperator, setErrorOperator] = useState(false);
   const [errorDescription, setErrorDescription] = useState(false);
   const [errorCategory, setErrorCategory] = useState(false);
   const [errorPrice, setErrorPrice] = useState(false);
+  const [errorDateStart, setErrorDateStart] = useState(false);
+  const [errorDateEnd, setErrorDateEnd] = useState(false);
+  const [errorCommissionType, setErrorCommissionType] = useState(false);
+  const [errorCommissionValue, setErrorCommissionValue] = useState(false);
 
   const [benefitSearchTerm, setBenefitSearchTerm] = useState("");
 
@@ -50,6 +76,8 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, operators = [], benefitsLis
           date_start: "",
           date_end: "",
           operator_name: "",
+          commission_type: "",
+          commission_value: "",
           category_name: "",
           is_active: true,
           benefits: []
@@ -61,11 +89,6 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, operators = [], benefitsLis
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    // e.target.name === "name" ? formData.name !==  "" || formData.name.trim() ? setErrorName(false) : setErrorName(true) : null;
-    // e.target.name === "operator_name" ? formData.operator_name !==  "" || formData.operator_name.trim() ? setErrorOperator(false) : setErrorOperator(true) : null;
-    // e.target.name === "description" ? formData.description !==  "" || formData.description.trim() ? setErrorDescription(false) : setErrorDescription(true) : null;
-    // e.target.name === "price" ? formData.price !==  "" || formData.price.trim() ? setErrorPrice(false) : setErrorPrice(true) : null;
-    
     setFormData((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value
@@ -83,6 +106,34 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, operators = [], benefitsLis
     });
   };
 
+  const formatDisplayValue = (value, type) => {
+    if (!value) return "";
+    value = value.toString().split(".")[0];
+    const cleanNum = value.replace(/\D/g, "");
+    if (!cleanNum) return "";
+    if (type === "Valor fijo" || type === "") {
+      return `$ ${Number(cleanNum).toLocaleString("es-CO")}`;
+    }
+    return cleanNum;
+  };
+
+  const handleCommissionTypeChange = (e) => {
+    const newType = e.target.value;
+    const newFormData = { ...formData };
+    newFormData.commission_type = newType;
+    newFormData._display_commission_value = formatDisplayValue(newFormData.commission_value, newType);
+    setFormData(newFormData);
+  };
+
+  const handleCommissionValueChange = (e) => {
+    const rawVal = e.target.value;
+    const cleanNum = rawVal.replace(/\D/g, "");
+    const newFormData = { ...formData };
+    newFormData.commission_value = cleanNum || "";
+    newFormData._display_commission_value = formatDisplayValue(cleanNum, newFormData.commission_type);
+    setFormData(newFormData);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (formData.name === "" || !formData.name.trim()) {
@@ -91,29 +142,53 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, operators = [], benefitsLis
     }else{
       setErrorName(false);
     }
-    if (formData.operator_name === "" || !formData.operator_name.trim()) {
-      setErrorOperator(true);
-      return;
-    }else{
-      setErrorOperator(false);
-    }
-     if (formData.category_name === "" || !formData.category_name.trim()) {
-      setErrorCategory(true);
-      return;
-    }else{
-      setErrorCategory(false);
-    }
     if (formData.description === "" || !formData.description.trim()) {
       setErrorDescription(true);
       return;
     }else{
       setErrorDescription(false);
     }
+    if (formData.operator_name === "" || !formData.operator_name.trim()) {
+      setErrorOperator(true);
+      return;
+    }else{
+      setErrorOperator(false);
+    }
+    if (formData.category_name === "" || !formData.category_name.trim()) {
+      setErrorCategory(true);
+      return;
+    }else{
+      setErrorCategory(false);
+    }
     if (formData.price === "" || !formData.price.trim()) {
       setErrorPrice(true);
       return;
     }else{
       setErrorPrice(false);
+    }
+    if( formData.date_start === "" || !formData.date_start.trim() ){
+      setErrorDateStart(true);
+      return;
+    }else{
+      setErrorDateStart(false);
+    }
+    if( formData.date_end === "" || !formData.date_end.trim() ){
+      setErrorDateEnd(true);
+      return;
+    }else{
+      setErrorDateEnd(false);
+    }
+    if (formData.commission_type === "" || !formData.commission_type.trim()) {
+      setErrorCommissionType(true);
+      return;
+    }else{
+      setErrorCommissionType(false);
+    }
+    if (formData.commission_value === "" || !formData.commission_value.trim()) {
+      setErrorCommissionValue(true);
+      return;
+    }else{
+      setErrorCommissionValue(false);
     }
     
     onSubmit(formData);
@@ -124,6 +199,8 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, operators = [], benefitsLis
   const filteredBenefits = benefitsList.filter((benefit) =>
     benefit.description.toLowerCase().includes(benefitSearchTerm.toLowerCase())
   );
+
+
 
   if (!isOpen) return null;
 
@@ -177,7 +254,7 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, operators = [], benefitsLis
                     )}
                   </div>
 
-                  <div className="md:col-span-2">
+                  <div className="md:col-span-2 text-sm">
                     <Textarea
                       label="Descripción"
                       name="description"
@@ -279,7 +356,6 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, operators = [], benefitsLis
                   </div>
                   )}
 
-                  {/* Date Start and End */}
                   <div className="md:col-span-2 grid grid-cols-2 gap-5 mt-1">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Disponible desde</label>
@@ -289,6 +365,7 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, operators = [], benefitsLis
                         value={formData.date_start}
                         onChange={handleChange}
                       />
+                      {errorDateStart && <span className="text-red-500 text-xs mt-1">El campo fecha de inicio es requerido</span>}
                     </div>
 
                     <div>
@@ -300,11 +377,44 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, operators = [], benefitsLis
                         min={formData.date_start}
                         onChange={handleChange}
                       />
+                      {errorDateEnd && <span className="text-red-500 text-xs mt-1">El campo fecha de fin es requerido</span>}
                     </div>
                   </div>
                 </div>
-
-                {/* Benefits multi-select */}
+                
+                { !offerToEdit && (
+                  <div className="grid grid-cols-2 gap-5 mt-1 mt-6 border-t border-gray-200 pt-4 items-center justify-center">
+                    <div className="col-span-2 md:col-span-2">
+                      <h5 className="block text-sm font-medium text-gray-700">Configuración de comisión</h5>
+                    </div>
+                    <div className="col-span-2 md:col-span-1">
+                      <Select
+                          label="Tipo de comisión"
+                          options={["Valor fijo", "Porcentaje"]}
+                          value={formData.commission_type}
+                          onChange={handleCommissionTypeChange}
+                        />
+                        {errorCommissionType && <span className="text-red-500 text-xs mt-1">El campo tipo de comisión es requerido</span>}
+                    </div>
+                    <div className="col-span-2 md:col-span-1 md:-mt-6">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Valor
+                      </label>
+                      <Input
+                        type="text"
+                        name="commission_value"
+                        icon={DollarSign}
+                        value={formData._display_commission_value || ""}
+                        onChange={handleCommissionValueChange}
+                        placeholder={formData.commission_type === 'Valor fijo' || formData.commission_type === '' ? "$ 0" : "0"}
+                        autoComplete="off"
+                        className="bg-white"
+                      />
+                      {errorCommissionValue && <span className="text-red-500 text-xs mt-1">El campo valor de la comisión es requerido</span>}
+                    </div>
+                  </div>
+                ) }  
+                
                 <div className="mt-6 border-t border-gray-200 pt-4">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3">
                     <label className="block text-sm font-medium text-gray-700 mb-2 sm:mb-0">Beneficios incluidos</label>
