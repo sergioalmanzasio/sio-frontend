@@ -114,7 +114,7 @@ const AdminBonusesTable = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 mt-4" >
+    <div className="container mx-auto px-4 lg:px-0 mt-4 max-w-6xl" >
       {loading && bonuses.length === 0 && (
         <FullScreenLoader show={loading} message="Cargando historial de bonos..." />
       )}
@@ -213,7 +213,7 @@ const AdminBonusesTable = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <button
                         onClick={() => handleOpenEditModal(bonus)}
-                        className="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 p-2 rounded-md transition-colors inline-flex items-center"
+                        className="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 p-2 rounded-md transition-colors inline-flex items-center cursor-pointer"
                         title="Editar bono"
                       >
                         <Edit2 className="h-4 w-4 cursor-pointer" />

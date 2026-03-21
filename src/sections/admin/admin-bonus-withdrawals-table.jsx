@@ -275,7 +275,7 @@ const AdminBonusWithdrawalsTable = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn">
+    <div className="container mx-auto px-4 lg:px-0 py-8 animate-fadeIn max-w-6xl">
       {loading && bonuses.length === 0 && (
         <FullScreenLoader show={true} message="Cargando solicitudes de pagos..." />
       )}

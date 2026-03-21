@@ -59,11 +59,8 @@ export default function ServiceCoordinatorDashboard() {
         description="Resumen de gestión y asignaciones de servicios."
       />
       {loading ? <FullScreenLoader show={loading} message="Cargando panel..." /> : null}    
-      <main className="container mx-auto px-4 py-8">
-        {/* Bento Grid Layout */}
+      <main className="container mx-auto px-4 py-8 max-w-6xl">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[minmax(180px,auto)]">
-          
-          {/* Summary Cards - Top Row */}
           {summaryData.map((item, index) => (
             <div key={index} className="md:col-span-1">
               <DashboardCard {...item} />

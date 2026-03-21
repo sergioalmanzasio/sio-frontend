@@ -83,7 +83,7 @@ const CommissionsHistoryTable = () => {
   
 
   return (
-    <div className="w-full md:w-3/4 mt-0 md:mt-4 mx-auto p-4 md:p-0">
+    <div className="w-full md:w-3/4 mt-0 md:mt-4 mx-auto p-4 md:p-0 max-w-6xl">
       {loadingGetCommissionsHistory && <FullScreenLoader show={loadingGetCommissionsHistory} message="Cargando historial de comisiones..." />}
       <InlineAlert
         title="Total de comisiones cobradas"

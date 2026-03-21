@@ -96,7 +96,7 @@ const CommissionPaymentsTable = () => {
   };
 
   return (
-    <div className="w-full md:w-4/4 mt-0 md:mt-4 mx-auto p-4 md:p-0">
+    <div className="w-full md:w-4/4 mt-0 md:mt-4 mx-auto p-4 md:p-0 max-w-6xl">
       {loadingDetailedPaidCommissions && commissions.length === 0 && (
         <FullScreenLoader show={loadingDetailedPaidCommissions} message="Cargando comisiones pagadas..." />
       )}
@@ -134,7 +134,7 @@ const CommissionPaymentsTable = () => {
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden sm:table-cell cursor-pointer select-none hover:bg-blue-500 transition-colors"
+                className="px-2 py-3 text-left text-xs font-medium uppercase tracking-wider hidden sm:table-cell cursor-pointer select-none hover:bg-blue-500 transition-colors"
                 onClick={() => handleSort("commission_amount_formmated")}
               >
                 Monto <SortIcon column="commission_amount_formmated" />

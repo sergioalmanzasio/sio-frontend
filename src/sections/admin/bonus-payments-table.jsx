@@ -103,7 +103,7 @@ const BonusPaymentsTable = () => {
   };
 
   return (
-    <div className="w-full mt-0 md:mt-4 mx-auto p-4 md:p-0">
+    <div className="w-full mt-0 md:mt-4 mx-auto p-4 md:p-0 max-w-6xl">
       {loading && bonuses.length === 0 && (
         <FullScreenLoader show={true} message="Cargando bonos pagados..." />
       )}
@@ -143,7 +143,7 @@ const BonusPaymentsTable = () => {
                 className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden sm:table-cell cursor-pointer select-none hover:bg-emerald-600 transition-colors"
                 onClick={() => handleSort("bonus_amount")}
               >
-                Monto bono <SortIcon column="bonus_amount" />
+                Monto <SortIcon column="bonus_amount" />
               </th>
               <th
                 className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden lg:table-cell cursor-pointer select-none hover:bg-emerald-600 transition-colors"

@@ -109,7 +109,7 @@ const AdminServiceRequestsTable = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn">
+    <div className="container mx-auto px-4 lg:px-0 py-8 animate-fadeIn max-w-6xl">
       {loadingAdminServiceRequests && requests.length === 0 && (
         <FullScreenLoader show={loadingAdminServiceRequests} message="Cargando solicitudes de servicio..." />
       )}
@@ -151,12 +151,12 @@ const AdminServiceRequestsTable = () => {
               >
                 Oferta <SortIcon column="offer_name" />
               </th>
-              <th
+              {/* <th
                 className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell cursor-pointer select-none hover:bg-indigo-600 transition-colors"
                 onClick={() => handleSort("filing_number")}
               >
                 Radicado <SortIcon column="filing_number" />
-              </th>
+              </th> */}
               <th
                 className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider cursor-pointer select-none hover:bg-indigo-600 transition-colors"
                 onClick={() => handleSort("status")}
@@ -189,8 +189,7 @@ const AdminServiceRequestsTable = () => {
                 <tr key={index} className="hover:bg-gray-50 transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     <div className="flex flex-col">
-                      <span className="font-bold">{item.referral_name || "N/A"}</span>
-                      <span className="text-xs text-gray-500 md:hidden mt-1">Radicado: {item.filing_number}</span>
+                      <span className="font-bold">{  item.referral_name || "N/A"}</span>
                       <span className="text-xs text-gray-400 lg:hidden mt-1">Fecha de solicitud: {item.created_at_formatted}</span>
                     </div>
                   </td>
@@ -200,11 +199,13 @@ const AdminServiceRequestsTable = () => {
                       <span className="text-xs text-gray-500 mt-0.5">{item.offer_description}</span>
                       <span className="text-xs font-medium text-indigo-600 mt-0.5">{item.offer_price}</span>
                       <span className="text-xs text-gray-500 mt-0.5">Operador: {item.operator_name}</span>
+                      <span className="bg-gray-100 px-2 py-1 rounded text-xs mt-1">
+                        <span className="font-semibold">Radicado: </span>{item.filing_number}</span>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 hidden md:table-cell">
+                  {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 hidden md:table-cell">
                     <span className="bg-gray-100 px-2 py-1 rounded font-medium">{item.filing_number}</span>
-                  </td>
+                  </td> */}
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
                     <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${getStatusColor(item.status)}`}>
                       {item.status}
