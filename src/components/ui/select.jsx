@@ -7,10 +7,11 @@ const ICONS = {
   "Departamento": MapPin,
   "Ciudad": MapPin,
   "Tipo de Bono": DollarSign,
-  "Tipo de Aplicación": HandCoins
+  "Tipo de Aplicación": HandCoins,
+  "Tipo de comisión": HandCoins
 };
 
-const Select = ({ options, label, value, onChange, disabled = false, icon }) => {
+const Select = ({ options, label, value, onChange, disabled = false, icon, className }) => {
   const Icon = icon || ICONS[label] || TabletSmartphone;
 
   return (
@@ -37,11 +38,11 @@ const Select = ({ options, label, value, onChange, disabled = false, icon }) => 
         onChange={onChange}
         id={`select-${label}`}
         disabled={disabled}
-        className="appearance-none w-full p-3 pt-5 pl-10 
+        className={`appearance-none w-full p-3 pt-5 pl-10 
                    border border-gray-300 rounded-lg text-gray-700 
                    outline-none focus:border-blue-500 focus:ring-1 
                    focus:ring-blue-500 transition duration-300 
-                   bg-white"
+                   bg-white text-sm ${className}`}
       >
         <option value="" disabled>
           Selecciona {label}
