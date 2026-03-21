@@ -75,7 +75,6 @@ export default function AssociateOfferPage() {
     }
 
     await getOffersByOperator(selectedOperatorId);
-    console.log('offers', offers);
     setShowOffers(true);
   };
 
@@ -96,7 +95,7 @@ export default function AssociateOfferPage() {
       ToastAlert({
         position: 'center',
         timer: 1800,
-        icon: 'warning',
+        icon: 'info',
         title: 'Por favor selecciona una oferta',
       });
       return;
@@ -154,9 +153,8 @@ export default function AssociateOfferPage() {
         description="Selecciona un operador y una oferta para asociar al referido asignado."
       />
 
-      <div className="w-full md:w-3/4 lg:w-2/3 mx-auto p-4 md:p-6">
+      <div className="w-full md:w-3/4 lg:w-2/3 mx-auto p-4 md:p-6 lg:px-0 max-w-6xl">
         <div className="bg-white shadow-lg rounded-xl p-6">
-          {/* Read-only referral information */}
           <div className="mb-6">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">Información del Referido</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -187,7 +185,6 @@ export default function AssociateOfferPage() {
 
           <div className="h-px bg-gray-200 my-6"></div>
 
-          {/* Operator selection */}
           <div className="mb-6">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">Selección de Operador y Oferta</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
@@ -205,7 +202,7 @@ export default function AssociateOfferPage() {
                   type="button"
                   onClick={handleFetchOffers}
                   disabled={!selectedOperatorId || loadingOffers}
-                  className="w-full h-14"
+                  className="w-full h-14 text-sm"
                 >
                   {loadingOffers ? 'Cargando...' : 'Buscar Ofertas'}
                 </PrimaryButton>
@@ -213,7 +210,6 @@ export default function AssociateOfferPage() {
             </div>
           </div>
 
-          {/* Offers list */}
           {showOffers && (
             <div className="mb-6">
               <h4 className="text-md font-semibold text-gray-800 mb-3">Ofertas Disponibles</h4>
@@ -264,7 +260,6 @@ export default function AssociateOfferPage() {
             </div>
           )}
 
-          {/* Selected offer details */}
           {selectedOffer && (
             <>
               <div className="h-px bg-gray-200 my-6"></div>
@@ -289,7 +284,7 @@ export default function AssociateOfferPage() {
                     <textarea
                       value={selectedOffer.offer_description || 'Sin descripción'}
                       disabled
-                      className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed"
+                      className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed text-sm"
                       rows="3"
                     />
                   </div>
@@ -313,7 +308,6 @@ export default function AssociateOfferPage() {
             </>
           )}
 
-          {/* Action buttons */}
           <div className="flex gap-3 pt-4">
             <PrimaryButton
               type="button"
