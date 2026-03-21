@@ -385,7 +385,7 @@ export default function AddClientForm({ onSuccess, onCancel, hasLegend = true })
           </label>
           <textarea 
             disabled={!isValidateClient}
-            className={`w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm ${!isValidateClient ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-base ${!isValidateClient ? 'opacity-50 cursor-not-allowed' : ''}`}
             rows="3"
             value={clientObservations}
             onChange={(e) => setClientObservations(e.target.value)}
