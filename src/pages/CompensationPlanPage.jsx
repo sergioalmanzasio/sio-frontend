@@ -17,6 +17,7 @@ export default function CompensationPlanPage() {
     };
     fetchPlans();
   }, [getCompensationPlan]);
+  
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
