@@ -106,6 +106,7 @@ const AdminOperatorsTable = () => {
       result = await createOperator(formData);
     }
     setIsSubmitting(false);
+    setIsFormModalOpen(false);
     
     if (result && result.process === "success") {
       ToastAlert({
@@ -121,8 +122,6 @@ const AdminOperatorsTable = () => {
       }, 1600);
     }
   };
-
-  if (loading) return <FullScreenLoader />;
 
   return (
     <div className="container mx-auto px-4 lg:px-0 mt-4 max-w-6xl">
