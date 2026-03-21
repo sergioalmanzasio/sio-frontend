@@ -140,35 +140,39 @@ export default function ReferralDashboard() {
                     <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/20 to-pink-500/20 blur-3xl rounded-full transform scale-75"></div>
                     
                     {/* Prize Card */}
-                    <div className="relative bg-[#1a1f37]/80 backdrop-blur-xl border border-white/10 p-8 rounded-3xl w-full max-w-sm transform rotate-3 hover:rotate-0 transition-all duration-500 shadow-2xl">
+
+                    <div className="relative w-full max-w-sm rounded-3xl p-[2px] bg-[conic-gradient(from_0deg,#ec4899,#8b5cf6,#6366f1,#ec4899)] ">
+                      <div className="bg-[#1a1f37]/90 backdrop-blur-xl p-8 rounded-3xl shadow-2xl">
                         <div className="absolute top-0 right-0 p-4 opacity-20">
-                            <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="80" cy="20" r="40" fill="url(#paint0_radial)" />
-                                <defs>
-                                    <radialGradient id="paint0_radial" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(80 20) rotate(90) scale(40)">
-                                        <stop stopColor="#EC4899" />
-                                        <stop offset="1" stopColor="#8B5CF6" stopOpacity="0" />
-                                    </radialGradient>
-                                </defs>
-                            </svg>
-                        </div>
-                        
-                        <div className="text-center py-8 space-y-4">
-                            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-500 to-purple-600 shadow-lg mb-4">
-                                <span className="text-3xl">🎁</span>
-                            </div>
-                            <h3 className="text-white text-5xl font-bold tracking-tight">$ 50.000</h3>
-                            <p className="text-gray-400 font-medium tracking-wide uppercase text-sm">
-                                Por cada cliente que complete su servicio
-                            </p>
+                          <svg width="100" height="100" viewBox="0 0 100 100">
+                            <circle cx="80" cy="20" r="40" fill="url(#paint0_radial)" />
+                            <defs>
+                              <radialGradient id="paint0_radial" cx="0" cy="0" r="1"
+                                gradientUnits="userSpaceOnUse"
+                                gradientTransform="translate(80 20) rotate(90) scale(40)">
+                                <stop stopColor="#EC4899"/>
+                                <stop offset="1" stopColor="#8B5CF6" stopOpacity="0"/>
+                              </radialGradient>
+                            </defs>
+                          </svg>
                         </div>
 
-                        {/* Decorative elements */}
-                        <div className="absolute bottom-4 left-4 opacity-30 text-purple-400">
-                             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-                            </svg>
+                        <div className="text-center py-8 space-y-4">
+                          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-500 to-purple-600 shadow-lg mb-4">
+                            <span className="text-3xl">🎁</span>
+                          </div>
+
+                          <h3 className="text-white text-5xl font-bold tracking-tight">
+                            $ 50.000
+                          </h3>
+
+                          <p className="text-gray-100 font-medium tracking-wide text-md">
+                            Por cada cliente que complete su servicio.
+                          </p>
                         </div>
+
+                      </div>
+
                     </div>
                 </div>
             </div>

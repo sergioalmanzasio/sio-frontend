@@ -171,7 +171,6 @@ export default function ConfigPage() {
   };
 
   const handleCancel = () => {
-    // Restore backup data
     setDocumentType(backupData.documentType);
     setDocumentNumber(backupData.documentNumber);
     setFirstName(backupData.firstName);
@@ -215,7 +214,6 @@ export default function ConfigPage() {
   };
 
   const handleUpdatePersonalInfo = async () => {
-    // Validate required fields
     if (!firstName || !lastName1 || !email || !phone || !documentType || !documentNumber) {
       ToastAlert({
         position: 'center',
@@ -362,7 +360,7 @@ export default function ConfigPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 pb-12 ">
+    <div className="min-h-screen pb-12 ">
       <Navbar />
       <TransversalHeader
         title="Configuración de Perfil"
@@ -373,17 +371,14 @@ export default function ConfigPage() {
 
       {!loading ? (
         <div className="container mx-auto px-4 mt-8 max-w-6xl">
-
-          {/* Main Card */}
           <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
-            {/* Header Section */}
             <div className="bg-blue-100 p-6 text-white">
               <div className="flex justify-between items-center">
                 <div>
-                  <h2 className="text-3xl font-bold mb-2 text-gray-800">
+                  <h2 className="text-1xl font-bold mb-1 text-gray-800">
                     {firstName} {secondName} {lastName1} {lastName2}
                   </h2>
-                  <p className="text-gray-800 flex items-center gap-2">
+                  <p className="text-gray-800 flex items-center gap-2 text-md">
                     <Mail className="w-4 h-4" />
                     {email}
                   </p>
@@ -419,9 +414,7 @@ export default function ConfigPage() {
               </div>
             </div>
 
-            {/* Content Section */}
             <div className="p-8">
-              {/* Personal Information */}
               <div className="mb-8">
                 <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
                   <User className="w-6 h-6 text-blue-600" />
@@ -438,6 +431,7 @@ export default function ConfigPage() {
                         if (selected) setDocumentType(selected.acronym);
                       }}
                       icon={IdCardLanyard}
+                      className={"md:mt-0.2"}
                     />
                   </div>
 
@@ -504,7 +498,7 @@ export default function ConfigPage() {
                     <PrimaryButton 
                       onClick={handleUpdatePersonalInfo}
                       >
-                      <div className='flex items-center gap-2'>
+                      <div className='flex items-center gap-2 text-sm'>
                         <UserPen className='w-4 h-4 mr-2' />   
                         Actualizar datos personales
                       </div>
@@ -513,10 +507,8 @@ export default function ConfigPage() {
                 </div>
               </div>
 
-              {/* Divider */}
               <div className="h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent my-8"></div>
 
-              {/* Bank Information */}
               <div>
                 <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
                   <CreditCard className="w-6 h-6 text-green-600" />
@@ -558,7 +550,7 @@ export default function ConfigPage() {
                     <PrimaryButton 
                       onClick={handleUpdateBankInfo}                      
                       >
-                        <div className='flex items-center gap-2'>
+                        <div className='flex items-center gap-2 text-sm'>
                           <BanknoteArrowUp className='w-4 h-4 mr-2' />   
                           Actualizar datos bancario
                         </div>
@@ -567,10 +559,8 @@ export default function ConfigPage() {
                 </div>
               </div>
 
-              {/* Divider */}
               <div className="h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent my-8"></div>
 
-            {/* Address Information */}
               <div>
                 <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
                   <MapPin className="w-6 h-6 text-purple-600" />
@@ -642,7 +632,7 @@ export default function ConfigPage() {
                     <PrimaryButton 
                       onClick={handleUpdateLocationInfo}
                       >
-                        <div className='flex items-center gap-2'>
+                        <div className='flex items-center gap-2 text-sm'>
                           <MapPinPen className='w-4 h-4 mr-2' />   
                           Actualizar datos de ubicación
                         </div>
@@ -657,7 +647,7 @@ export default function ConfigPage() {
           <div className="mt-8 flex justify-center">
             <SecondaryButton
               onClick={() => navigate('/')}
-              className="px-8 py-3 cursor-pointer transform hover:scale-105 transition-transform"
+              className="px-8 py-3 cursor-pointer transform hover:scale-105 transition-transform text-sm"
             >
               Volver al Inicio
             </SecondaryButton>

@@ -125,7 +125,6 @@ const ServiceRequestsCoordinatorTable = () => {
       isCancelButtonVisible: false,
       footerText: 'Contactar al solicitante a SysAdmin',
       confirmCallback: () => {
-        console.log('Usuario aceptó el modal de detalles');
       },
     });
   };

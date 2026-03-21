@@ -74,10 +74,8 @@ const BonusesHistoryTable = () => {
     );
   };
 
-  
-
   return (
-    <div className="w-full md:w-3/4 mt-0 md:mt-4 mx-auto p-4 md:p-0">
+    <div className="w-full md:w-3/4 mt-0 md:mt-4 mx-auto p-4 md:p-0 max-w-6xl">
       {loading && bonuses.length === 0 && <FullScreenLoader show={true} message="Cargando historial de bonos..." />}
       <InlineAlert
         title="Total de bonos cobrados"

@@ -300,7 +300,7 @@ const WithdrawalsTable = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn">
+    <div className="container mx-auto px-4 lg:px-0 py-8 animate-fadeIn max-w-6xl">
        {loadingGetPaymentRequirements && (
         <FullScreenLoader show={loadingGetPaymentRequirements} message="Cargando solicitudes de pagos..." />
       )}
