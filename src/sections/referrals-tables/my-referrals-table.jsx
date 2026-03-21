@@ -8,6 +8,7 @@ import {GradientButton} from "../../components/ui/button";
 import useReferral from "../../hooks/useReferral";
 import { useAuth } from "../../context/AuthContext";
 import ToastAlert from "../../components/alerts/ToastAlert";
+import { useNavigate } from "react-router-dom";
 
 
 // Mock data - 22 referrals (kept for testing purposes)
@@ -36,8 +37,9 @@ const MOCK_REFERRALS = [
   { id: "REF022", clientName: "Emilio Salazar Fuentes", trackingCode: "TRK-2024-022", registrationDate: "2024-05-20", status: true},
 ];
 
-const ITEMS_PER_PAGE = 10;
 
+const ITEMS_PER_PAGE = 10;
+ 
 const MyReferralsTable = () => {
   const { myReferrals, loadingMyReferrals, getReferralGeneralInfo, loadingGetGeneralInfo } = useReferral();
   const { isAuthenticated, userData, logout } = useAuth();
@@ -47,6 +49,7 @@ const MyReferralsTable = () => {
   
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate(); 
 
   // Fetch referrals data
   const getReferrals = async () => {
@@ -265,19 +268,11 @@ const MyReferralsTable = () => {
     </button>
   );
 
-  
-
   return (
     <>
       {loadingMyReferrals && <FullScreenLoader show={loadingMyReferrals} message="Cargando clientes..." />}
-      <div className="w-full md:w-3/4 mt-0 md:mt-4 mx-auto p-4 md:p-0">
+      <div className="w-full md:w-3/4 mt-0 md:mt-8 mx-auto p-4 md:p-0 max-w-6xl">
         <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
-          <GradientButton
-            onClick={() => setIsModalOpen(true)}
-            className="px-8 py-3 cursor-pointer transform hover:scale-105 transition-transform w-full md:w-auto"
-          >
-            Agregar cliente
-          </GradientButton>
           <input
             type="text"
             value={searchTerm}
@@ -288,6 +283,13 @@ const MyReferralsTable = () => {
             placeholder="Buscar por nombre o código de referencia..."
             className="w-full md:w-2/4 px-4 py-3 border border-gray-300 rounded-lg text-sm text-gray-700 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
+          <GradientButton
+            onClick={() => navigate('/add-referral')}
+            className="px-8 py-3 cursor-pointer transform hover:scale-105 transition-transform w-full md:w-auto"
+          >
+            Agregar cliente
+          </GradientButton>
+          
         </div>
         <div className="overflow-x-auto bg-white shadow-lg rounded-sm">
           <table className="min-w-full divide-y divide-gray-200">

@@ -17,6 +17,7 @@ import usePerson from '../hooks/usePerson';
 import useReferral from '../hooks/useReferral';
 import FullScreenLoader from '../components/ui/FullScreenLoader';
 import { getDepartments, getCitiesByDepartmentId, getBanks } from '../shared/utils';
+import { Loader2 } from 'lucide-react';
 
 const ROLES = getRolesToSignUp();
 const DOCUMENT_TYPES = getDocumentTypes();
@@ -73,6 +74,7 @@ export default function SignupPage() {
   const [clientDepartment, setClientDepartment] = useState("");
   const [clientCity, setClientCity] = useState("");
   const [clientNeighborhood, setClientNeighborhood] = useState("");
+  const [loadingValidateClientByDocumentNumber, setLoadingValidateClientByDocumentNumber] = useState(false);
 
   const handleRoleSelect = (roleId) => {
     setSelectedRole(roleId);
@@ -99,7 +101,7 @@ export default function SignupPage() {
             <li>La metodología es muy sencilla: regístrate con tus datos personales y envíanos la información de los posibles clientes interesados. Nuestro equipo se encargará de gestionar el proceso comercial.</li>
             <li>Una vez enviada la información, recibirás una notificación por <b>mensaje de texto o correo electrónico</b> informándote sobre el estado del proceso de tu referido.</li>
             <li>Cuando el servicio haya sido <b>instalado y activado correctamente</b>, se procederá al pago de la <b>comisión correspondiente por la venta realizada</b>.</li>
-            <li>En el siguiente enlace podrás consultar las <b>tablas de comisiones vigentes</b>. <a href="#" class="text-blue-600 hover:text-blue-800 underline cursor-pointer">aquí</a></li>
+            <li>En el siguiente enlace podrás consultar las <b>tablas de comisiones vigentes</b>. <a href="/compensation-plan" target="_blank" class="text-blue-600 hover:text-blue-800 underline cursor-pointer">aquí</a></li>
             <li>Los desembolsos de las comisiones se realizan <b>todos los sábados</b>, teniendo en cuenta la fecha de instalación y activación del servicio.</li>
             <li>El pago de la comisión se realizará directamente a la <b>cuenta registrada en nuestra base de datos</b>.</li>
             <li>Al continuar con el registro como referido, aceptas nuestros <b>Términos y Condiciones de uso</b>, la <b>Política de Privacidad</b> y el <b>tratamiento de datos personales</b>.</li>
@@ -324,18 +326,6 @@ export default function SignupPage() {
     setClientNeighborhood('');
   }
 
-  // useEffect(() => {
-  //   if (errorGenerateOTP) {
-  //     ToastAlert({
-  //       position: 'top',
-  //       timer: 1800,
-  //       icon: 'error',
-  //       title: 'Error al generar OTP',
-  //       description: errorGenerateOTP,
-  //     });
-  //   }
-  // }, [errorGenerateOTP]);
-
   const handleValidateClientDocumentNumber = async () => {
     setIsValidateClient(false);
     clearFormClientInfo();
@@ -348,9 +338,11 @@ export default function SignupPage() {
       });
       return false;
     }
+    setLoadingValidateClientByDocumentNumber(true);
     const validatePersonByDocumentResponse = await validatePersonByDocument({ document: clientDocumentNumber });
     if (validatePersonByDocumentResponse.process === 'person-found') {
       setIsValidateClient(false);
+      setLoadingValidateClientByDocumentNumber(false);
       ModalAlertConfirm({
         title: 'Cliente encontrado',
         text: 'Hemos encontrado un cliente con el número de documento ingresado. ¿Deseas referenciarlo?',
@@ -372,6 +364,7 @@ export default function SignupPage() {
     }
     if (validatePersonByDocumentResponse.process === 'person-not-found') {
       setIsValidateClient(true);
+      setLoadingValidateClientByDocumentNumber(false);
       return false;
     }
     // return true;
@@ -708,10 +701,18 @@ export default function SignupPage() {
                      
                     </div>
 
-                    <div className="md:flex-1 w-full mb-2 md:mb-0 md:-mt-1">
-                      <PrimaryButton type="button" className="w-full h-14 mx-auto flex items-center justify-center" onClick={() => handleValidateClientDocumentNumber()}>
-                        <Search />
-                        <span className="ml-2">Consultar</span>
+                    <div className="md:flex-1 col-span-1 w-full mb-2 md:mb-0 md:-mt-1">
+                      <PrimaryButton type="button" disabled={!clientDocumentNumber || loadingValidateClientByDocumentNumber} className="w-full h-14 md:mx-auto w-full flex items-center justify-center box-shadow-none disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => handleValidateClientDocumentNumber()}>
+                        {loadingValidateClientByDocumentNumber ? 
+                        (
+                          <>
+                            <Loader2 className="mr-2 h-6 w-6 animate-spin text-blue-600" /> <span className="text-gray-800">Consultando</span>
+                          </>
+                        ) : (
+                          <>
+                            <Search className="mr-2 h-6 w-6" /><span className="">Consultar</span>
+                          </>
+                        )}
                       </PrimaryButton>
                     </div>
                   </div>
@@ -760,7 +761,9 @@ export default function SignupPage() {
                   clearFormClientInfo();
                   setStep(2)
                 }} type="button" className="w-full md:w-auto px-8 cursor-pointer">Atrás</SecondaryButton> */}
-                <SecondaryButton onClick={() => handleCancelAddClient()} type="button" className="w-full md:w-auto px-8 cursor-pointer btn-cancel shadow-none">
+                <SecondaryButton onClick={() => handleCancelAddClient()} 
+                  disabled={isRegistering}
+                  type="button" className="w-full md:w-auto px-8 cursor-pointer btn-cancel shadow-none disabled:opacity-50 disabled:cursor-not-allowed">
                   {
                     selectedRole === 'client' ? (
                       <span>Cancelar</span>
@@ -770,7 +773,20 @@ export default function SignupPage() {
                   }
                 </SecondaryButton>
                 {selectedRole === 'client' ? (
-                  <PrimaryButton type="submit" className="w-full btn-primary shadow-none cursor-pointer">Registrarme</PrimaryButton>
+                  <PrimaryButton
+                    type="submit"
+                    disabled={!isValidateClient || loadingValidateClientByDocumentNumber || isRegistering}
+                    className="w-full btn-primary shadow-none"
+                  >
+                    {isRegistering ? (
+                      <div className="flex items-center gap-2 justify-center">
+                        <Loader2 className="h-5 w-5 animate-spin" />
+                        <span className="italic animate-pulse text-sm text-black">Registrando...</span>
+                      </div>
+                    ) : (
+                      <span>Registrarme</span>
+                    )}
+                  </PrimaryButton>
                 ) : (
                   <PrimaryButton type="submit" className="w-full btn-primary shadow-none cursor-pointer">Agregar cliente y finalizar</PrimaryButton>
                 )}

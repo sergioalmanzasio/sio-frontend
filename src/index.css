@@ -68,3 +68,27 @@ input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
+@keyframes softFloat {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes neonGlow {
+  0% {
+    box-shadow: 0 0 5px #3b82f6;
+  }
+  50% {
+    box-shadow: 0 0 20px #3b82f6, 0 0 30px #3b82f6;
+  }
+  100% {
+    box-shadow: 0 0 5px #3b82f6;
+  }
+}
+
+@keyframes borderRotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}

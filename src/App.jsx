@@ -26,13 +26,17 @@ import CommissionsHistoryPage from "./pages/CommissionsHistoryPage";
 import CommissionPaymentsPage from "./pages/CommissionPaymentsPage";
 import AdminServiceRequestsPage from "./pages/AdminServiceRequestsPage";
 import AdminBonusesPage from "./pages/AdminBonusesPage";
+import AdminBenefitsPage from "./pages/AdminBenefitsPage";
 import AdminOffersPage from "./pages/AdminOffersPage";
+import AdminOperatorsPage from "./pages/AdminOperatorsPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import SessionManager from "./components/SessionManager";
 import ReferralBonusesPage from "./pages/ReferralBonusesPage";
 import AdminBonusWithdrawalsPage from "./pages/AdminBonusWithdrawalsPage";
 import BonusesHistoryPage from "./pages/BonusesHistoryPage";
 import BonusPaymentsPage from "./pages/BonusPaymentsPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
+import CompensationPlanPage from "./pages/CompensationPlanPage";
 
 function App() {
 
@@ -42,6 +46,8 @@ function App() {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/compensation-plan" element={<CompensationPlanPage />} />
           <Route path="/offers" element={<OffersPage />} />
           <Route path="/auth-redirect" element={<AuthRedirect />} />
 
@@ -69,6 +75,8 @@ function App() {
             <Route path="/admin/bonuses" element={<AdminBonusesPage />} />
             <Route path="/bonuses/withdrawals" element={<AdminBonusWithdrawalsPage />} />
             <Route path="/admin/offers" element={<AdminOffersPage />} />
+            <Route path="/admin/operators" element={<AdminOperatorsPage />} />
+            <Route path="/admin/benefits" element={<AdminBenefitsPage />} />
           </Route>
 
           <Route path="/v2" element={<LandingPageV2 />} />

@@ -75,7 +75,6 @@ export default function BentoGridSectionOffers( { offers = [] } ) {
     getBenefits(id);
   };
 
-
   const handleBuyClick = async (id, title, description, price, operator) => {
     setOfferId(id);
     clearInputCode();
@@ -111,8 +110,6 @@ export default function BentoGridSectionOffers( { offers = [] } ) {
     }
   };
 
-
-  // Manejando el cambio del código del asesor
   const handleCodeChange = (e) => {
     setCode(e.target.value);
   };
@@ -135,20 +132,16 @@ export default function BentoGridSectionOffers( { offers = [] } ) {
 
   useEffect(() => {
     if (loadingAddRequest) {
-      document.body.style.overflow = "hidden";   // Bloquea scroll
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = "";         // Restaura scroll
+      document.body.style.overflow = "";   
     }
   }, [loadingAddRequest]);
 
   return (
     <>
       <FullScreenLoader show={loadingAddRequest} message="Procesando solicitud, espere un momento." />
-      <section className={`${loadingAddRequest ? 'pointer-events-none' : 'py-4 md:py-12 px-6 bg-gray-50'} `}>
-        {/* GRID PRINCIPAL:
-                - Móvil: 1 columna (gap-4)
-                - Desktop (lg): 4 columnas (grid-cols-4) con un gap-8
-              */}
+      <section className={`${loadingAddRequest ? 'pointer-events-none' : 'py-4 md:py-12 px-6 bg-white'} `}>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:gap-8">
           {GRID_ITEMS.map((item, idx) => (
             <div
@@ -158,8 +151,10 @@ export default function BentoGridSectionOffers( { offers = [] } ) {
                           /* Aplicamos el desplazamiento solo a partir de LG (desktop) */
                           lg:mt-0 
                           
-                          /* Lógica del Bento: Desplazar las columnas pares (col 2, 4) */
-                          ${ (idx % 4 === 1 || idx % 4 === 3) ? "lg:translate-y-10" : "" }
+                          /* Lógica del Bento: Desplazar las columnas pares (col 2, 4) */ 
+                           
+                          
+                          
                       `}
             >
               <Card

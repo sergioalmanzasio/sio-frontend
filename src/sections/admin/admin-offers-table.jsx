@@ -1,16 +1,17 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Search, ArrowUpDown, ArrowUp, ArrowDown, Eye, ChevronLeft, ChevronRight, Plus, Pencil } from "lucide-react";
+import { Search, ArrowUpDown, ArrowUp, ArrowDown, Eye, ChevronLeft, ChevronRight, Plus, Pencil, BadgeDollarSign } from "lucide-react";
 import FullScreenLoader from "../../components/loader/FullScreenLoader";
 import useOffer from "../../hooks/useOffer";
 import useOperator from "../../hooks/useOperator";
 import OfferDetailModal from "../../components/modals/OfferDetailModal";
 import OfferFormModal from "../../components/modals/OfferFormModal";
+import OfferCommissionConfigModal from "../../components/modals/OfferCommissionConfigModal";
 import ToastAlert from '../../components/alerts/ToastAlert'
 
 const ITEMS_PER_PAGE = 10;
 
 const AdminOffersTable = () => {
-  const { getAdminOffers, getAllBenefits, getAllCategories, createOffer, updateOffer, loading: loadingOffers } = useOffer();
+  const { getAdminOffers, getAllBenefits, getAllCategories, createOffer, updateOffer, getOfferCommissionConfig, loading: loadingOffers } = useOffer();
   const { getOperators, operators, loading: loadingOperators } = useOperator();
   
   const [offers, setOffers] = useState([]);
@@ -23,6 +24,10 @@ const AdminOffersTable = () => {
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [offerToEdit, setOfferToEdit] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [isCommissionConfigModalOpen, setIsCommissionConfigModalOpen] = useState(false);
+  const [currentCommissionConfigs, setCurrentCommissionConfigs] = useState([]);
+  const [selectedOfferForCommission, setSelectedOfferForCommission] = useState(null);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
@@ -138,6 +143,27 @@ const AdminOffersTable = () => {
     setOfferToEdit(null);
   };
 
+  const handleOpenCommissionsConfigModal = async (offer) => {
+    // setLoadingForm(true); // if you use some global modal loading
+    const data = await getOfferCommissionConfig(offer.id);
+    if (data !== null) {
+      setSelectedOfferForCommission(offer);
+      setCurrentCommissionConfigs(data);
+      document.querySelector('body').style.overflow = "hidden";
+      setIsCommissionConfigModalOpen(true);
+    }
+    // setLoadingForm(false);
+  };
+
+  const handleCloseCommissionsConfigModal = () => {
+    document.querySelector('body').style.overflow = "auto";
+    setIsCommissionConfigModalOpen(false);
+    setTimeout(() => {
+      setSelectedOfferForCommission(null);
+      setCurrentCommissionConfigs([]);
+    }, 200);
+  };
+
   const handleSubmitOffer = async (formData) => {
     setIsSubmitting(true);
     // setLoadingForm(true);
@@ -160,21 +186,10 @@ const AdminOffersTable = () => {
         title: offerToEdit ? "Oferta actualizada exitosamente." : "Oferta creada exitosamente."
       });
 
-      if (offerToEdit) {
-      // actualizar oferta en el estado
-        setOffers((prev) =>
-          prev.map((o) =>
-            o.id === offerToEdit.id ? { ...o, ...formData } : o
-          )
-        );
-      } else {
-        // agregar nueva oferta
-        setOffers((prev) => [result.data, ...prev]);
-      }
       setTimeout(() => {
         handleCloseFormModal();
-        // loadData(); // Reload table data
-      }, 1800);
+        loadData(); // Reload table data
+      }, 1600);
       
     }
   };
@@ -184,7 +199,7 @@ const AdminOffersTable = () => {
   // }
 
   return (
-    <div className="container mx-auto px-4 mt-4">
+    <div className="container mx-auto px-4 lg:px-0 mt-4 max-w-6xl">
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
         <div className="p-4 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-gray-50/50">
           <div className="relative w-full md:w-1/2">
@@ -193,7 +208,7 @@ const AdminOffersTable = () => {
               placeholder="Buscar por nombre, descripción u operador..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+              className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all text-sm"
             />
             <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
           </div>
@@ -308,6 +323,13 @@ const AdminOffersTable = () => {
                           >
                             <Pencil className="h-4 w-4" />
                           </button>
+                          <button
+                            onClick={() => handleOpenCommissionsConfigModal(offer)}
+                            className="text-teal-600 hover:text-teal-900 bg-teal-50 hover:bg-teal-100 p-2 rounded-md transition-colors inline-flex items-center cursor-pointer ml-2"
+                            title="Configurar comisiones"
+                          >
+                            <BadgeDollarSign className="h-4 w-4" />
+                          </button>
                         </td>
                       </tr>
                     ))
@@ -400,6 +422,13 @@ const AdminOffersTable = () => {
         benefitsList={benefitsList || []}
         categoriesList={categoriesList || []}
         isSubmitting={isSubmitting}
+      />
+
+      <OfferCommissionConfigModal
+        isOpen={isCommissionConfigModalOpen}
+        onClose={handleCloseCommissionsConfigModal}
+        offer={selectedOfferForCommission}
+        configs={currentCommissionConfigs}
       />
     </div>
   );
