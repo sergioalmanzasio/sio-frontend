@@ -8,8 +8,8 @@ const ReferralBonusesPage = () => {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <Navbar />
       <TransversalHeader
-        title="Comisiones disponibles"
-        description="Visualiza tus comisiones disponibles y solicita el pago."
+        title="Bonos disponibles"
+        description="Visualiza tus bonos disponibles y solicita el pago."
       />
       <ReferralBonusesTable />
     </div>
