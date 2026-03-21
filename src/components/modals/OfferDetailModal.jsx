@@ -36,46 +36,46 @@ const OfferDetailModal = ({ isOpen, onClose, offer }) => {
             <div className="mt-2 text-left space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-500 tracking-wider">Nombre de la oferta</h4>
+                  <h4 className="text-sm font-semibold text-gray-500">Nombre de la oferta</h4>
                   <p className="mt-1 text-base font-medium text-gray-900">{offer.name}</p>
                 </div>
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-500 tracking-wider">Operador</h4>
+                  <h4 className="text-sm font-semibold text-gray-500">Operador</h4>
                   <p className="mt-1 text-base font-medium text-gray-900">{offer.operator_name}</p>
                 </div>
                 <div className="sm:col-span-2">
-                  <h4 className="text-sm font-semibold text-gray-500 tracking-wider">Descripción</h4>
+                  <h4 className="text-sm font-semibold text-gray-500">Descripción</h4>
                   <p className="mt-1 text-base text-gray-800">{offer.description}</p>
                 </div>
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-500 tracking-wider">Precio</h4>
+                  <h4 className="text-sm font-semibold text-gray-500">Precio</h4>
                   <p className="mt-1 text-lg font-bold text-indigo-600">
                     ${Number(offer.price).toLocaleString("es-CO")}
                   </p>
                 </div>
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-500 tracking-wider">Estado</h4>
+                  <h4 className="text-sm font-semibold text-gray-500">Estado</h4>
                   <span className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold mt-1 ${offer.is_active ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
                     {offer.is_active ? "Activa" : "Inactiva"}
                   </span>
                 </div>
                 <div className="sm:col-span-2">
-                  <h4 className="text-sm font-semibold text-gray-500 tracking-wider">Categoría</h4>
+                  <h4 className="text-sm font-semibold text-gray-500">Categoría</h4>
                   <p className="mt-1 text-base text-gray-800">{offer.category_name}</p>
                 </div>  
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-500 tracking-wider">Fecha Inicio</h4>
+                  <h4 className="text-sm font-semibold text-gray-500">Fecha Inicio</h4>
                   <p className="mt-1 text-sm text-gray-900">{new Date(offer.date_start).toLocaleDateString()}</p>
                 </div>
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-500 tracking-wider">Fecha Fin</h4>
+                  <h4 className="text-sm font-semibold text-gray-500">Fecha Fin</h4>
                   <p className="mt-1 text-sm text-gray-900">{new Date(offer.date_end).toLocaleDateString()}</p>
                 </div>
               </div>
 
               {offer.benefits && offer.benefits.length > 0 && (
                 <div className="border-t border-gray-200 pt-4 mt-6">
-                  <h4 className="text-sm font-semibold text-gray-500 tracking-wider mb-2">Beneficios incluidos</h4>
+                  <h4 className="text-sm font-semibold text-gray-500 mb-2">Beneficios incluidos</h4>
                   <ul className="list-disc pl-5 space-y-1 text-sm text-gray-700">
                     {offer.benefits.map((benefit, index) => (
                       <li key={benefit.id || index}>{benefit.description}</li>
