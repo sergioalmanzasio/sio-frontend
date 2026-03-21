@@ -145,7 +145,7 @@ const AdminOperatorsTable = () => {
         </div>
 
         {/* Skelton Loader */}
-        {loading ? (
+        {isLoading ? (
           <div className="p-4">
             <div className="animate-pulse">
               <div className="h-10 bg-gray-200 rounded w-full mb-4"></div>
