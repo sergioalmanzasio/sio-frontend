@@ -26,7 +26,7 @@ const Select = ({ options, label, value, onChange, disabled = false, icon, class
           pointer-events-none
           bg-white px-1
           text-gray-500
-          -top-2 text-base
+          -top-2 text-xs
         `}
       >
         {label.charAt(0).toUpperCase() + label.slice(1)}
@@ -42,7 +42,7 @@ const Select = ({ options, label, value, onChange, disabled = false, icon, class
                    border border-gray-300 rounded-lg text-gray-700 
                    outline-none focus:border-blue-500 focus:ring-1 
                    focus:ring-blue-500 transition duration-300 
-                   bg-white text-sm ${className}`}
+                   bg-white text-base ${className}`}
       >
         <option value="" disabled>
           Selecciona {label}
