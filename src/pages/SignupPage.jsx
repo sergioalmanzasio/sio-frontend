@@ -64,6 +64,7 @@ export default function SignupPage() {
   const [isShowOTPSection, setIsShowOTPSection] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
   const [emailToResendOTP, setEmailToResendOTP] = useState("");
+  const [nameToResendOTP, setNameToResendOTP] = useState("");
 
   // Form States - Client Info (for Referral)
   const [clientDocumentType, setClientDocumentType] = useState("");
@@ -151,6 +152,7 @@ export default function SignupPage() {
       }
     }
     setEmailToResendOTP(email);
+    setNameToResendOTP(firstName + ' ' + lastName);
     generateOTP({
       email,
       document: documentNumber,
@@ -401,7 +403,10 @@ export default function SignupPage() {
 
   const handleResendOTP = async (e) => {
     e.preventDefault();
-    const resendOTPResponse = await resendOTP({ email: emailToResendOTP });
+    const resendOTPResponse = await resendOTP({ 
+      email: emailToResendOTP,
+      name: nameToResendOTP,
+    });
     if (resendOTPResponse.process !== 'success') {
       ToastAlert({
         position: 'center',
