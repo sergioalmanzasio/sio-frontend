@@ -118,7 +118,7 @@ const AdminBenefitsTable = () => {
       setTimeout(() => {
         handleCloseFormModal();
         loadData(); // Reload table data
-      }, 1300);
+      }, 1000);
     }
   };
 

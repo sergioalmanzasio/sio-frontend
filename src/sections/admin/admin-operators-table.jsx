@@ -119,7 +119,7 @@ const AdminOperatorsTable = () => {
       setTimeout(() => {
         handleCloseFormModal();
         loadData(); // Reload table data
-      }, 1600);
+      }, 1000);
     }
   };
 
