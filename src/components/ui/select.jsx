@@ -26,7 +26,7 @@ const Select = ({ options, label, value, onChange, disabled = false, icon, class
           pointer-events-none
           bg-white px-1
           text-gray-500
-          -top-2 text-xs
+          -top-2 text-base
         `}
       >
         {label.charAt(0).toUpperCase() + label.slice(1)}

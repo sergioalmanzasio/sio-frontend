@@ -285,7 +285,7 @@ const MyReferralsTable = () => {
           />
           <GradientButton
             onClick={() => navigate('/add-referral')}
-            className="px-8 py-3 cursor-pointer transform hover:scale-105 transition-transform w-full md:w-auto"
+            className="px-8 py-3 cursor-pointer transform hover:scale-105 transition-transform w-full md:w-auto text-sm"
           >
             Agregar cliente
           </GradientButton>

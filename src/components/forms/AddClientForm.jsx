@@ -261,11 +261,7 @@ export default function AddClientForm({ onSuccess, onCancel, hasLegend = true })
                 ) : (
                   <>
                     <UserSearch />
-                    
-                    {/* Texto solo en mobile */}
                     <span className="inline md:hidden">Consultar</span>
-
-                    {/* Texto opcional en desktop */}
                     <span className="hidden md:inline">Buscar</span>
                   </>
                 )}
@@ -398,7 +394,7 @@ export default function AddClientForm({ onSuccess, onCancel, hasLegend = true })
         <PrimaryButton 
           type="submit" 
           disabled={!isValidateClient || loadingAssignReferral} 
-          className="btn-gradient shadow-none"
+          className="btn-gradient shadow-none text-sm"
         >
           {loadingAssignReferral ? 
             <div className="flex items-center gap-2 cursor-pointer text-blue-900 justify-center">
