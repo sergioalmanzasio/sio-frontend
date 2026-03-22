@@ -31,8 +31,7 @@ const useReferral = () => {
         ...options,
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           referral_email: requestData.email_user,
