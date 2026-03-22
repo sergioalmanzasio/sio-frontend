@@ -1,6 +1,6 @@
 import { X } from "lucide-react";
 import { PrimaryButton } from "../ui/button";
-import { CONTACT_EMAIL, CONTACT_PHONE, OPENING_HOURS } from "../../shared/constanst";
+import { CONTACT_EMAIL, CONTACT_PHONE, OPENING_HOURS, WEBSITE_URL } from "../../shared/constanst";
 
 
 export default function ContactModal({ isOpen, onClose }) {
@@ -31,7 +31,7 @@ export default function ContactModal({ isOpen, onClose }) {
            <h5 className="font-bold mb-1">Horario de atención</h5>
            <p>{OPENING_HOURS}</p>
            <h5 className="font-bold mb-1">Sitio web</h5>
-           <p>https://www.sio.com.co</p>
+           <p>{WEBSITE_URL}</p>
          </div>
 
          {/* Modal Footer */}
