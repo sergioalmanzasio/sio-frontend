@@ -27,8 +27,11 @@ const HOUSING_TYPES = ["Casa", "Apartamento", "Edificio", "Oficina"];
 
 export default function SignupPage() {
   const navigate = useNavigate();
-  const { generateOTP, loadingGenerateOTP, errorGenerateOTP,
-    verifyOTP, loadingVerifyOTP, errorVerifyOTP, signUp, loadingSignUp, errorSignUp
+  const { 
+    generateOTP, loadingGenerateOTP, errorGenerateOTP,
+    verifyOTP, loadingVerifyOTP, errorVerifyOTP, 
+    resendOTP, loadingResendOTP, errorResendOTP,
+    signUp, loadingSignUp, errorSignUp
   } = useSignUp();
   const { validatePersonByDocument, loadingValidatePersonExistByDocument, errorValidatePersonExistByDocument,
     addPerson, loadingAddPerson, errorAddPerson, addClient
@@ -60,6 +63,7 @@ export default function SignupPage() {
   const [codeToResgitration, setCodeToResgitration] = useState("");
   const [isShowOTPSection, setIsShowOTPSection] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
+  const [emailToResendOTP, setEmailToResendOTP] = useState("");
 
   // Form States - Client Info (for Referral)
   const [clientDocumentType, setClientDocumentType] = useState("");
@@ -146,7 +150,7 @@ export default function SignupPage() {
         return false;
       }
     }
-    
+    setEmailToResendOTP(email);
     generateOTP({
       email,
       document: documentNumber,
@@ -395,6 +399,27 @@ export default function SignupPage() {
     return false;
   }
 
+  const handleResendOTP = async (e) => {
+    e.preventDefault();
+    const resendOTPResponse = await resendOTP({ email: emailToResendOTP });
+    if (resendOTPResponse.process !== 'success') {
+      ToastAlert({
+        position: 'center',
+        timer: 1800,
+        icon: 'error',
+        title: resendOTPResponse.message,
+      });
+      return false;
+    }
+    ToastAlert({
+      position: 'center',
+      timer: 1800,
+      icon: 'success',
+      title: 'Código reenviado correctamente.',
+    });
+    return true;
+  }
+
   useEffect(() => {
     // Show modal only when loading transitions from true to false (OTP generation completed)
     if (prevLoadingGenerateOTP.current && !loadingGenerateOTP && !errorGenerateOTP) {
@@ -540,8 +565,6 @@ export default function SignupPage() {
         </div>
 
         <div className="bg-white rounded-xl shadow-lg p-8">
-          
-          {/* STEP 1: Role Selection */}
           {step === 1 && (
             <div className="space-y-6 animate-fadeIn">
               <h2 className="text-2xl font-bold text-center text-gray-800">Selecciona tu perfil</h2>
@@ -580,7 +603,6 @@ export default function SignupPage() {
             </div>
           )}
 
-          {/* STEP 2: Personal Information */}
           {step === 2 && (
             <form onSubmit={handleNextStep2} className="space-y-6 animate-fadeIn">
               <h2 className="text-2xl font-bold text-center text-gray-800">Información Personal</h2>
@@ -588,7 +610,6 @@ export default function SignupPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="md:col-span-1">
                   <Select options={DOCUMENT_TYPES.map((docType) => docType.label)} label="Tipo de documento" value={documentType} onChange={(e) => {
-                    // setDocumentType(e.target.value.acronym);
                     setDocumentType(DOCUMENT_TYPES.find((docType) => docType.label === e.target.value).acronym);
                   }} />
                 </div>
@@ -604,7 +625,6 @@ export default function SignupPage() {
                   <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Correo electrónico" icon={Mail} />
                 </div>
                 
-                {/* Solo es visible para role 'referral' o 'advisor' */}
                 {showBankInfo && (
                 <>
                   <div className="md:col-span-1">
@@ -625,6 +645,7 @@ export default function SignupPage() {
                 onClose={() => setIsShowOTPSection(false)}
                 title="Confirmación de registro"
                 description="Por favor, ingresa el código de confirmación enviado a tu correo electrónico."
+                isTitleCenter={true}
               >
                 <div className="flex flex-col gap-4 items-center">
                   <OTPInput length={6} onComplete={(code) =>{
@@ -637,12 +658,9 @@ export default function SignupPage() {
                       ¿No has recibido el código?{' '}
                       <span 
                         className="text-blue-600 font-semibold cursor-pointer hover:underline" 
-                        onClick={() => {
-                          console.log('Solicitar reenvío de código de registro');
-                          // Add resend logic here
-                        }}
+                        onClick={(e) => handleResendOTP(e)}
                       >
-                        Reenviar
+                        {loadingResendOTP ? 'Reenviando...' : 'Reenviar'}
                       </span>
                     </p>
                   </div>
@@ -650,7 +668,7 @@ export default function SignupPage() {
                   <PrimaryButton 
                     type="button" 
                     className="w-full mt-4"
-                    disabled={loadingVerifyOTP}
+                    disabled={loadingVerifyOTP || loadingResendOTP}
                     onClick={ () => handleVerifyCode() }
                   >
                     {loadingVerifyOTP ? 
