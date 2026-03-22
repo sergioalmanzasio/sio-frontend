@@ -117,6 +117,7 @@ const useSignUp = () => {
         },
         body: JSON.stringify({
           email: requestData.email,
+          name: requestData.name,
         }),
       });
       const data = await response.json();
