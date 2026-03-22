@@ -7,4 +7,4 @@ export const CONTACT_PHONE = import.meta.env.VITE_CONTACT_PHONE;
 export const OPENING_HOURS = import.meta.env.VITE_OPENING_HOURS;
 export const FACEBOOK_URL = import.meta.env.VITE_FACEBOOK_URL;
 export const INSTAGRAM_URL = import.meta.env.VITE_INSTAGRAM_URL;
-
+export const WEBSITE_URL = import.meta.env.VITE_WEBSITE_URL;
