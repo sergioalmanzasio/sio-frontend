@@ -2,7 +2,7 @@
 
 const ServiceRequestsTableSkeleton = ({message = "Cargando solicitudes..."}) => {
   return (
-    <div className="w-full md:w-3/4 mt-4 md:mt-8 mx-auto py-3 px-6 md:p-0">
+    <div className="w-full md:w-3/4 mt-4 md:mt-8 mx-auto py-3 px-6 md:p-0 max-w-6xl">
      <div className="flex justify-center py-4 flex-col items-center">
       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
       <h1 className="text-md font-medium text-gray-800 mt-2">{message}</h1>
