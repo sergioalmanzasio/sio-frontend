@@ -452,7 +452,7 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, operators = [], benefitsLis
                       ))
                     ) : (
                       <p className="text-sm text-gray-500 p-2">
-                        {benefitsList.length === 0 ? "No hay }s disponibles." : "No se encontraron }s."}
+                        {benefitsList.length === 0 ? "No hay beneficios disponibles." : "No se encontraron beneficios."}
                       </p>
                     )}
                   </div>
