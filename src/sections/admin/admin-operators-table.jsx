@@ -146,7 +146,6 @@ const AdminOperatorsTable = () => {
           </button>
         </div>
 
-        {/* Skelton Loader */}
         {isLoading ? (
           <div className="p-4">
             <div className="animate-pulse">
@@ -223,7 +222,6 @@ const AdminOperatorsTable = () => {
               </table>
             </div>
 
-            {/* Pagination */}
             {sortedOperators.length > 0 && (
               <div className="bg-gray-50 px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
                 <div className="flex-1 flex justify-between sm:hidden">
