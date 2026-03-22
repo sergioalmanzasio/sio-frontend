@@ -1,7 +1,7 @@
 import React from "react";
 import { X } from "lucide-react";
 
-export default function BottomModal({ isOpen, onClose, title, description, children, sizeContentMD = 'md:w-1/3' }) {
+export default function BottomModal({ isOpen, onClose, title, description, children, sizeContentMD = 'md:w-1/3', isTitleCenter = true }) {
   if (!isOpen) return null;
 
 
@@ -17,7 +17,7 @@ export default function BottomModal({ isOpen, onClose, title, description, child
         </button>
         
         {title && (
-          <h2 className="text-2xl font-semibold mb-2 text-gray-800 text-justify ml-2 md:mb-4">
+          <h2 className={`text-2xl font-semibold mb-2 text-gray-800 ${isTitleCenter ? 'text-center' : 'text-justify ml-2'} md:mb-4`}>
             {title}
           </h2>
         )}
