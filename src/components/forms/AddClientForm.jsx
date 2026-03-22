@@ -245,7 +245,7 @@ export default function AddClientForm({ onSuccess, onCancel, hasLegend = true })
                 onChange={(e) => setClientDocumentNumber(e.target.value.replace(/[^0-9]/g, ''))} 
                 placeholder="Número de documento" 
                 icon={IdCard} 
-                className="w-full h-12 text-sm" 
+                className="w-full h-12" 
               />
             </div>
 
@@ -279,7 +279,7 @@ export default function AddClientForm({ onSuccess, onCancel, hasLegend = true })
             if (selected) setClientDocumentType(selected.acronym);
           }} 
           disabled={!isValidateClient}
-          className="w-full text-sm"
+          className="w-full"
         />
 
         <Input 
@@ -289,7 +289,7 @@ export default function AddClientForm({ onSuccess, onCancel, hasLegend = true })
           placeholder="Nombre(s)" 
           icon={User} 
           disabled={!isValidateClient}
-          className="w-full h-12 text-sm"
+          className="w-full h-12"
         />
         
         <Input 
@@ -299,7 +299,7 @@ export default function AddClientForm({ onSuccess, onCancel, hasLegend = true })
           placeholder="Apellidos" 
           icon={User} 
           disabled={!isValidateClient}
-          className="w-full h-12 text-sm"
+          className="w-full h-12"
         />
         
         <Input 
@@ -309,7 +309,7 @@ export default function AddClientForm({ onSuccess, onCancel, hasLegend = true })
           placeholder="Correo electrónico" 
           icon={Mail} 
           disabled={!isValidateClient}
-          className="w-full h-12 text-sm"
+          className="w-full h-12"
         />
         
         <Input 
@@ -319,7 +319,7 @@ export default function AddClientForm({ onSuccess, onCancel, hasLegend = true })
           placeholder="Teléfono" 
           icon={Phone} 
           disabled={!isValidateClient}
-          className="w-full h-12 text-sm"
+          className="w-full h-12"
         />
         
         <Select 
@@ -328,7 +328,7 @@ export default function AddClientForm({ onSuccess, onCancel, hasLegend = true })
           value={clientDepartment} 
           onChange={(e) => handleDepartmentChange(e.target.value)} 
           disabled={!isValidateClient}
-          className="w-full text-sm"
+          className="w-full"
         />
         
         <Select 
@@ -337,7 +337,7 @@ export default function AddClientForm({ onSuccess, onCancel, hasLegend = true })
           value={clientCity} 
           onChange={(e) => setClientCity(e.target.value)} 
           disabled={!isValidateClient || !departmentCodeSelected}
-          className="w-full text-sm"
+          className="w-full"
         />
         
         <div className="md:col-span-1">
@@ -348,7 +348,7 @@ export default function AddClientForm({ onSuccess, onCancel, hasLegend = true })
             placeholder="Barrio" 
             icon={MapPin} 
             disabled={!isValidateClient}
-            className="w-full h-12 text-sm"
+            className="w-full h-12"
           />
         </div>
         
@@ -360,7 +360,7 @@ export default function AddClientForm({ onSuccess, onCancel, hasLegend = true })
             placeholder="Dirección" 
             icon={MapPin} 
             disabled={!isValidateClient}
-            className="w-full h-12 text-sm"
+            className="w-full h-12"
           />
         </div>
         
@@ -371,7 +371,7 @@ export default function AddClientForm({ onSuccess, onCancel, hasLegend = true })
             value={clientHousingType.label} 
             onChange={(e) => setClientHousingType(e.target.value)} 
             disabled={!isValidateClient}
-            className="w-full text-sm"
+            className="w-full"
           />
         </div>
         
