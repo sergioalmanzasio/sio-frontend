@@ -415,7 +415,7 @@ const useOffer = () => {
     }
   }, []);
 
-  return { offers, loading, error, getOffers, getOffersByOperator, getOffersByService, getOffersByOperatorAndService, getAdminOffers, getAllBenefits, getAllCategories, createOffer, updateOffer, getCompensationPlan, getOfferCommissionConfig, updateOfferCommissionConfig };
+  return { offers, loading, loadingConfig, error, getOffers, getOffersByOperator, getOffersByService, getOffersByOperatorAndService, getAdminOffers, getAllBenefits, getAllCategories, createOffer, updateOffer, getCompensationPlan, getOfferCommissionConfig, updateOfferCommissionConfig };
 };
 
 export default useOffer;

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Search, ArrowUpDown, ArrowUp, ArrowDown, Eye, ChevronLeft, ChevronRight, Plus, Pencil, BadgeDollarSign } from "lucide-react";
+import { Search, ArrowUpDown, ArrowUp, ArrowDown, Eye, ChevronLeft, ChevronRight, Plus, Pencil, BadgeDollarSign, Loader2 } from "lucide-react";
 import FullScreenLoader from "../../components/loader/FullScreenLoader";
 import useOffer from "../../hooks/useOffer";
 import useOperator from "../../hooks/useOperator";
@@ -11,7 +11,7 @@ import ToastAlert from '../../components/alerts/ToastAlert'
 const ITEMS_PER_PAGE = 10;
 
 const AdminOffersTable = () => {
-  const { getAdminOffers, getAllBenefits, getAllCategories, createOffer, updateOffer, getOfferCommissionConfig, loading: loadingOffers } = useOffer();
+  const { getAdminOffers, getAllBenefits, getAllCategories, createOffer, updateOffer, getOfferCommissionConfig, loading: loadingOffers, loadingConfig } = useOffer();
   const { getOperators, operators, loading: loadingOperators } = useOperator();
   
   const [offers, setOffers] = useState([]);
@@ -316,7 +316,11 @@ const AdminOffersTable = () => {
                             className="text-teal-600 hover:text-teal-900 bg-teal-50 hover:bg-teal-100 p-2 rounded-md transition-colors inline-flex items-center cursor-pointer ml-2"
                             title="Configurar comisiones"
                           >
-                            <BadgeDollarSign className="h-4 w-4" />
+                            {loadingConfig ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <BadgeDollarSign className="h-4 w-4" />
+                            )}
                           </button>
                         </td>
                       </tr>
