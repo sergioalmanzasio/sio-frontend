@@ -150,7 +150,6 @@ const AssignedReferralsTable = () => {
   return (
     <>
       <div className="w-full md:w-3/4 mt-0 md:mt-4 mx-auto p-4 md:p-0 max-w-6xl">
-        {/* Search Field */}
         <div className="mb-4 md:w-1/2">
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -166,7 +165,6 @@ const AssignedReferralsTable = () => {
           </div>
         </div>
 
-        {/* Table */}
         <div className="overflow-x-auto bg-white shadow-lg rounded-xl">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-blue-600 text-white">
@@ -219,7 +217,6 @@ const AssignedReferralsTable = () => {
           </table>
         </div>
 
-        {/* Pagination */}
         {filteredReferrals.length > 0 && (
           <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 mt-4 rounded-lg shadow-md">
             <div className="flex-1 flex justify-between sm:hidden">
