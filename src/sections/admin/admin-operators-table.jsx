@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Search, ArrowUpDown, ArrowUp, ArrowDown, ChevronLeft, ChevronRight, Settings, Plus } from "lucide-react";
+import { Search, ArrowUpDown, ArrowUp, ArrowDown, ChevronLeft, ChevronRight, Settings, Plus, Loader2 } from "lucide-react";
 import FullScreenLoader from "../../components/loader/FullScreenLoader";
 import useOperator from "../../hooks/useOperator";
 import ToastAlert from '../../components/alerts/ToastAlert';
@@ -31,7 +31,6 @@ const AdminOperatorsTable = () => {
     loadData();
   }, [loadData]);
 
-  // Filtering
   const filteredOperators = operatorsData.filter((item) => {
     const term = searchTerm.toLowerCase();
     return (
@@ -40,7 +39,6 @@ const AdminOperatorsTable = () => {
     );
   });
 
-  // Sorting
   const handleSort = (column) => {
     if (sortColumn === column) {
       setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
@@ -70,7 +68,6 @@ const AdminOperatorsTable = () => {
     });
   }, [filteredOperators, sortColumn, sortDirection]);
 
-  // Reset page when searching
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm]);
@@ -118,7 +115,7 @@ const AdminOperatorsTable = () => {
 
       setTimeout(() => {
         handleCloseFormModal();
-        loadData(); // Reload table data
+        loadData();
       }, 1000);
     }
   };
@@ -140,8 +137,13 @@ const AdminOperatorsTable = () => {
           <button
             onClick={() => handleOpenFormModal()}
             className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors btn-gradient"
+            disabled={isLoading}
           >
-            <Plus className="h-4 w-4" />
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Plus className="h-4 w-4" />
+            )}
             Nuevo operador
           </button>
         </div>
