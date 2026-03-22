@@ -38,7 +38,6 @@ const AdminOffersTable = () => {
   const [loadingMessage, setLoadingMessage] = useState("Cargando información...");
 
   const loadData = useCallback(async () => {
-    // setLoadingOffers(true);
     setLoadingMessage("Obteniendo información de las ofertas...");
     const data = await getAdminOffers();
     if (data) setOffers(data);
@@ -47,14 +46,12 @@ const AdminOffersTable = () => {
     const categories = await getAllCategories(); 
     if (benefits) setBenefitsList(benefits);
     if (categories) setCategoriesList(categories);
-    // setLoading(false);
   }, [getAdminOffers, getOperators, getAllBenefits]);
 
   useEffect(() => {
     loadData();
   }, [loadData]);
 
-  // Filtering
   const filteredOffers = offers.filter((item) => {
     const term = searchTerm.toLowerCase();
     return (
@@ -65,7 +62,6 @@ const AdminOffersTable = () => {
     );
   });
 
-  // Sorting
   const handleSort = (column) => {
     if (sortColumn === column) {
       setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
@@ -103,7 +99,6 @@ const AdminOffersTable = () => {
     });
   }, [filteredOffers, sortColumn, sortDirection]);
 
-  // Reset page when searching
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm]);
@@ -144,7 +139,6 @@ const AdminOffersTable = () => {
   };
 
   const handleOpenCommissionsConfigModal = async (offer) => {
-    // setLoadingForm(true); // if you use some global modal loading
     const data = await getOfferCommissionConfig(offer.id);
     if (data !== null) {
       setSelectedOfferForCommission(offer);
@@ -152,7 +146,6 @@ const AdminOffersTable = () => {
       document.querySelector('body').style.overflow = "hidden";
       setIsCommissionConfigModalOpen(true);
     }
-    // setLoadingForm(false);
   };
 
   const handleCloseCommissionsConfigModal = () => {
@@ -194,10 +187,6 @@ const AdminOffersTable = () => {
     }
   };
 
-  // if (loadingOffers || loadingOperators || loading) {
-  //   return <FullScreenLoader show={true} message={loadingMessage} />;
-  // }
-
   return (
     <div className="container mx-auto px-4 lg:px-0 mt-4 max-w-6xl">
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -221,7 +210,6 @@ const AdminOffersTable = () => {
           </button>
         </div>
 
-        {/* Skelton Loader */}
         {loadingOffers ? (
           <div className="p-4">
             <div className="animate-pulse">
@@ -344,7 +332,6 @@ const AdminOffersTable = () => {
               </table>
             </div>
 
-            {/* Pagination */}
             {sortedOffers.length > 0 && (
               <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
                 <div className="flex-1 flex justify-between sm:hidden">
@@ -403,8 +390,6 @@ const AdminOffersTable = () => {
             )}
           </>
         )}
-
-        
       </div>
 
       <OfferDetailModal

@@ -6,6 +6,7 @@ import { API_BASE_URL } from "../shared/constanst";
 const useOffer = () => {
   const [offers, setOffers] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [loadingConfig, setLoadingConfig] = useState(false);
   const [error, setError] = useState(null);
   const token = localStorage.getItem("auth_token");
 
@@ -346,7 +347,7 @@ const useOffer = () => {
   }, []);
 
   const getOfferCommissionConfig = useCallback(async (offerId) => {
-    setLoading(true);
+    setLoadingConfig(true);
     try {
       const response = await fetch(`${API_BASE_URL}/admin/offers/commission-config`, {
         method: "POST",
@@ -377,12 +378,12 @@ const useOffer = () => {
       });
       return null;
     } finally {
-      setLoading(false);
+      setLoadingConfig(false);
     }
   }, []);
 
   const updateOfferCommissionConfig = useCallback(async (configData) => {
-    setLoading(true);
+    setLoadingConfig(true);
     try {
       const response = await fetch(`${API_BASE_URL}/admin/offers/commission-config`, {
         method: "PUT",
@@ -393,7 +394,7 @@ const useOffer = () => {
         body: JSON.stringify(configData),
       });
       const data = await response.json();
-      
+
       ToastAlert({
         position: "top",
         timer: 2500,
