@@ -10,6 +10,8 @@ const useSignUp = () => {
   const [errorVerifyOTP, setErrorVerifyOTP] = useState(null);
   const [loadingSignUp, setLoadingSignUp] = useState(false);
   const [errorSignUp, setErrorSignUp] = useState(null);
+  const [loadingResendOTP, setLoadingResendOTP] = useState(false);
+  const [errorResendOTP, setErrorResendOTP] = useState(null);
 
   const generateOTP = useCallback(async (requestData, options = {}) => {
     setLoadingGenerateOTP(true);
@@ -103,6 +105,48 @@ const useSignUp = () => {
     }
   }, []);
 
+  const resendOTP = useCallback(async (requestData, options = {}) => {
+    setLoadingResendOTP(true);
+    setErrorResendOTP(null);
+    try {
+      const response = await fetch(`${API_BASE_URL}/signup/resend-code`, {
+        ...options,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: requestData.email,
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        if (response.status === 401) {
+          sessionExpiredToast(
+            logout,
+            () => {
+              window.location.href = '/';
+            }
+          );
+          return { process: 'session-expired' };
+        }
+        throw new Error(data.message || "Error en la solicitud");
+      }
+      return data;
+    } catch (err) {
+      setErrorResendOTP(err.message);
+      ToastAlert({
+        position: "center",
+        timer: 1800,
+        icon: "error",
+        title: err.message || "Error de red, inténtelo más tarde",
+      });
+      throw err;
+    } finally {
+      setLoadingResendOTP(false);
+    }
+  }, []);
+
   const signUp = useCallback(async (requestData, options = {}) => {
     setLoadingSignUp(true);
     setErrorSignUp(null);
@@ -163,6 +207,9 @@ const useSignUp = () => {
     verifyOTP,
     loadingVerifyOTP,
     errorVerifyOTP,
+    resendOTP,
+    loadingResendOTP,
+    errorResendOTP,
     signUp,
     loadingSignUp,
     errorSignUp,
