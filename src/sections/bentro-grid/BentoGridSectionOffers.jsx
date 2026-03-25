@@ -14,7 +14,6 @@ import FullScreenLoader from "../../components/ui/FullScreenLoader";
 
 
 export default function BentoGridSectionOffers( { offers = [] } ) {
-
   const { benefits, error, getBenefits } = useBenefit();
   const { validateClienteRequestPending} = useRequest();
   const [offerId, setOfferId] = useState("");
@@ -22,11 +21,12 @@ export default function BentoGridSectionOffers( { offers = [] } ) {
   const [offerTitle, setOfferTitle] = useState("");
   const [offerPrice, setOfferPrice] = useState("");
   const [offerOperator, setOfferOperator] = useState("");
+  const [offerOperatorLogo, setOfferOperatorLogo] = useState("");
   const { isAuthenticated, userData } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [code, setCode] = useState("");
   const [loadingAddRequest, setLoadingAddRequest] = useState(false);
-
+  
   useEffect(() => {
     if (benefits) {
       OfferDetailModal({
@@ -34,7 +34,7 @@ export default function BentoGridSectionOffers( { offers = [] } ) {
         html: `
         <div class="flex flex-col gap-2 text-left">
           <div class="w-full flex flex-col align-left md:flex-row justify-left items-center">
-            <img src="${OPERATORS_LOGOS[offerOperator.toUpperCase()] ?? OPERATORS_LOGOS.CLARO}" alt="${offerOperator}" class="w-48 h-14 object-contain">
+            <img src="${offerOperatorLogo}" alt="${offerOperator}" class="w-48 h-14 object-contain">
             <div class="w-full">
               <h2 class="text-2xl font-semibold">${offerTitle}</h2>
               <h3 class="text-xl">${offerDescription}</h3>
@@ -67,11 +67,12 @@ export default function BentoGridSectionOffers( { offers = [] } ) {
     }
   }, [benefits, offerDescription, offerTitle]);
 
-  const handleBenefitsClick = async (id, title, description, price, operator) => {
+  const handleBenefitsClick = async (id, title, description, price, operator, operatorLogo) => {
     setOfferDescription(description);
     setOfferTitle(title);
     setOfferPrice(price);
     setOfferOperator(operator);
+    setOfferOperatorLogo(operatorLogo);
     getBenefits(id);
   };
 
@@ -127,6 +128,7 @@ export default function BentoGridSectionOffers( { offers = [] } ) {
       index: offer.offer_id,
       operator: offer.operator_name.toUpperCase(),
       price: offer.price_formatted,
+      operatorLogo: offer.operator_logo
     }));
   }
 
@@ -146,16 +148,7 @@ export default function BentoGridSectionOffers( { offers = [] } ) {
           {GRID_ITEMS.map((item, idx) => (
             <div
               key={item.id}
-              className={`
-                          col-span-1 
-                          /* Aplicamos el desplazamiento solo a partir de LG (desktop) */
-                          lg:mt-0 
-                          
-                          /* Lógica del Bento: Desplazar las columnas pares (col 2, 4) */ 
-                           
-                          
-                          
-                      `}
+              className={`col-span-1 lg:mt-0`}
             >
               <Card
                 title={item.title}
@@ -163,15 +156,15 @@ export default function BentoGridSectionOffers( { offers = [] } ) {
                 index={item.index}
                 operator={item.operator}
                 price={item.price}
-                onBenefitsClick={() => handleBenefitsClick(item.id, item.title, item.description, item.price, item.operator)}
+                onBenefitsClick={() => handleBenefitsClick(item.id, item.title, item.description, item.price, item.operator, item.operatorLogo)}
                 onBuyClick={() => handleBuyClick(item.id, item.title, item.description, item.price, item.operator)}
+                operatorLogo={item.operatorLogo}
               />
             </div>
           ))}
         </div>
       </section>
     
-      {/* ⬇️ Modal renderizado correctamente */}
       <OfferBuyBottomModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

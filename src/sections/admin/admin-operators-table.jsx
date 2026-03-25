@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { Search, ArrowUpDown, ArrowUp, ArrowDown, ChevronLeft, ChevronRight, Settings, Plus, Loader2 } from "lucide-react";
-import FullScreenLoader from "../../components/loader/FullScreenLoader";
 import useOperator from "../../hooks/useOperator";
 import ToastAlert from '../../components/alerts/ToastAlert';
 import OperatorFormModal from "../../components/modals/OperatorFormModal";
+import ImageUploader from "../../components/ImageUploader";
+import { SIO_LOGO_URL } from "../../shared/constanst";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -94,7 +95,7 @@ const AdminOperatorsTable = () => {
     setOperatorToEdit(null);
   };
 
-  const handleSubmitOperator = async (formData) => {
+  const handleSubmitOperator = async (formData, opts = {}) => {
     setIsSubmitting(true);
     let result;
     if (operatorToEdit) {
@@ -103,8 +104,7 @@ const AdminOperatorsTable = () => {
       result = await createOperator(formData);
     }
     setIsSubmitting(false);
-    setIsFormModalOpen(false);
-    
+
     if (result && result.process === "success") {
       ToastAlert({
         position: "top",
@@ -113,12 +113,45 @@ const AdminOperatorsTable = () => {
         title: operatorToEdit ? "Operador actualizado exitosamente." : "Operador creado exitosamente."
       });
 
-      setTimeout(() => {
-        handleCloseFormModal();
-        loadData();
-      }, 1000);
+      if (operatorToEdit) {
+        // For updates close immediately and reload
+        setIsFormModalOpen(false);
+        setTimeout(() => {
+          handleCloseFormModal();
+          loadData();
+        }, 1000);
+      } else {
+        // For creates, the modal handles the subsequent image upload before closing.
+        // Reload the table after a short delay to pick up the new operator (and logo once uploaded).
+        setTimeout(() => {
+          setIsFormModalOpen(false);
+          handleCloseFormModal();
+          loadData();
+        }, 2500);
+      }
+    } else {
+      setIsFormModalOpen(false);
     }
+
+    // Always return result so OperatorFormModal can chain the image upload
+    return result;
   };
+
+
+  const ImageWithFallback = ({ src, fallback, alt, className }) => {
+  return (
+    <img
+      className={className}
+      alt={alt}
+      src={src && src !== "default-icon.png" ? src : fallback}
+      onError={(e) => {
+        if (e.target.src !== fallback) {
+          e.target.src = fallback;
+        }
+      }}
+    />
+  );
+};
 
   return (
     <div className="container mx-auto px-4 lg:px-0 mt-4 max-w-6xl">
@@ -180,6 +213,11 @@ const AdminOperatorsTable = () => {
                     >
                       Estado <SortIcon column="is_active" />
                     </th>
+                    <th 
+                      className="px-6 py-3 text-xs font-medium text-white uppercase tracking-wider cursor-pointer select-none hover:bg-indigo-600 transition-colors text-center"
+                    >
+                      Logo
+                    </th>
                     <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
                       Acciones
                     </th>
@@ -203,6 +241,14 @@ const AdminOperatorsTable = () => {
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                          <ImageWithFallback 
+                            src={operator.logo} 
+                            fallback={SIO_LOGO_URL} 
+                            alt={operator.name} 
+                            className="h-10 w-15 mx-auto" 
+                          />
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium flex items-center justify-center gap-2">
                           <button
                             onClick={() => handleOpenFormModal(operator)}
                             className="text-gray-500 hover:text-indigo-600 bg-gray-50 hover:bg-indigo-50 p-2 rounded-md transition-colors inline-flex items-center cursor-pointer"
@@ -210,6 +256,7 @@ const AdminOperatorsTable = () => {
                           >
                             <Settings className="h-4 w-4" />
                           </button>
+                          <ImageUploader currentImageUrl={operator.logo === "default-icon.png" || operator.logo === null ? SIO_LOGO_URL : operator.logo} operatorId={operator.id} onSuccess={loadData}/>
                         </td>
                       </tr>
                     ))

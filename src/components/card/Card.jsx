@@ -4,7 +4,7 @@ import React from 'react';
 import { PrimaryButton, SecondaryButton, ButtonCard } from '../ui/button';
 import { getColorOpertator, getColorButtonBuy, getColorHoverOpertator, getColorButtonBenefits, OPERATORS_LOGOS } from '../../shared/utils';
 
-export default function Card({ title, description, index, operator, price = "$ -- /mes", onBenefitsClick, onBuyClick }) {
+export default function Card({ title, description, index, operator, price = "$ -- /mes", onBenefitsClick, onBuyClick, operatorLogo }) {
   return (
     <div 
       className={`
@@ -20,7 +20,7 @@ export default function Card({ title, description, index, operator, price = "$ -
       <div className="absolute -top-5 -right-5 w-24 h-24 bg-white rounded-full 
                 flex items-center justify-center overflow-hidden shadow-md">
         <img 
-          src={OPERATORS_LOGOS[operator.toUpperCase()] ?? OPERATORS_LOGOS.CLARO}
+          src={operatorLogo}
           alt={operator}
           className="w-24 h-14 object-contain"
         />
