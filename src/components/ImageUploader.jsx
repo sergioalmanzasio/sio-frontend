@@ -8,12 +8,13 @@ import { SIO_LOGO_URL } from "../shared/constanst";
 
 const MySwal = withReactContent(Swal);
 
-export default function ImageUploader({ currentImageUrl, onSuccess, operatorId }) {
+export default function ImageUploader({ currentImageUrl, onSuccess, operatorId, operatorName }) {
   const fileInputRef = useRef(null);
+  const token = localStorage.getItem("auth_token");
 
   const handleOpenModal = () => {
     MySwal.fire({
-      title: 'Actualizar logo',
+      title: `Actualizar logo de ${operatorName}`,
       confirmButtonText: 'Guardar cambios',
       showCancelButton: true,
       cancelButtonText: 'Cancelar',
@@ -88,6 +89,9 @@ export default function ImageUploader({ currentImageUrl, onSuccess, operatorId }
           const res = await fetch(`${API_BASE_URL}/admin/upload`, {
             method: 'POST',
             body: formData,
+            headers: {
+              "Authorization": `Bearer ${token}`,
+            },
           });
 
           if (!res.ok) throw new Error('Error en la subida del logo');

@@ -256,7 +256,7 @@ const AdminOperatorsTable = () => {
                           >
                             <Settings className="h-4 w-4" />
                           </button>
-                          <ImageUploader currentImageUrl={operator.logo === "default-icon.png" || operator.logo === null ? SIO_LOGO_URL : operator.logo} operatorId={operator.id} onSuccess={loadData}/>
+                          <ImageUploader currentImageUrl={operator.logo === "default-icon.png" || operator.logo === null ? SIO_LOGO_URL : operator.logo} operatorId={operator.id} onSuccess={loadData} operatorName={operator.name}/>
                         </td>
                       </tr>
                     ))
