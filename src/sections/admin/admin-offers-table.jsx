@@ -7,6 +7,8 @@ import OfferDetailModal from "../../components/modals/OfferDetailModal";
 import OfferFormModal from "../../components/modals/OfferFormModal";
 import OfferCommissionConfigModal from "../../components/modals/OfferCommissionConfigModal";
 import ToastAlert from '../../components/alerts/ToastAlert'
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -37,6 +39,47 @@ const AdminOffersTable = () => {
   const [loadingForm, setLoadingForm] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("Cargando información...");
 
+  // 1. Agregamos .drive() al final
+  const runTour = useCallback(() => {
+    const driverObj = driver({
+      showProgress: true,
+      nextBtnText: 'Siguiente',
+      prevBtnText: 'Anterior',
+      doneBtnText: 'Finalizar',
+      steps: [
+        { element: '#new-offer-btn', popover: { title: 'Nueva Oferta', description: 'Haz clic aquí para crear una nueva oferta.', side: "left", align: 'start' }},
+        { 
+          element: 'tbody tr:first-child td:last-child button:nth-child(1)', 
+          popover: { 
+            title: 'Ver Detalles', 
+            description: 'Haz clic aquí para ver toda la información de la oferta.', 
+            side: "left", align: 'center' 
+          } 
+        },
+        { 
+          element: 'tbody tr:first-child td:last-child button:nth-child(2)', 
+          popover: { 
+            title: 'Editar Oferta', 
+            description: 'Usa este botón para modificar los datos existentes e incluso inhabilita la oferta si lo deseas.', 
+            side: "left", align: 'center' 
+          } 
+        },
+        { 
+          element: 'tbody tr:first-child td:last-child button:nth-child(3)', 
+          popover: { 
+            title: 'Configurar Comisiones', 
+            description: 'Aquí puedes gestionar los valores de comisión.', 
+            side: "left", align: 'center' 
+          } 
+        }
+      ]
+    });
+
+    driverObj.drive();
+  }, []);
+
+ 
+
   const loadData = useCallback(async () => {
     setLoadingMessage("Obteniendo información de las ofertas...");
     const data = await getAdminOffers();
@@ -46,6 +89,11 @@ const AdminOffersTable = () => {
     const categories = await getAllCategories(); 
     if (benefits) setBenefitsList(benefits);
     if (categories) setCategoriesList(categories);
+    if (data && data.length > 0) {
+      setTimeout(() => {
+        runTour();
+      }, 500);
+    }
   }, [getAdminOffers, getOperators, getAllBenefits]);
 
   useEffect(() => {
@@ -204,6 +252,7 @@ const AdminOffersTable = () => {
           <button
             onClick={() => handleOpenFormModal()}
             className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors btn-gradient"
+            id="new-offer-btn"
           >
             <Plus className="h-4 w-4" />
             Nueva oferta
