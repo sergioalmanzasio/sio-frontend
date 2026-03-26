@@ -37,6 +37,8 @@ import BonusesHistoryPage from "./pages/BonusesHistoryPage";
 import BonusPaymentsPage from "./pages/BonusPaymentsPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import CompensationPlanPage from "./pages/CompensationPlanPage";
+import CustomerReferencingPage from "./pages/CustomerReferencingPage";
+import "driver.js/dist/driver.css";
 
 function App() {
 
@@ -50,6 +52,7 @@ function App() {
           <Route path="/compensation-plan" element={<CompensationPlanPage />} />
           <Route path="/offers" element={<OffersPage />} />
           <Route path="/auth-redirect" element={<AuthRedirect />} />
+          <Route path="/customer-referencing" element={<CustomerReferencingPage />} />
 
           <Route element={<ProtectedRoute />}>
             <Route path="/client-service-requests" element={<ClientServiceRequests />} />
