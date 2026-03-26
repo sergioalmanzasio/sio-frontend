@@ -22,7 +22,7 @@ export default function CustomerReferencingPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("referral-code:", referralCode);
+    
   }, [referralCode]);
 
   // Form states
