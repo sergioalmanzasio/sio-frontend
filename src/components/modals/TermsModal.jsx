@@ -7,7 +7,6 @@ export default function TermsModal({ isOpen, onClose }) {
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl shadow-2xl w-full md:w-full md:max-w-2/3 transform transition-all duration-500 scale-100 opacity-100 animate-slideUp overflow-y-auto max-h-[95vh]">
-        {/* Modal Header */}
         <div className="flex justify-between items-center p-6 border-b border-gray-100">
           <h3 className="text-2xl font-bold text-blue-700">
             SIO
@@ -22,7 +21,6 @@ export default function TermsModal({ isOpen, onClose }) {
           </button>
         </div>
 
-        {/* Modal Body */}
         <div className="p-6 space-y-4 text-sm">
           <p>Al acceder y utilizar la plataforma de <b>SIO</b> (Sistema Integrado de Operadores), el usuario acepta los presentes términos y condiciones.</p>
           <p>SIO es una plataforma de intermediación que facilita la conexión entre usuarios y proveedores de servicios de telecomunicaciones.</p>
@@ -41,7 +39,6 @@ export default function TermsModal({ isOpen, onClose }) {
           <p>El uso indebido de la plataforma o el suministro de información falsa podrá resultar en la suspensión o cancelación del acceso del usuario.</p>
         </div>
 
-        {/* Modal Footer */}
         <div className="p-6 space-y-4 cursor-pointer text-sm">
           <PrimaryButton onClick={onClose}>Entendido</PrimaryButton>
         </div>

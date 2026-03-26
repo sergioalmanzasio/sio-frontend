@@ -22,7 +22,6 @@ const ServiceRequestsCoordinatorTable = () => {
     )
   }
 
-  // Expandable section in HTML
   const expandableSection = (status) => {
     return (
       '<div>' +

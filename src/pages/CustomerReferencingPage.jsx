@@ -25,7 +25,6 @@ export default function CustomerReferencingPage() {
     
   }, [referralCode]);
 
-  // Form states
   const [clientDocumentType, setClientDocumentType] = useState("");
   const [clientDocumentNumber, setClientDocumentNumber] = useState("");
   const [clientFirstName, setClientFirstName] = useState("");
@@ -41,7 +40,6 @@ export default function CustomerReferencingPage() {
   const [isValidateClient, setIsValidateClient] = useState(false);
   const [loadingAssignReferral, setLoadingAssignReferral] = useState(false);
 
-  // Location data
   const [departments, setDepartments] = useState([]);
   const [cities, setCities] = useState([]);
   const [departmentCodeSelected, setDepartmentCodeSelected] = useState("");
@@ -94,7 +92,6 @@ export default function CustomerReferencingPage() {
       return;
     }
 
-    // Reset form before validating
     const prevDocNumber = currentDocNumber;
     clearForm();
     setClientDocumentNumber(prevDocNumber);
@@ -102,7 +99,6 @@ export default function CustomerReferencingPage() {
     const response = await validatePersonByDocument({ document: currentDocNumber });
 
     if (response.process === "person-found") {
-      // Person already exists in the system
       ModalAlertConfirm({
         title: "Cliente encontrado",
         text: "Ya existe una persona registrada con este número de documento. Si deseas referenciarla, comunícate con un referido activo.",
@@ -205,8 +201,6 @@ export default function CustomerReferencingPage() {
     } catch (error) {
       console.error('Error during registration:', error);
     }
-
-    // TODO: connect to hook
   };
 
   const clearFormClientInfo = () => {
@@ -247,7 +241,6 @@ export default function CustomerReferencingPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Document number + validate button */}
               <div className="md:col-span-1">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-3 items-center">
                   <div className="md:col-span-3">
@@ -283,7 +276,6 @@ export default function CustomerReferencingPage() {
                 </div>
               </div>
 
-              {/* Document type */}
               <Select
                 options={DOCUMENT_TYPES.map((dt) => dt.label)}
                 label="Tipo de documento"

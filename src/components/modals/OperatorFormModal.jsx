@@ -13,7 +13,6 @@ const OperatorFormModal = ({ isOpen, onClose, onSubmit, isSubmitting = false, op
   const [errorName, setErrorName] = useState(false);
   const [errorDescription, setErrorDescription] = useState(false);
 
-  // Image states (only used when creating)
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const fileInputRef = useRef(null);
@@ -72,16 +71,12 @@ const OperatorFormModal = ({ isOpen, onClose, onSubmit, isSubmitting = false, op
     setErrorDescription(false);
 
     if (operatorToEdit) {
-      // Update: no image handling here, use ImageUploader on the table row
       onSubmit(formData);
       document.querySelector('body').style.overflow = "auto";
       return;
     }
-
-    // Create flow: submit main data first, then upload image if any
     const result = await onSubmit(formData, { returnResult: true });
 
-    // onSubmit must return the created operator data with the tokenized id
     if (result && result.process === "success" && selectedFile) {
       const newOperatorId = result.data?.data?.data?.id ?? result.data?.data?.id;
       if (newOperatorId) {
@@ -89,7 +84,6 @@ const OperatorFormModal = ({ isOpen, onClose, onSubmit, isSubmitting = false, op
         try {
           await uploadImage(newOperatorId, selectedFile);
         } catch (_) {
-          // Image upload failure is non-blocking; the operator was already created
         } finally {
           setUploadingImage(false);
         }
@@ -168,7 +162,6 @@ const OperatorFormModal = ({ isOpen, onClose, onSubmit, isSubmitting = false, op
                     )}
                   </div>
 
-                  {/* Image picker — only shown when creating a new operator */}
                   {isCreating && (
                     <div className="md:col-span-2">
                       <label className="block text-sm font-medium text-gray-700 mb-2">Logo del operador (opcional)</label>
@@ -198,7 +191,6 @@ const OperatorFormModal = ({ isOpen, onClose, onSubmit, isSubmitting = false, op
                     </div>
                   )}
 
-                  {/* Status toggle — only shown when editing */}
                   {operatorToEdit && (
                     <div className="md:col-span-2 pt-2">
                       <div className="flex items-center justify-between p-4 bg-gray-50 border border-gray-100 rounded-lg">

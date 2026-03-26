@@ -67,12 +67,11 @@ export default function ServiceCoordinatorDashboard() {
             </div>
           ))}
 
-          {/* Chart - Large Block */}
+          
           <div className="md:col-span-4 md:row-span-2">
              <MonthlyAssignmentsChart data={assignmentsData} />
           </div>
-
-          {/* Placeholder for future content or additional stats - Right Column Vertical */}
+        
           <div className="md:col-span-1 md:row-span-2 bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-center items-center text-center hidden">
             <div className="p-4 bg-blue-50 rounded-full mb-4">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">

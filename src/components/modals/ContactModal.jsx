@@ -9,7 +9,6 @@ export default function ContactModal({ isOpen, onClose }) {
   return (
      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
        <div className="bg-white rounded-2xl shadow-2xl w-full md:w-full md:max-w-md transform transition-all duration-500 scale-100 opacity-100 animate-slideUp">
-         {/* Modal Header */}
          <div className="flex justify-between items-center p-6 border-b border-gray-100">
            <h3 className="text-2xl font-bold text-blue-700">SIO <p className="text-xl text-gray-600">Contacto</p></h3>
            <button
@@ -21,7 +20,6 @@ export default function ContactModal({ isOpen, onClose }) {
            </button>
          </div>
 
-         {/* Modal Body */}
          <div className="p-6 space-y-4 text-sm">
            <p>Si tienes dudas sobre nuestros servicios, el programa de referidos o el estado de tus comisiones, puedes comunicarte con nosotros a través de los siguientes canales:</p>
            <h5 className="font-bold mb-1">Atención al cliente</h5>
@@ -34,7 +32,6 @@ export default function ContactModal({ isOpen, onClose }) {
            <p>{WEBSITE_URL}</p>
          </div>
 
-         {/* Modal Footer */}
          <div className="p-6 space-y-4 text-sm">
            <PrimaryButton onClick={onClose}>Entendido</PrimaryButton>
          </div>

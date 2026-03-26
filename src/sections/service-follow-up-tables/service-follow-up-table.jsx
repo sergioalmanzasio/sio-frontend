@@ -33,7 +33,6 @@ const ServiceFollowUpTable = () => {
     loadData();
   }, [userData?.email, referralByCoordinatorService]);
 
-  // Pagination calculations
   const totalPages = Math.ceil(followUps.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
@@ -63,7 +62,6 @@ const ServiceFollowUpTable = () => {
     );
   };
 
-  // Expose copy function to window for modal HTML
   useEffect(() => {
     window.copyToClipboard = (text) => {
       navigator.clipboard.writeText(text).then(() => {
@@ -159,7 +157,6 @@ const ServiceFollowUpTable = () => {
         </table>
       </div>
       
-      {/* Pagination */}
       {followUps.length > 0 && (
         <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 mt-4 rounded-lg shadow-md">
           <div className="flex-1 flex justify-between sm:hidden">

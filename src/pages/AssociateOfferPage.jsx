@@ -19,24 +19,17 @@ export default function AssociateOfferPage() {
   const { operators, loading: loadingOperators, getOperators } = useOperator();
   const { offers, loading: loadingOffers, getOffersByOperator } = useOffer();
   const { addReferralServiceRequest, loadingAddReferralServiceRequest } = useRequest();
-
-  // Get referral data from navigation state
   const referralData = location.state || {};
   const { clientName = '', trackingCode = '', referralId = '' } = referralData;
-
-  // Form states
   const [selectedOperator, setSelectedOperator] = useState('');
   const [selectedOperatorId, setSelectedOperatorId] = useState('');
   const [selectedOffer, setSelectedOffer] = useState(null);
   const [showOffers, setShowOffers] = useState(false);
   const [filingNumber, setFilingNumber] = useState('');
 
-  // Load operators on mount
   useEffect(() => {
     getOperators();
   }, [getOperators]);
-
-  // Redirect back if no referral data
   useEffect(() => {
     if (!trackingCode || !clientName) {
       ToastAlert({
@@ -49,20 +42,17 @@ export default function AssociateOfferPage() {
     }
   }, [trackingCode, clientName, navigate]);
 
-  // Handle operator selection
   const handleOperatorChange = (value) => {
     setSelectedOperator(value);
     setShowOffers(false);
     setSelectedOffer(null);
     
-    // Find operator ID
     const operator = operators?.find(op => op.name === value);
     if (operator) {
       setSelectedOperatorId(operator.id);
     }
   };
 
-  // Handle fetch offers
   const handleFetchOffers = async () => {
     if (!selectedOperatorId) {
       ToastAlert({
@@ -78,18 +68,14 @@ export default function AssociateOfferPage() {
     setShowOffers(true);
   };
 
-  // Handle offer selection
   const handleSelectOffer = (offer) => {
     setSelectedOffer(offer);
-    setFilingNumber(''); // Reset filing number when selecting new offer
+    setFilingNumber('');
   };
-
-  // Handle cancel
   const handleCancel = () => {
     navigate('/assigned-referrals');
   };
 
-  // Handle save
   const handleSave = () => {
     if (!selectedOffer) {
       ToastAlert({
@@ -114,14 +100,13 @@ export default function AssociateOfferPage() {
     });
   };
 
-  // Handle confirmed save
   const handleConfirmSave = async () => {
     try {
       const result = await addReferralServiceRequest({
         assigned_referral_code: trackingCode,
         email_service_coordinator: userData.email,
         offer_id: selectedOffer.offer_id,
-        filing_number: filingNumber.trim() || undefined, // Send undefined if empty, backend will set 'Pendiente'
+        filing_number: filingNumber.trim() || undefined,
       });
 
       if (result.process === 'success') {

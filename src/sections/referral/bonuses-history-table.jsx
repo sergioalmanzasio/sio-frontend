@@ -51,7 +51,6 @@ const BonusesHistoryTable = () => {
     loadData();
   }, [loadData]);
 
-  // Pagination
   const totalPages = Math.ceil(bonuses.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
@@ -98,7 +97,6 @@ const BonusesHistoryTable = () => {
         </select>
       </div>
 
-      {/* Table */}
       <div className="overflow-x-auto bg-white shadow-lg rounded-sm mt-4">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-teal-500 text-white">
@@ -151,7 +149,6 @@ const BonusesHistoryTable = () => {
         </table>
       </div>
 
-      {/* Pagination */}
       {bonuses.length > 0 && (
         <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 mt-4 rounded-lg shadow-md">
           <div className="flex-1 flex justify-between sm:hidden">

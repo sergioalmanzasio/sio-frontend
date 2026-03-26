@@ -18,7 +18,6 @@ export default function AddClientForm({ onSuccess, onCancel, hasLegend = true })
   const { addReferralExistCustomer, loadingReferralExistCustomer } = useReferral();
   const { userData } = useAuth();
 
-  // Form states
   const [clientDocumentType, setClientDocumentType] = useState("");
   const [clientDocumentNumber, setClientDocumentNumber] = useState("");
   const [clientFirstName, setClientFirstName] = useState("");
@@ -33,16 +32,11 @@ export default function AddClientForm({ onSuccess, onCancel, hasLegend = true })
   const [clientNeighborhood, setClientNeighborhood] = useState("");
   const [isValidateClientDocumentNumber, setIsValidateClientDocumentNumber] = useState(false);
   const [loadingAssignReferral, setLoadingAssignReferral] = useState(false);
-  
-  // Validation state
   const [isValidateClient, setIsValidateClient] = useState(false);
-  
-  // Department/City management
   const [departments, setDepartments] = useState([]);
   const [cities, setCities] = useState([]);
   const [departmentCodeSelected, setDepartmentCodeSelected] = useState("");
 
-  // Load departments
   useEffect(() => {
     const loadDepartments = async () => {
       const depts = await getDepartments();
@@ -51,7 +45,6 @@ export default function AddClientForm({ onSuccess, onCancel, hasLegend = true })
     loadDepartments();
   }, []);
 
-  // Load cities when department changes
   useEffect(() => {
     if (!departmentCodeSelected || departmentCodeSelected === '') return;
     const loadCities = async () => {
@@ -62,7 +55,6 @@ export default function AddClientForm({ onSuccess, onCancel, hasLegend = true })
     loadCities();
   }, [departmentCodeSelected]);
 
-  // Clear form function
   const clearFormClientInfo = () => {
     setClientDocumentType('');
     setClientDocumentNumber('');
@@ -81,7 +73,6 @@ export default function AddClientForm({ onSuccess, onCancel, hasLegend = true })
     setCities([]);
   };
 
-  // Handle validate client document number
   const handleValidateClientDocumentNumber = async () => {
     setIsValidateClient(false);
     const currentDocNumber = clientDocumentNumber;
@@ -146,7 +137,6 @@ export default function AddClientForm({ onSuccess, onCancel, hasLegend = true })
     }
   };
 
-  // Handle form submission
   const handleSubmitClient = async (e) => {
     e.preventDefault();
     
@@ -213,7 +203,6 @@ export default function AddClientForm({ onSuccess, onCancel, hasLegend = true })
     }
   };
 
-  // Handle department change
   const handleDepartmentChange = (value) => {
     setClientDepartment(value);
     setClientCity("");

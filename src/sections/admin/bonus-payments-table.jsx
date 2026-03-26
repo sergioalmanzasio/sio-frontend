@@ -38,7 +38,6 @@ const BonusPaymentsTable = () => {
     loadData();
   }, [loadData]);
 
-  // Filtering by referral name or account number
   const filteredBonuses = bonuses.filter(bonus => {
     if (!searchTerm.trim()) return true;
     const term = searchTerm.toLowerCase();
@@ -47,7 +46,6 @@ const BonusPaymentsTable = () => {
     return name.includes(term) || account.includes(term);
   });
 
-  // Sorting
   const handleSort = (column) => {
     if (sortColumn === column) {
       setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
@@ -83,12 +81,9 @@ const BonusPaymentsTable = () => {
     });
   }, [filteredBonuses, sortColumn, sortDirection]);
 
-  // Reset page when searching
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm]);
-
-  // Pagination
   const totalPages = Math.max(1, Math.ceil(sortedBonuses.length / ITEMS_PER_PAGE));
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
@@ -211,7 +206,6 @@ const BonusPaymentsTable = () => {
         </table>
       </div>
 
-      {/* Pagination */}
       {sortedBonuses.length > 0 && (
         <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 mt-4 rounded-lg shadow-md">
           <div className="flex-1 flex justify-between sm:hidden">

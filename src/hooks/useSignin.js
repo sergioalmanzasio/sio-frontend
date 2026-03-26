@@ -1,5 +1,3 @@
-// useSignin.js 
-
 import { useState } from "react";
 import ToastAlert from "../components/alerts/ToastAlert";
 import { saveUserData, clearUserData } from "../shared/auth";
@@ -23,7 +21,7 @@ const useSignin = () => {
 
       if (response.ok) {
         saveUserData(data);
-        return { success: true, data: data }; // Devuelve un objeto para indicar éxito
+        return { success: true, data: data };
       } else {
         ToastAlert({
           position: "top",
@@ -32,7 +30,7 @@ const useSignin = () => {
           title: data.message,
         });
         clearUserData();
-        return { success: false }; // Devuelve fracaso
+        return { success: false };
       }
     } catch (error) {
       ToastAlert({
@@ -42,7 +40,7 @@ const useSignin = () => {
         title: "Error al obtener la sesión, inténtelo más tarde",
       });
       clearUserData();
-      return { success: false }; // Devuelve fracaso
+      return { success: false };
     }
   };
 
@@ -50,12 +48,11 @@ const useSignin = () => {
   const signin = async (formData) => {
     clearUserData();
     setLoading(true);
-    let loginSuccessful = false; // Variable local para controlar el resultado del login
+    let loginSuccessful = false;
 
     try {
       const response = await fetch(`${API_BASE_URL}/auth/sign-in`, {
         method: "POST",
-        // credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -71,10 +68,9 @@ const useSignin = () => {
         const sessionResult = await getDataForSession();
 
         if (sessionResult.success) {
-          setIsLogin(true); // <--- Este cambio de estado forzará la re-renderización.
+          setIsLogin(true);
           loginSuccessful = true;
         } else {
-          // El error ya fue notificado dentro de getDataForSession
           clearUserData();
         }
       } else {
@@ -95,7 +91,7 @@ const useSignin = () => {
       });
     } finally {
       setLoading(false);
-      return loginSuccessful; // Devuelve un booleano
+      return loginSuccessful;
     }
   };
 

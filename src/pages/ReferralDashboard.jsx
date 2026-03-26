@@ -56,7 +56,6 @@ export default function ReferralDashboard() {
     const currentMonth = now.getMonth();
     const currentYear = now.getFullYear();
 
-    // Helper to get ISO week number
     const getWeek = (d) => {
         d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
         d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
@@ -116,7 +115,6 @@ export default function ReferralDashboard() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Hola, {userData?.firstName || 'Referido'}</h1>
           <p className="text-gray-500 mt-2">Aquí tienes el resumen de tu actividad.</p>
-          {/* TODO: add container with url referencing code with option copy in clipboard */}
           <div className="mt-4 flex flex-col items-center justify-between items-start gap-2 bg-purple-50 p-2 rounded-xl px-4 py-4">
             <div className="flex flex-col items-start gap-2">
               <h2 className="text-gray-900 font-semibold text-sm">Link de referenciación:</h2>
@@ -127,14 +125,12 @@ export default function ReferralDashboard() {
 
         </div>
 
-        {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {stats.map((item, index) => (
             <DashboardCard key={index} {...item} />
           ))}
         </div>
 
-        {/* Flyer Section */}
         <div className="bg-[#0f172a] rounded-3xl shadow-lg border border-gray-800 p-8 md:p-12 overflow-hidden relative">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
                 <div className="space-y-6">
@@ -157,11 +153,7 @@ export default function ReferralDashboard() {
                 </div>
 
                 <div className="relative flex justify-center lg:justify-end">
-                    {/* Abstract shapes background effect */}
                     <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/20 to-pink-500/20 blur-3xl rounded-full transform scale-75"></div>
-                    
-                    {/* Prize Card */}
-
                     <div className="relative w-full max-w-sm rounded-3xl p-[2px] bg-[conic-gradient(from_0deg,#ec4899,#8b5cf6,#6366f1,#ec4899)] ">
                       <div className="bg-[#1a1f37]/90 backdrop-blur-xl p-8 rounded-3xl shadow-2xl">
                         <div className="absolute top-0 right-0 p-4 opacity-20">
@@ -198,9 +190,8 @@ export default function ReferralDashboard() {
                 </div>
             </div>
             
-            {/* Background decorative gradient */}
-             <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-purple-500/10 blur-3xl rounded-full"></div>
-             <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-pink-500/10 blur-3xl rounded-full"></div>
+            <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-purple-500/10 blur-3xl rounded-full"></div>
+            <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-pink-500/10 blur-3xl rounded-full"></div>
         </div>
 
       </main>

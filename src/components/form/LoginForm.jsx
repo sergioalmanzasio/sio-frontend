@@ -19,7 +19,6 @@ const LoginForm = ({ onClickForgotPassword, onClickRegister, onClose }) => {
   }
 
   const handleInputChange = (e) => {
-    // Capturar el evento enter
     const { name, value } = e.target;
     setFormData((prevState) => ({
       ...prevState,
@@ -27,15 +26,12 @@ const LoginForm = ({ onClickForgotPassword, onClickRegister, onClose }) => {
     }));
   };
 
-  // NUEVA LÓGICA: Reaccionar cuando isLogin cambie a true
   useEffect(() => {
     if (isAuthenticated) {
-      // 1. Notificar al Navbar para que cierre el dropdown y actualice isAuthenticated
       if (onClose) {
         onClose(); 
       }
-
-         navigate('/offers');
+      navigate('/offers');
     }
   }, [isAuthenticated, navigate, onClose]);
 
@@ -66,8 +62,6 @@ const LoginForm = ({ onClickForgotPassword, onClickRegister, onClose }) => {
       navigate('/auth-redirect');
     }
   };
-
-    
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -100,7 +94,6 @@ const LoginForm = ({ onClickForgotPassword, onClickRegister, onClose }) => {
           value={formData.password}
            isPasswordToggle={true} 
         />
-        {/* TODO: Agregar un loading skeleton mientras se carga el login */}
         <PrimaryButton
           type="submit"
           className={`w-full ${loading ? 'cursor-not-allowed' : 'cursor-pointer'}`}

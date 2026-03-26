@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Gift, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { Input } from "../ui/input";
 import Select from "../ui/select";
 import Textarea from "../ui/textarea";
@@ -19,7 +19,6 @@ export default function BonusFormModal({ isOpen, onClose, onSubmit, initialData,
     is_active: true
   });
 
-  // Map strings for select to actual logic values
   const typeMapToAPI = {
     "Dinero": "MONEY",
     "Porcentaje": "PERCENTAGE"
@@ -83,7 +82,7 @@ export default function BonusFormModal({ isOpen, onClose, onSubmit, initialData,
         return {
           ...prev,
           valid_from: value,
-          valid_until: "" // limpiar fecha final
+          valid_until: ""
         };
       }
 
@@ -99,7 +98,6 @@ export default function BonusFormModal({ isOpen, onClose, onSubmit, initialData,
     const outputData = {
         ...formData,
         bonus_type: typeMapToAPI[formData.bonus_type],
-        // apply_type: applyTypeMapToAPI[formData.apply_type],
         apply_type: getApplyTypeSelected(formData.apply_type, true),
         is_active: formData.is_active ? true : false
     };
@@ -145,11 +143,7 @@ export default function BonusFormModal({ isOpen, onClose, onSubmit, initialData,
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm overflow-y-auto pt-10 pb-10">
       <div className="bg-white rounded-xl shadow-2xl w-[90%] max-w-2xl animate-fade-in relative my-auto">
         
-        {/* SweetAlert-like Header */}
         <div className="flex flex-col items-center justify-center pt-8 px-6 pb-2">
-            {/* <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-teal-100 mb-4 ring-4 ring-teal-50">
-              <Gift className="h-8 w-8 text-teal-600" />
-            </div> */}
             <h2 className="text-2xl font-semibold text-gray-800 text-center">
               {initialData ? "Actualizar bono" : "Crear nuevo bono"}
             </h2>

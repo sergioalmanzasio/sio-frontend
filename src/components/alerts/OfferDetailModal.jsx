@@ -29,16 +29,13 @@ export default function OfferDetailModal({
     showCloseButton: true,
     allowOutsideClick: false,
 
-    // 🔥 ESTA ES LA CLAVE
     preConfirm: async () => {
       const shouldClose = await confirmCallback();
 
-      // ❗ Si confirmCallback retorna false --> NO cerrar modal
       if (shouldClose === false) {
         return false; 
       }
 
-      // Si retorna undefined o true --> cerrar modal
       return true;
     }
 

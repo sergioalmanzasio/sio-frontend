@@ -1,5 +1,4 @@
-// src/hooks/useOperator.js (Modificado)
-import { useState, useCallback } from "react"; // ⬅️ Importar useCallback
+import { useState, useCallback } from "react";
 import ToastAlert from "../components/alerts/ToastAlert";
 import { API_BASE_URL } from "../shared/constanst";
 
@@ -9,7 +8,6 @@ const useOperator = () => {
   const [error, setError] = useState(null);
   const token = localStorage.getItem("auth_token");
 
-  // 🔑 Envuelve la función con useCallback
   const getOperators = useCallback(async () => {
     setLoading(true);
     try {
@@ -38,8 +36,7 @@ const useOperator = () => {
     } finally {
       setLoading(false);
     }
-  }, []); // ⬅️ Array de dependencias vacío, ya que no depende de props o estados internos
-  // (solo usa setters y constantes, que son estables).
+  }, []);
 
   const getAdminOperators = useCallback(async () => {
     setLoading(true);

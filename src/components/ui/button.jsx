@@ -1,5 +1,3 @@
-// src/components/ui/button.jsx
-
 import React from "react";
 
 export const Button = React.forwardRef(
@@ -27,7 +25,6 @@ export const Button = React.forwardRef(
   }
 );
 
-// A primary variation for use in the Navbar/Form
 export const PrimaryButton = React.forwardRef(
   ({ className, children, ...props }, ref) => {
     return (

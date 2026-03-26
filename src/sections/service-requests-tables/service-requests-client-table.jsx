@@ -13,8 +13,7 @@ const ServiceRequestsClientTable = () => {
   const { loadingServiceRequestClient, getServiceRequestByClient, loadingServiceRequestDetail, getServiceRequestDetailByID, loadingCancelServiceRequestClient, cancelServiceRequestByClient } = useRequest();
   const { isAuthenticated, userData, logout } = useAuth();
   const [serviceRequests, setServiceRequests] = useState([]);
-  // 🔑 NUEVO ESTADO: Contador para forzar la recarga
-    const [refreshCounter, setRefreshCounter] = useState(0);
+  const [refreshCounter, setRefreshCounter] = useState(0);
   
   const buttomDetails = (id) => (
     <button 
@@ -84,11 +83,8 @@ const ServiceRequestsClientTable = () => {
       confirmText: 'Sí, cancelar',
       cancelText: 'No',
       confirmCallback: async () => {
-        // Here you would typically make an API call to cancel the service request
         let cancelServiceRequestByClientResponse = await cancelServiceRequestByClient(id, userData.email);
-
         if( cancelServiceRequestByClientResponse ) {
-          // await getServiceRequests();
           setRefreshCounter(prev => prev + 1);
           ToastAlert({
             position: "center",

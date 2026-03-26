@@ -24,8 +24,6 @@ export default function ConfigPage() {
   const [departments, setDepartments] = useState([]);
   const [cities, setCities] = useState([]);
   const [departmentCodeSelected, setDepartmentCodeSelected] = useState("");
-
-  // User data states
   const [documentType, setDocumentType] = useState("");
   const [documentNumber, setDocumentNumber] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -44,11 +42,9 @@ export default function ConfigPage() {
   const [role, setRole] = useState("");
   const [roleColor, setRoleColor] = useState("");
 
-  // Backup for cancel functionality
   const [backupData, setBackupData] = useState({});
   const { getPersonInfo, updatePersonInfo, loadingUpdatePersonInfo, updateBankInfo, loadingUpdateBankInfo, updateLocationInfo, loadingUpdateLocationInfo } = usePerson();
 
-  // Load user data
   useEffect(() => {
     const loadUserData = async () => {
       setLoading(true);
@@ -65,7 +61,6 @@ export default function ConfigPage() {
         if(response.process === "success") {
             const { person_info, data_location, data_bank } = response.data;
 
-            // Map document type name to acronym
             const docType = DOCUMENT_TYPES.find(dt => dt.label === person_info.document_type_name);
             setDocumentType(docType ? docType.acronym : "");
 
@@ -78,9 +73,7 @@ export default function ConfigPage() {
             setPhone(person_info.phone);
             setRole(person_info.role_name);
             
-            // Location
             if(data_location.is_data_location === false) {
-                 // Fields remain empty or we can show a message
             } else {
                  setDepartment(data_location.department == 'Pendiente' ? "" : data_location.department);
                  setCity(data_location.city == 'Pendiente' ? "" : data_location.city);
@@ -89,12 +82,10 @@ export default function ConfigPage() {
                  setHousingType(data_location.type_of_housing);
             }
 
-            // Bank
             if(data_bank.is_data_bank === false) {
-                // Fields remain empty
             } else {
-                 setBank(data_bank.name); // Assuming field name
-                 setAccountNumber(data_bank.account_number); // Assuming field name
+                 setBank(data_bank.name);
+                 setAccountNumber(data_bank.account_number);
             }
 
         } else {
@@ -116,7 +107,6 @@ export default function ConfigPage() {
     loadUserData();
   }, [getPersonInfo]);
 
-  // Load department code when department is set (for initial load)
   useEffect(() => {
     if (department && departments.length > 0 && !departmentCodeSelected) {
       const dept = departments.find(d => d.name === department);
@@ -126,7 +116,6 @@ export default function ConfigPage() {
     }
   }, [department, departments, departmentCodeSelected]);
 
-  // Load departments
   useEffect(() => {
     const loadDepartments = async () => {
       const depts = await getDepartments();
@@ -135,7 +124,6 @@ export default function ConfigPage() {
     loadDepartments();
   }, []);
 
-  // Load cities when department changes
   useEffect(() => {
     if (!departmentCodeSelected || departmentCodeSelected === '') return;
     const loadCities = async () => {
@@ -148,7 +136,6 @@ export default function ConfigPage() {
 
   const handleEditToggle = () => {
     if (!isEditMode) {
-      // Entering edit mode - backup current data
       setBackupData({
         documentType,
         documentNumber,
@@ -191,7 +178,6 @@ export default function ConfigPage() {
   };
 
   const handleSave = () => {
-    // Validate required fields
     if (!firstName || !lastName1 || !email || !phone) {
       ToastAlert({
         position: 'center',
@@ -202,7 +188,6 @@ export default function ConfigPage() {
       return;
     }
 
-    // Simulate save operation
     ToastAlert({
       position: 'center',
       timer: 2000,
@@ -225,7 +210,6 @@ export default function ConfigPage() {
     }
 
     try {
-      // Map acronym to full document type name
       const docType = DOCUMENT_TYPES.find(dt => dt.acronym === documentType);
       const documentTypeName = docType ? docType.label : documentType;
 
@@ -643,7 +627,6 @@ export default function ConfigPage() {
             </div>
           </div>
 
-          {/* Back Button */}
           <div className="mt-8 flex justify-center">
             <SecondaryButton
               onClick={() => navigate('/')}

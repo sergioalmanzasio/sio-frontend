@@ -11,19 +11,15 @@ const OTPInput = ({ length = 6, onComplete }) => {
     newValues[index] = val;
     setValues(newValues);
 
-    // Avanzar si el usuario escribe un número
     if (val && index < length - 1) {
       inputsRef.current[index + 1].focus();
     }
-
-    // Si están todos completos, enviar resultado
     if (newValues.every((v) => v !== "")) {
       onComplete(newValues.join(""));
     }
   };
 
   const handleKeyDown = (e, index) => {
-    // Retroceder al borrar
     if (e.key === "Backspace" && values[index] === "" && index > 0) {
       inputsRef.current[index - 1].focus();
     }
@@ -38,12 +34,9 @@ const OTPInput = ({ length = 6, onComplete }) => {
     const newValues = paste.split("").concat(Array(length).fill("")).slice(0, length);
     setValues(newValues);
 
-    // Enviar resultado si está completo
     if (newValues.every((v) => v !== "")) {
       onComplete(newValues.join(""));
     }
-
-    // Mover el focus al último
     inputsRef.current[newValues.length - 1].focus();
   };
 

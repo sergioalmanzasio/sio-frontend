@@ -1,5 +1,3 @@
-// src/sections/BentoGridSection.jsx
-
 import { useEffect, useState } from "react";
 import Card from "../../components/card/Card";
 import ToastAlert from "../../components/alerts/ToastAlert";
@@ -61,7 +59,6 @@ export default function BentoGridSectionOffers( { offers = [] } ) {
         cancelText: "Salir", 
         confirmCallback: () => handleBuyClick(offerId, offerTitle, offerDescription, offerPrice, offerOperator),
         cancelCallback: () => {
-          // Do nothing
         }
       });
     }
@@ -91,23 +88,20 @@ export default function BentoGridSectionOffers( { offers = [] } ) {
       return;
     }
 
-    // Validar si el usuario ya tiene una solicitud en estado de pendiente/en progreso
     try {
       const result = await validateClienteRequestPending({
-        email: userData?.email // Usar el email del usuario autenticado
+        email: userData?.email
       });
       if (result.hasPendingRequest || result.process === 'session-expired') {
         
         return;
       }
-      // Proceder con la compra
       setOfferDescription(description);
       setOfferTitle(title);
       setOfferPrice(price);
       setOfferOperator(operator);
       setIsModalOpen(true);
     } catch (error) {
-      // console.error("Error validando solicitud pendiente:", error);
     }
   };
 

@@ -38,8 +38,7 @@ const useOffer = () => {
     } finally {
       setLoading(false);
     }
-  }, []); // ⬅️ Array de dependencias vacío, ya que no depende de props o estados internos
-  // (solo usa setters y constantes, que son estables).
+  }, []);
 
   const getOffersByOperator = useCallback(async (operatorId) => {
     setLoading(true);
@@ -69,8 +68,7 @@ const useOffer = () => {
     } finally {
       setLoading(false);
     }
-  }, []); // ⬅️ Array de dependencias vacío, ya que no depende de props o estados internos
-  // (solo usa setters y constantes, que son estables).
+  }, []);
 
   const getOffersByService = useCallback(async (serviceId) => {
     setLoading(true);
@@ -100,8 +98,7 @@ const useOffer = () => {
     } finally {
       setLoading(false);
     }
-  }, []); // ⬅️ Array de dependencias vacío, ya que no depende de props o estados internos
-  // (solo usa setters y constantes, que son estables).
+  }, []);
 
   const getOffersByOperatorAndService = useCallback(async (operatorId, serviceId) => {
     setLoading(true);
@@ -131,8 +128,7 @@ const useOffer = () => {
     } finally {
       setLoading(false);
     }
-  }, []); // ⬅️ Array de dependencias vacío, ya que no depende de props o estados internos
-  // (solo usa setters y constantes, que son estables).
+  }, []);
 
   const getAdminOffers = useCallback(async () => {
     setLoading(true);

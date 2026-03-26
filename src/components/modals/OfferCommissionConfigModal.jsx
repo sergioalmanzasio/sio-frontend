@@ -32,7 +32,7 @@ export default function OfferCommissionConfigModal({ isOpen, onClose, offer, con
     if (type === "Valor fijo") {
       return `$ ${Number(cleanNum).toLocaleString("es-CO")}`;
     }
-    return cleanNum; // Porcentaje
+    return cleanNum;
   };
 
   const handleTypeChange = (index, value) => {
@@ -46,7 +46,6 @@ export default function OfferCommissionConfigModal({ isOpen, onClose, offer, con
     const rawVal = e.target.value;
     const cleanNum = rawVal.replace(/\D/g, "");
     const newConfigs = [...localConfigs];
-    // Guardamos el valor limpio a enviar al backend
     newConfigs[index].commission_value = cleanNum || "";
     newConfigs[index]._display_value = formatDisplayValue(cleanNum, newConfigs[index].commission_type);
     setLocalConfigs(newConfigs);
@@ -89,7 +88,6 @@ export default function OfferCommissionConfigModal({ isOpen, onClose, offer, con
       return;
     }
 
-    // Check if state changed from active to inactive
     if (item._original_is_active && !item.is_active) {
       Swal.fire({
         title: "¿Estás seguro?",
@@ -113,7 +111,6 @@ export default function OfferCommissionConfigModal({ isOpen, onClose, offer, con
           };
           const res = await updateOfferCommissionConfig(payload);
           if (res && res.process === "success") {
-            // Actualización exitosa en UI o cerramos el modal
             onClose();
           }
         }
@@ -163,7 +160,6 @@ export default function OfferCommissionConfigModal({ isOpen, onClose, offer, con
               {localConfigs.map((config, idx) => (
                 <div key={config.offer_commission_config_id || idx} className="p-5 border border-gray-200 rounded-xl bg-gray-50/50 space-y-5">
                   
-                  {/* Switch for Status */}
                   <div className="flex items-center justify-between border-b border-gray-200 pb-4">
                     <div>
                       <h3 className="text-sm font-semibold text-gray-800">Estado de la configuración</h3>
@@ -187,7 +183,6 @@ export default function OfferCommissionConfigModal({ isOpen, onClose, offer, con
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end mt-4">
-                    {/* Commission Type */}
                     <div className="w-full">
                       <Select
                         label="Tipo de comisión"
@@ -197,7 +192,6 @@ export default function OfferCommissionConfigModal({ isOpen, onClose, offer, con
                       />
                     </div>
                     
-                    {/* Commission Value */}
                     <div className="w-full">
                       <label className="block text-sm font-medium text-gray-700 mb-1 pl-1">
                         Valor
@@ -211,7 +205,6 @@ export default function OfferCommissionConfigModal({ isOpen, onClose, offer, con
                     </div>
                   </div>
 
-                  {/* Actions */}
                   <div className="flex justify-end gap-3 pt-4 border-t border-gray-200 mt-2">
                     <button
                       onClick={onClose}

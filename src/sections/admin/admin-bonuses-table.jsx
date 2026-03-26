@@ -28,7 +28,6 @@ const AdminBonusesTable = () => {
     loadData();
   }, [loadData]);
 
-  // Filtering
   const filteredBonuses = bonuses.filter((item) => {
     const term = searchTerm.toLowerCase();
     return (
@@ -38,7 +37,6 @@ const AdminBonusesTable = () => {
     );
   });
 
-  // Sorting
   const handleSort = (column) => {
     if (sortColumn === column) {
       setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
@@ -67,7 +65,6 @@ const AdminBonusesTable = () => {
     });
   }, [filteredBonuses, sortColumn, sortDirection]);
 
-  // Reset page when searching
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm]);
@@ -120,7 +117,6 @@ const AdminBonusesTable = () => {
       )}
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
         
-        {/* Search */}
         <div className="p-4 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-gray-50/50">
           <div className="relative w-full md:w-1/3">
             <input
@@ -232,7 +228,6 @@ const AdminBonusesTable = () => {
           </table>
         </div>
 
-        {/* Pagination */}
         {sortedBonuses.length > 0 && (
           <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
             <div className="flex-1 flex justify-between sm:hidden">

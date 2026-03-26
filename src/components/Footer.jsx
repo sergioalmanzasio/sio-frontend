@@ -1,4 +1,3 @@
-// src/components/Footer.jsx
 import { useState } from "react";
 import AboutModal from "./modals/AboutModal";
 import PolicyModal from "./modals/PolicyModal";  

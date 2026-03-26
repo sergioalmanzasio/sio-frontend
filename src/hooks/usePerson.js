@@ -187,8 +187,6 @@ const usePerson = () => {
     setLoadingGetPersonInfo(true);
     setErrorGetPersonInfo(null);
     try {
-      // Assuming GET request with query param based on "recibe como parametro el correo"
-      // If it requires POST, I will change method to POST and body to JSON.stringify({ email })
       const response = await fetch(`${API_BASE_URL}/person/info`, {
         ...options,
         method: "POST",

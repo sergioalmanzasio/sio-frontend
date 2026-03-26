@@ -114,15 +114,12 @@ const AdminOperatorsTable = () => {
       });
 
       if (operatorToEdit) {
-        // For updates close immediately and reload
         setIsFormModalOpen(false);
         setTimeout(() => {
           handleCloseFormModal();
           loadData();
         }, 1000);
       } else {
-        // For creates, the modal handles the subsequent image upload before closing.
-        // Reload the table after a short delay to pick up the new operator (and logo once uploaded).
         setTimeout(() => {
           setIsFormModalOpen(false);
           handleCloseFormModal();
@@ -133,7 +130,6 @@ const AdminOperatorsTable = () => {
       setIsFormModalOpen(false);
     }
 
-    // Always return result so OperatorFormModal can chain the image upload
     return result;
   };
 

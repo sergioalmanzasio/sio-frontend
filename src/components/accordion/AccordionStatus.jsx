@@ -19,7 +19,6 @@ export default function AccordionStatus({ children }) {
         />
       </button>
 
-      {/* Contenido expandible */}
       <div
         className={`transition-all duration-300 overflow-hidden ${
           open ? "max-h-96" : "max-h-0"

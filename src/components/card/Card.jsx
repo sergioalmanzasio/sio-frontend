@@ -1,10 +1,8 @@
-// src/components/Card.jsx
-
 import React from 'react';
-import { PrimaryButton, SecondaryButton, ButtonCard } from '../ui/button';
-import { getColorOpertator, getColorButtonBuy, getColorHoverOpertator, getColorButtonBenefits, OPERATORS_LOGOS } from '../../shared/utils';
+import { ButtonCard } from '../ui/button';
+import { getColorOpertator, getColorButtonBuy, getColorButtonBenefits } from '../../shared/utils';
 
-export default function Card({ title, description, index, operator, price = "$ -- /mes", onBenefitsClick, onBuyClick, operatorLogo }) {
+export default function Card({ title, description, operator, price = "$ -- /mes", onBenefitsClick, onBuyClick, operatorLogo }) {
   return (
     <div 
       className={`

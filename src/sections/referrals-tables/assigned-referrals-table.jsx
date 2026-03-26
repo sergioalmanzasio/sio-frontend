@@ -97,7 +97,6 @@ const AssignedReferralsTable = () => {
         }, 3000);
         return;
       }
-      // Using email_user as per hook definition
       const result = await referralByCoordinatorService({ email_user: userData.email });
       setReferrals(result); 
     } catch (error) {
@@ -112,7 +111,6 @@ const AssignedReferralsTable = () => {
     getAssignedReferrals();
   }, [isAuthenticated, userData]);
 
-  // Filter referrals based on search term
   const allReferrals = referrals?.data || [];
   const filteredReferrals = allReferrals.filter((referral) => {
     if (!searchTerm.trim()) return true;
@@ -124,12 +122,9 @@ const AssignedReferralsTable = () => {
     );
   });
 
-  // Reset to page 1 when search changes
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm]);
-
-  // Pagination calculations
   const totalPages = Math.ceil(filteredReferrals.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;

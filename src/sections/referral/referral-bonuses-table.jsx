@@ -32,13 +32,11 @@ const ReferralBonusesTable = () => {
     loadData();
   }, [loadData]);
 
-  // Filtering by date
   const filteredBonuses = bonuses.filter((item) => {
     if (!dateFilter) return true;
     return (item.created_at_formatted || "").toLowerCase().includes(dateFilter.toLowerCase());
   });
 
-  // Sorting
   const handleSort = (column) => {
     if (sortColumn === column) {
       setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
@@ -76,10 +74,9 @@ const ReferralBonusesTable = () => {
     });
   }, [filteredBonuses, sortColumn, sortDirection]);
 
-  // Reset page when filtering
   useEffect(() => {
     setCurrentPage(1);
-    setSelectedIds([]); // Clear selections on filter
+    setSelectedIds([]);
   }, [dateFilter]);
 
   const totalPages = Math.ceil(sortedBonuses.length / ITEMS_PER_PAGE);
@@ -143,7 +140,6 @@ const ReferralBonusesTable = () => {
       
 
       <div className="bg-white rounded-lg shadow-md overflow-hidden mt-4">
-        {/* Actions Bar */}
         <div className="p-4 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-gray-50/50">
           <div className="relative w-full sm:w-1/2 md:w-1/3">
             <input
@@ -170,7 +166,6 @@ const ReferralBonusesTable = () => {
           </button>
         </div>
 
-        {/* Table */}
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-cyan-500">
@@ -195,12 +190,6 @@ const ReferralBonusesTable = () => {
                 >
                   Fecha de Generación <SortIcon column="created_at_formatted" />
                 </th>
-                {/* <th 
-                  className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider cursor-pointer select-none hover:bg-indigo-600 transition-colors"
-                  onClick={() => handleSort("apply_type")}
-                >
-                  Tipo de Aplicación <SortIcon column="apply_type" />
-                </th> */}
                 <th 
                   className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider cursor-pointer select-none hover:bg-cyan-600 transition-colors"
                   onClick={() => handleSort("bonus_status_translate")}
@@ -232,11 +221,6 @@ const ReferralBonusesTable = () => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">{bonus.created_at_formatted}</div>
                     </td>
-                    {/* <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                        {bonus.apply_type}
-                      </span>
-                    </td> */}
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
                         {bonus.bonus_status_translate}
@@ -264,7 +248,6 @@ const ReferralBonusesTable = () => {
           </table>
         </div>
 
-        {/* Pagination */}
         {sortedBonuses.length > 0 && (
           <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
             <div className="flex-1 flex justify-between sm:hidden">

@@ -175,7 +175,6 @@ const AdminOffersTable = () => {
 
   const handleSubmitOffer = async (formData) => {
     setIsSubmitting(true);
-    // setLoadingForm(true);
     let result;
     if (offerToEdit) {
       setLoadingMessage("Actualizando oferta...");
@@ -185,7 +184,6 @@ const AdminOffersTable = () => {
       result = await createOffer(formData);
     }
     setIsSubmitting(false);
-    // setLoadingForm(false);
     
     if (result && result.process === "success") {
       ToastAlert({
@@ -197,7 +195,7 @@ const AdminOffersTable = () => {
 
       setTimeout(() => {
         handleCloseFormModal();
-        loadData(); // Reload table data
+        loadData();
       }, 1600);
       
     }

@@ -47,10 +47,8 @@ export default function OfferBuyBottomModal({ isOpen, onClose, children, title, 
 
   const showSuccessMessageForBuy = async () => {
     const codeText = code ? ' Código de asesor: ' + code : 'NO-CODE';
-    // onClose();
     const is_assisted = !!code;
     
-    // TODO: Implement actual API call to register the purchase
     const response = await addServiceRequest({
       email, 
       offer_id: offerID, 

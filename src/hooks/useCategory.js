@@ -1,5 +1,5 @@
 
-import { useState, useCallback } from "react"; // ⬅️ Importar useCallback
+import { useState, useCallback } from "react";
 import ToastAlert from "../components/alerts/ToastAlert";
 import { API_BASE_URL } from "../shared/constanst";
 
@@ -8,7 +8,6 @@ const useCategory = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // 🔑 Envuelve la función con useCallback
   const getCategories = useCallback(async () => {
     setLoading(true);
     try {
@@ -37,7 +36,7 @@ const useCategory = () => {
     } finally {
       setLoading(false);
     }
-  }, []); // ⬅️ Array de dependencias vacío, para que la función sea estable.
+  }, []);
 
   return { categories, loading, error, getCategories };
 };

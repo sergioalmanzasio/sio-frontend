@@ -51,7 +51,6 @@ const AdminServiceRequestsTable = () => {
     loadData();
   }, [loadData]);
 
-  // Filtering by referral name or status
   const filteredRequests = requests.filter((item) => {
     if (!searchTerm.trim()) return true;
     const term = searchTerm.toLowerCase();
@@ -60,7 +59,6 @@ const AdminServiceRequestsTable = () => {
     return referralName.includes(term) || status.includes(term);
   });
 
-  // Sorting
   const handleSort = (column) => {
     if (sortColumn === column) {
       setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
@@ -89,12 +87,10 @@ const AdminServiceRequestsTable = () => {
     });
   }, [filteredRequests, sortColumn, sortDirection]);
 
-  // Reset page when searching
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm]);
 
-  // Pagination
   const totalPages = Math.max(1, Math.ceil(sortedRequests.length / ITEMS_PER_PAGE));
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
@@ -120,7 +116,6 @@ const AdminServiceRequestsTable = () => {
         show={true}
       />
 
-      {/* Search */}
       <div className="overflow-x-auto bg-white shadow-lg rounded-sm mt-6">
         <div className="p-4 border-b border-gray-100">
           <div className="relative w-full md:w-1/3">
@@ -135,7 +130,6 @@ const AdminServiceRequestsTable = () => {
           </div>
         </div>
 
-        {/* Table */}
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-indigo-500 text-white">
             <tr>
@@ -151,12 +145,6 @@ const AdminServiceRequestsTable = () => {
               >
                 Oferta <SortIcon column="offer_name" />
               </th>
-              {/* <th
-                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hidden md:table-cell cursor-pointer select-none hover:bg-indigo-600 transition-colors"
-                onClick={() => handleSort("filing_number")}
-              >
-                Radicado <SortIcon column="filing_number" />
-              </th> */}
               <th
                 className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider cursor-pointer select-none hover:bg-indigo-600 transition-colors"
                 onClick={() => handleSort("status")}
@@ -203,9 +191,6 @@ const AdminServiceRequestsTable = () => {
                         <span className="font-semibold">Radicado: </span>{item.filing_number}</span>
                     </div>
                   </td>
-                  {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 hidden md:table-cell">
-                    <span className="bg-gray-100 px-2 py-1 rounded font-medium">{item.filing_number}</span>
-                  </td> */}
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
                     <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${getStatusColor(item.status)}`}>
                       {item.status}
@@ -239,7 +224,6 @@ const AdminServiceRequestsTable = () => {
         </table>
       </div>
 
-      {/* Pagination */}
       {sortedRequests.length > 0 && (
         <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 mt-4 rounded-lg shadow-md">
           <div className="flex-1 flex justify-between sm:hidden">

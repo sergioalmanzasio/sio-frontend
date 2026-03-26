@@ -92,7 +92,6 @@ const useReferral = () => {
       const response = await fetch(`${API_BASE_URL}/referral/my-referrals`, {
         ...options,
         method: "POST",
-        // credentials: "include",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,
@@ -296,7 +295,6 @@ const useReferral = () => {
       const response = await fetch(`${API_BASE_URL}/referral/get-total-commision`, {
         ...options,
         method: "GET",
-        // credentials: "include",
         headers: {
           'Content-Type': 'application/json',
           "Authorization": `Bearer ${token}`,

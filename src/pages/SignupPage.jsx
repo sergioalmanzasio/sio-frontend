@@ -46,10 +46,8 @@ export default function SignupPage() {
   const [departamentCodeSelected, setDepartamentCodeSelected] = useState("");
   
   
-  // Ref to track previous loading state for OTP generation
   const prevLoadingGenerateOTP = useRef(false);
 
-  // Form States - Personal Info
   const [documentType, setDocumentType] = useState("");
   const [documentNumber, setDocumentNumber] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -66,7 +64,6 @@ export default function SignupPage() {
   const [emailToResendOTP, setEmailToResendOTP] = useState("");
   const [nameToResendOTP, setNameToResendOTP] = useState("");
 
-  // Form States - Client Info (for Referral)
   const [clientDocumentType, setClientDocumentType] = useState("");
   const [clientDocumentNumber, setClientDocumentNumber] = useState("");
   const [clientFirstName, setClientFirstName] = useState("");
@@ -114,7 +111,6 @@ export default function SignupPage() {
           <p class="text-left text-sm italic mt-4"><span class="font-semibold">¿Deseas continuar con el proceso de registro?</span></p>
         
         `, 
-        // icon: 'info',
         confirmText: 'Si, continuar',
         cancelText: 'No, cancelar',
         isText: false,
@@ -358,7 +354,6 @@ export default function SignupPage() {
         isShowCancelButton: true,
         isAllowOutsideClick: false,
         confirmCallback: () => {
-          // setIsValidateClient(true);
           addReferralExistCustomer({
             document_client: clientDocumentNumber,
             email_user: email,
@@ -373,7 +368,6 @@ export default function SignupPage() {
       setLoadingValidateClientByDocumentNumber(false);
       return false;
     }
-    // return true;
   } 
 
   const handleCancelAddClient = () => {
@@ -426,7 +420,6 @@ export default function SignupPage() {
   }
 
   useEffect(() => {
-    // Show modal only when loading transitions from true to false (OTP generation completed)
     if (prevLoadingGenerateOTP.current && !loadingGenerateOTP && !errorGenerateOTP) {
       ModalAlertConfirm({
         title: 'Generación de código',
@@ -439,13 +432,11 @@ export default function SignupPage() {
       });
     }
     
-    // Update the ref with current loading state
     prevLoadingGenerateOTP.current = loadingGenerateOTP;
   }, [loadingGenerateOTP, errorGenerateOTP]);
 
   useEffect(() => {
     if (loadingVerifyOTP && !errorVerifyOTP) {
-      // Do nothing while loading
     } else if (!loadingVerifyOTP && !errorVerifyOTP && codeToResgitration) {       
       if (selectedRole === 'client') {
         ToastAlert({
@@ -479,7 +470,6 @@ export default function SignupPage() {
         });
       }
     } else if (errorVerifyOTP) {
-       // Stop process if error
        return;
     }
   }, [loadingVerifyOTP, errorVerifyOTP]);
@@ -511,7 +501,6 @@ export default function SignupPage() {
 
   useEffect(() => {
     if (loadingReferralExistCustomer) {
-      // Redirect to home
       ToastAlert({
         position: 'center',
         timer: 2000,
@@ -554,7 +543,6 @@ export default function SignupPage() {
       />
 
       <div className="container mx-auto px-4 mt-8 max-w-6xl">
-        {/* Progress Steps */}
         <div className="flex justify-center mb-8">
           <div className="flex items-center space-x-4">
             <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${step >= 1 ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'}`}>1</div>
@@ -700,13 +688,11 @@ export default function SignupPage() {
             </form>
           )}
 
-          {/* STEP 3: Client Data Form */}
           {step === 3 && (selectedRole === 'referral' || selectedRole === 'client') && (
             <form onSubmit={handleFinalSubmit} className="space-y-6 animate-fadeIn">
               <h2 className="text-2xl font-bold text-center text-gray-800">
                 {selectedRole === 'client' ? 'Completa tus datos' : 'Agregar Cliente'}
               </h2>
-              {/* Si roleClient show inline alert informando que se registrara como cliente */}
               {selectedRole === 'client' && (
                 <InlineAlert type="info" title="Información" message="Estás a punto de registrarte como cliente. Completa tu información personal para activar tus servicios." />
               )}
@@ -751,7 +737,6 @@ export default function SignupPage() {
                 <Select options={departments.map((department) => department.name )} label="Departamento" value={clientDepartment} onChange={(e) => { 
                   setClientDepartment(e.target.value);
                   setDepartamentCodeSelected('');
-                  // setCities([]);
                   setTimeout(() => {
                     setDepartamentCodeSelected(departments.find((department) => department.name === e.target.value).id);
                   }, 1500);
@@ -780,10 +765,6 @@ export default function SignupPage() {
               </div>
 
               <div className="flex justify-center pt-4 gap-4">
-                {/* <SecondaryButton onClick={() => {
-                  clearFormClientInfo();
-                  setStep(2)
-                }} type="button" className="w-full md:w-auto px-8 cursor-pointer">Atrás</SecondaryButton> */}
                 <SecondaryButton onClick={() => handleCancelAddClient()} 
                   disabled={isRegistering}
                   type="button" className="w-full md:w-auto px-8 cursor-pointer btn-cancel shadow-none disabled:opacity-50 disabled:cursor-not-allowed">

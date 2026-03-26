@@ -7,7 +7,6 @@ export default function PolicyModal({ isOpen, onClose }) {
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl shadow-2xl w-full md:w-full md:max-w-1/2 transform transition-all duration-500 scale-100 opacity-100 animate-slideUp overflow-y-auto max-h-[95vh]">
-        {/* Modal Header */}
         <div className="flex justify-between items-center p-6 border-b border-gray-100">
           <h3 className="text-2xl font-bold text-blue-700">Políticas de Privacidad</h3>
           <button
@@ -19,7 +18,6 @@ export default function PolicyModal({ isOpen, onClose }) {
           </button>
         </div>
 
-        {/* Modal Body */}
         <div className="p-6 space-y-4 text-sm">
           <p>En <b>SIO</b> (Sistema Integrado de Operadores) respetamos y protegemos la privacidad de nuestros usuarios. La plataforma puede recopilar información personal necesaria para la gestión de solicitudes de servicios, incluyendo:</p>
           <ul className="list-disc space-y-2 ml-4">
@@ -40,7 +38,6 @@ export default function PolicyModal({ isOpen, onClose }) {
           <p>Los usuarios pueden solicitar la actualización o eliminación de su información personal mediante los canales de contacto disponibles en la plataforma.</p>
         </div>
 
-        {/* Modal Footer */}
         <div className="p-6 space-y-4 cursor-pointer text-sm">
           <PrimaryButton onClick={onClose}>Entendido</PrimaryButton>
         </div>

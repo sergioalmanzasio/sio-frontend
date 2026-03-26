@@ -93,7 +93,6 @@ export const getRolesToSignUp = () => {
   return [
     { id: 'referral', label: 'Plan referido', description: 'Recomienda servicios y gana comisiones.' },
     { id: 'client', label: 'Soy cliente', description: 'Activa tus servicios hoy.' },
-    // { id: 'advisor', label: 'Soy asesor/a', description: 'Brinda asesoría y gestiona solicitudes.' },
   ];
 };
 

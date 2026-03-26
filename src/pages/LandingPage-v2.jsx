@@ -78,10 +78,6 @@ const TestimonialsSection = () => {
           viewport={{ once: true }}
           className="flex flex-col items-center justify-center max-w-[540px] mx-auto"
         >
-          {/* <div className="flex justify-center">
-            <div className="border border-gray-200 py-1 px-4 rounded-lg text-sm text-gray-600">Servicios</div>
-          </div> */}
-
           <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tighter mt-5 text-center">
             Tu Conexión Inteligente con servicios de Fibra y Móvil.
           </h2>
@@ -113,7 +109,6 @@ const LandingPageV2 = () => {
       <div className="font-[Inter] min-h-screen flex flex-col justify-between antialiased bg-gray-50">
         <Navbar />
         <main className="grow">
-          {/* <HeroSection /> */}
           <TestimonialsSection />
         </main>
         <Footer />

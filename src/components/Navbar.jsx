@@ -1,5 +1,3 @@
-// src/components/Navbar.jsx
-
 import sioLogo from "../assets/SIO-logo.png";
 import { useState } from "react";
 import { GradientButton } from "./ui/button";
@@ -28,11 +26,10 @@ export default function Navbar() {
       confirmText: "Sí, cerrar sesión",
       cancelText: "Cancelar",
       confirmCallback: () => {
-        logout(); // Llama a la función global de logout
+        logout();
         navigate('/');
       },
       cancelCallback: () => {
-        // Do nothing
       }
     });
   };
@@ -41,12 +38,9 @@ export default function Navbar() {
   return (
     <><header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-lg transition-all duration-300">
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
-        {/* Logo */}
         <div className="text-3xl font-extrabold text-blue-600 tracking-wider cursor-pointer" onClick={() => navigate('/')}>
           <img src={sioLogo} className="w-24 h-16" alt="" />
         </div>
-        {/* Icono de menu */}
-
         {
           isAuthenticated ? 
           (
@@ -60,9 +54,6 @@ export default function Navbar() {
                   <Menu className="cursor-pointer text-blue-600" onClick={() => setShowMenuUser(!showMenuUser)} />
                 )
               }
-              {/* <button className="text-gray-600 hover:text-gray-800 transition" onClick={handleLogout}>
-                <LogOut className="cursor-pointer"/>
-              </button> */}
               <div className="relative">
                 {showMenuUser && (
                   <MenuUser onClose={() => setShowMenuUser(false)} onCloseSession={handleLogout} />
@@ -73,7 +64,7 @@ export default function Navbar() {
           ) : (
             <div className="relative">
               <GradientButton
-                className="hidden md:flex cursor-pointer" // Hide on small screens for cleaner look
+                className="hidden md:flex cursor-pointer" 
                 onClick={() => setShowLogin(!showLogin)}
               >
                 {showLogin ? "Cancelar" : "Acceso"}

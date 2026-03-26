@@ -17,7 +17,6 @@ const Select = ({ options, label, value, onChange, disabled = false, icon, class
   return (
     <div className={"relative w-full" + (disabled ? " opacity-50 cursor-not-allowed" : "")}>
       
-      {/* Label visible sobre el Select */}
       <label
         htmlFor={`select-${label}`}
         className={`
@@ -32,7 +31,6 @@ const Select = ({ options, label, value, onChange, disabled = false, icon, class
         {label.charAt(0).toUpperCase() + label.slice(1)}
       </label>
 
-      {/* SELECT */}
       <select
         value={value}
         onChange={onChange}
@@ -54,13 +52,10 @@ const Select = ({ options, label, value, onChange, disabled = false, icon, class
         ))}
       </select>
 
-      {/* ICONO IZQUIERDO */}
       <Icon
         size={18}
         className="absolute left-3 top-1/2 -translate-y-1/4 text-gray-400 pointer-events-none"
       />
-
-      {/* FLECHA DERECHA */}
       <ChevronDown
         size={18}
         className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"

@@ -1,16 +1,13 @@
-// src/components/RegistrationModal.jsx
-
 import { useState } from "react";
-import { X, User, Phone, Briefcase, ChevronDown, Mail, Lock } from "lucide-react";
+import { X, User, Phone, Mail, Lock } from "lucide-react";
 import { PrimaryButton } from "./ui/button";
 import { Input } from "./ui/input"; 
-import ToastAlert from "./alerts/ToastAlert"; // Asegúrate de que esta librería funcione
+import ToastAlert from "./alerts/ToastAlert";
 import Select from "./ui/select";
 
 const DOCUMENT_TYPES = ["Cédula de ciudadanía", "Cédula de extranjería", "Pasaporte"];
 
 export default function RegistrationModal({ isOpen, onClose }) {
-  // 1. Estados para todos los campos del formulario
   const [isSeller, setIsSeller] = useState(false);
   const [documentType, setDocumentType] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -22,7 +19,6 @@ export default function RegistrationModal({ isOpen, onClose }) {
 
   if (!isOpen) return null;
   
-  // 2. Mover la lógica de manejo dentro del componente para acceder a los estados
   const clearInput = () => {
     setDocumentType("");
     setFirstName("");
@@ -36,7 +32,6 @@ export default function RegistrationModal({ isOpen, onClose }) {
   const validateAndSubmitForm = (e) => {
     e.preventDefault();
     
-    // 3. Validación usando los estados de React
     if (!documentType || !firstName || !lastName || !email || !phone || !password) {
       ToastAlert({
         position: "top",
@@ -44,11 +39,9 @@ export default function RegistrationModal({ isOpen, onClose }) {
         icon: "error",
         title: "Por favor, completa todos los campos requeridos."
       });
-      return false; // Detiene el envío
+      return false;
     }
 
-    
-    // Simulación de envío exitoso
     ToastAlert({
         position: "top",
         timer: 1800,
@@ -61,12 +54,10 @@ export default function RegistrationModal({ isOpen, onClose }) {
     return true;
   }
 
-
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md transform transition-all duration-500 scale-100 opacity-100 animate-slideUp">
         
-        {/* Modal Header */}
         <div className="flex justify-between items-center p-6 border-b border-gray-100">
           <h3 className="text-2xl font-bold text-blue-700">🚀 ¡Únete a SIO!</h3>
           <button 
@@ -78,11 +69,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
           </button>
         </div>
 
-        {/* Modal Body/Form */}
-        {/* 4. Usar la nueva función de manejo */}
-        <form onSubmit={validateAndSubmitForm} className="p-6 space-y-4"> 
-          
-          {/* Checkbox: Vendedor/a */}
+        <form onSubmit={validateAndSubmitForm} className="p-6 space-y-4">   
           <div className="flex items-center space-x-2 pb-2 border-b border-gray-100">
             <input 
               id="is-seller" 
@@ -96,30 +83,21 @@ export default function RegistrationModal({ isOpen, onClose }) {
             </label>
           </div>
           
-          {/* 5. SELECT - Campo controlado */}
           <Select
             options={DOCUMENT_TYPES}
             label="tipo de documento"
             value={documentType}
             onChange={(e) => setDocumentType(e.target.value)}
           />
-          
-          
-          {/* 6. INPUTS - Campos controlados: Aseguramos value y onChange */}
           <Input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="Primer nombre" icon={User} />
-          {/* Si quieres que el segundo nombre sea opcional, no lo incluyas en la validación principal */}
           <Input type="text" value={secondName} onChange={(e) => setSecondName(e.target.value)} placeholder="Segundo nombre (Opcional)" icon={User} />
           <Input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Apellidos" icon={User} />
           <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Correo electrónico" icon={Mail} />
           <Input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Número de teléfono" icon={Phone} />
           <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Crear contraseña" icon={Lock} />
-          
-          
-
           <p className="text-xs text-gray-500 pt-2">
               Al registrarte, aceptas nuestros <a href="#" className="text-blue-600 hover:underline">Términos y Condiciones</a>.
           </p>
-          
           <PrimaryButton type="submit" className="w-full py-3">
             Completar Registro
           </PrimaryButton>

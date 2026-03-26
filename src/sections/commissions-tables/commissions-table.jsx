@@ -44,7 +44,6 @@ const CommissionsTable = () => {
     loadData();
   }, [loadData]);
 
-  // Pagination calculations
   const totalPages = Math.ceil(commissions.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
@@ -113,7 +112,6 @@ const CommissionsTable = () => {
         type="info"
       />
 
-      {/* Table */}
       <div className="overflow-x-auto bg-white shadow-lg rounded-sm mt-4">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-blue-400 text-white">
@@ -189,7 +187,6 @@ const CommissionsTable = () => {
         </table>
       </div>
       
-      {/* Pagination */}
       {commissions.length > 0 && (
         <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 mt-4 rounded-lg shadow-md">
           <div className="flex-1 flex justify-between sm:hidden">

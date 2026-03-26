@@ -8,7 +8,6 @@ import InlineAlert from "../../components/alert/InlineAlert";
 
 const ITEMS_PER_PAGE = 10;
 
-// Helper: parse formatted currency string to number
 const parseCurrency = (value) => {
   if (typeof value === "number") return value;
   if (!value) return 0;
@@ -16,7 +15,6 @@ const parseCurrency = (value) => {
   return parseFloat(cleaned) || 0;
 };
 
-// Helper: format number to COP-style currency string
 const formatCurrency = (value) => {
   return "$ " + Math.round(value).toLocaleString("es-CO");
 };
@@ -56,7 +54,6 @@ const AdminBonusWithdrawalsTable = () => {
     loadData();
   }, [loadData]);
 
-  // Filtering
   const filteredBonuses = bonuses.filter((item) => {
     const term = searchTerm.toLowerCase();
     return (
@@ -65,7 +62,6 @@ const AdminBonusWithdrawalsTable = () => {
     );
   });
 
-  // Sorting
   const handleSort = (column) => {
     if (sortColumn === column) {
       setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
@@ -103,12 +99,10 @@ const AdminBonusWithdrawalsTable = () => {
     });
   }, [filteredBonuses, sortColumn, sortDirection]);
 
-  // Reset page when searching
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm]);
 
-  // Pagination calculations
   const totalPages = Math.ceil(sortedBonuses.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const currentBonuses = sortedBonuses.slice(startIndex, startIndex + ITEMS_PER_PAGE);
@@ -121,7 +115,6 @@ const AdminBonusWithdrawalsTable = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
 
-  // Multi-select logic
   const handleToggleSelect = (id) => {
     setSelectedIds((prev) => {
       const next = new Set(prev);
@@ -151,7 +144,6 @@ const AdminBonusWithdrawalsTable = () => {
   const allPageSelected = currentBonuses.length > 0 && currentBonuses.every((item) => selectedIds.has(item.bonus_transaction_id));
   const somePageSelected = currentBonuses.some((item) => selectedIds.has(item.bonus_transaction_id));
 
-  // Compute selected total
   const selectedItems = useMemo(() => {
     return bonuses.filter((item) => selectedIds.has(item.bonus_transaction_id));
   }, [bonuses, selectedIds]);
@@ -160,7 +152,6 @@ const AdminBonusWithdrawalsTable = () => {
     return selectedItems.reduce((sum, item) => sum + parseCurrency(item.bonus_amount_formatted), 0);
   }, [selectedItems]);
 
-  // Handle pay all selected
   const handlePayAll = () => {
     if (selectedIds.size === 0) return;
 
@@ -207,7 +198,6 @@ const AdminBonusWithdrawalsTable = () => {
       if (result.isConfirmed) {
         const tokens = Array.from(selectedIds);
 
-        // Show loading state
         Swal.fire({
           title: "Procesando pagos...",
           text: "Esto puede tomar unos momentos.",
@@ -286,7 +276,6 @@ const AdminBonusWithdrawalsTable = () => {
         show={true}
       />
 
-      {/* Search and Table */}
       <div className="overflow-x-auto bg-white shadow-lg rounded-sm mt-6">
         <div className="p-4 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
           <div className="relative w-full md:w-1/3">
@@ -433,7 +422,6 @@ const AdminBonusWithdrawalsTable = () => {
         </table>
       </div>
 
-      {/* Pagination */}
       {sortedBonuses.length > 0 && (
         <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 mt-4 rounded-lg shadow-md">
           <div className="flex-1 flex justify-between sm:hidden">

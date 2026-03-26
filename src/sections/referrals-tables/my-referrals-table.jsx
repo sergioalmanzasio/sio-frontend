@@ -19,11 +19,9 @@ const MyReferralsTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   
-  // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate(); 
 
-  // Fetch referrals data
   const getReferrals = async () => {
     try {
       if (!userData || !userData.email) {
@@ -43,7 +41,6 @@ const MyReferralsTable = () => {
       const result = await myReferrals({ email: userData.email });
       
       
-      // If API returns data, use it; otherwise use mock data for testing
       if (result && result.data) {
         setReferrals(result.data);
       } 
@@ -60,7 +57,6 @@ const MyReferralsTable = () => {
     getReferrals();
   }, [isAuthenticated, userData]);
 
-  // Pagination and filtering calculations
   const filteredReferrals = referrals.filter(referral => {
     if (!searchTerm.trim()) return true;
     const term = searchTerm.toLowerCase();
@@ -205,7 +201,6 @@ const MyReferralsTable = () => {
       }
     } catch (error) {
       console.error('Error fetching general info:', error);
-      // ToastAlert handled in hook
     }
   };
 
@@ -309,7 +304,6 @@ const MyReferralsTable = () => {
           </table>
         </div>
 
-        {/* Pagination */}
         {referrals.length > 0 && (
           <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 mt-4 rounded-lg shadow-md">
             <div className="flex-1 flex justify-between sm:hidden">
@@ -378,7 +372,6 @@ const MyReferralsTable = () => {
         )}
       </div>
 
-      {/* Add Client Modal */}
       <BottomModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

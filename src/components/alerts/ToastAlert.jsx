@@ -16,7 +16,6 @@ export default function ToastAlert({ position, timer, icon, title, isColored }) 
           popup: isColored ? 'colored-toast' : '',
         },
         didOpen: (toast) => {
-            // toast.onmouseenter = Swal.stopTimer;
             toast.onmouseleave = Swal.resumeTimer;
         },
         willClose: () => {

@@ -60,9 +60,7 @@ export default function ImageUploader({ currentImageUrl, onSuccess, operatorId, 
                 const url = URL.createObjectURL(file);
                 const container = document.getElementById('preview-container');
                 container.innerHTML = `<img src="${url}" style="max-height: 100%; object-fit: contain;" />`;
-                // Al seleccionar imagen, habilitamos el botón de confirmación
                 Swal.enableButtons();
-                // Guardamos el archivo en una propiedad temporal del DOM o variable
                 window.selectedFile = file; 
               }
             }}
@@ -103,7 +101,6 @@ export default function ImageUploader({ currentImageUrl, onSuccess, operatorId, 
         }
       },
       willClose: () => {
-        // Limpieza de variables globales temporales
         delete window.selectedFile;
       }
     }).then((result) => {

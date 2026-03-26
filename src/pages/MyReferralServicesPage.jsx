@@ -32,8 +32,6 @@ export default function MyReferralServicesPage() {
   const ITEMS_PER_PAGE = 10;
   const [showEditModal, setShowEditModal] = useState(false);
 
-  // Service request states
-  // En proceso, suspendida, aprobada, no aprobada y terminada
   const SERVICE_STATES = [
     'En proceso',
     'Suspendida',
@@ -42,7 +40,6 @@ export default function MyReferralServicesPage() {
     'Terminada',
   ];
 
-  // Fetch service requests
   const fetchServiceRequests = async () => {
     try {
       if (!userData || !userData.email) {
@@ -75,7 +72,6 @@ export default function MyReferralServicesPage() {
     fetchServiceRequests();
   }, [isAuthenticated, userData]);
 
-  // Handle add comment
   const handleAddComment = async () => {
     const comment = document.getElementById('comment')?.value;
     
@@ -115,9 +111,7 @@ export default function MyReferralServicesPage() {
           icon: 'success',
           title: 'Comentario agregado exitosamente',
         });
-        // Clear comment field
         document.getElementById('comment').value = '';
-        // Update character counter
         const counter = document.getElementById('char-count');
         if (counter) {
           counter.textContent = '0 / 200 caracteres';
@@ -137,7 +131,6 @@ export default function MyReferralServicesPage() {
     }
   };
 
-  // Expose handleAddComment to window for modal button access
   useEffect(() => {
     window.handleAddCommentClick = handleAddComment;
     return () => {
@@ -145,12 +138,10 @@ export default function MyReferralServicesPage() {
     };
   }, [selectedRequest, userData]);
 
-  // Handle show comments history
   const handleShowComments = async (request) => {
     let comments = [];
     try {
       const response = await getServiceRequestComments(request.service_request.id);
-      // Determine if response is the array or if it's wrapped in data property
       if (Array.isArray(response)) {
         comments = response;
       } else if (response.data && Array.isArray(response.data)) {
@@ -264,7 +255,6 @@ export default function MyReferralServicesPage() {
     });
   };
 
-  // Handle edit button click
   const handleEdit = (request) => {
     setSelectedRequest({
       ...request,
@@ -279,7 +269,6 @@ export default function MyReferralServicesPage() {
       cancelText: 'Cancelar',
       isShowCancelButton: true,
       confirmCallback: async () => {
-        // await handleSaveState(request); // Pass request directly
         confirmChangeState(request);
       },
       cancelCallback: () => {
@@ -352,7 +341,6 @@ export default function MyReferralServicesPage() {
     });
   }
 
-  // Build modal content
   const buildEditModalContent = (request) => {
     return `
       <div class="text-left space-y-2">
@@ -441,7 +429,6 @@ export default function MyReferralServicesPage() {
     `;
   };
 
-  // Handle save state
   const handleSaveState = async (request, newState, comment) => {
     
     if (!newState) {
@@ -490,7 +477,6 @@ export default function MyReferralServicesPage() {
           title: 'Estado actualizado exitosamente',
         });
 
-        // Calculate commission when state changes to 'Terminada'
         if (newState === 'Terminada') {
           try {
             await calculateCommission(request.client.referral_code);
@@ -499,7 +485,6 @@ export default function MyReferralServicesPage() {
           }
         }
 
-        // Refresh the list
         await fetchServiceRequests();
         setSelectedRequest(null);
       } else {
@@ -582,7 +567,6 @@ export default function MyReferralServicesPage() {
     });
   };
 
-  // Returns the available states based on the current state
   const getAvailableStates = (currentState) => {
     const stateTransitions = {
       'En proceso': ['En proceso', 'Suspendida', 'Aprobada', 'No aprobada'],
@@ -592,7 +576,6 @@ export default function MyReferralServicesPage() {
     return stateTransitions[currentState] || [currentState];
   };
 
-  // Format price
   const formatPrice = (price) => {
     return `$${Number(price).toLocaleString('es-CO')}`;
   };
@@ -660,7 +643,6 @@ export default function MyReferralServicesPage() {
       />
 
       <div className="w-full md:w-3/4 mt-0 md:mt-4 mx-auto p-4 md:p-0 max-w-6xl">
-        {/* Search Filter */}
         <div className="mb-4">
           <input
             type="text"
@@ -711,7 +693,6 @@ export default function MyReferralServicesPage() {
                 const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
                 const paginatedRequests = filteredRequests.slice(startIndex, startIndex + ITEMS_PER_PAGE);
                 
-                // Store for pagination UI
                 window.__paginationMeta = { filteredRequests, totalPages, startIndex };
                 
                 return paginatedRequests.length === 0 ? (
@@ -768,36 +749,11 @@ export default function MyReferralServicesPage() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                       <div className="flex gap-2 justify-center items-center h-full">
-                        {/* Icon button for add comment */}
                         {customButtonTable("Agregar comentario", () => handleShowComments(request), "comment", "purple", loadingGetComments)}
-                        {/* <div className="relative group">
-                          <button
-                            title="Agregar comentario"
-                            onClick={() => handleShowComments(request)}
-                            className="text-purple-600 hover:text-white bg-purple-100 hover:bg-purple-600 px-3 py-1 rounded-md text-xs font-semibold transition duration-150 cursor-pointer"
-                          >
-                            <span className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-gray-900 text-white text-xs px-2 py-1 rounded transition duration-200 whitespace-nowrap">
-                              Ver comentarios
-                            </span>
-                            <MessageSquareText className="w-4 h-4" />
-                          </button>
-                        </div> */}
                         {request.service_request.state !== 'Terminada' && request.service_request.state !== 'No aprobada' && request.service_request.filing_number !== 'Pendiente' && (
                           customButtonTable("Editar", () => handleEdit(request), "edit", "blue", loadingUpdateServiceRequestState)
-                          // <button
-                          //   onClick={() => handleEdit(request)}
-                          //   className="text-blue-600 hover:text-white bg-blue-100 hover:bg-blue-600 px-3 py-1 rounded-md text-xs font-semibold transition duration-150 cursor-pointer"
-                          // >
-                          //   <PenLine className="w-4 h-4" />
-                          // </button>
                         )}
                         {customButtonTable("Número de radicado", () => handleAddFilingNumber(request), "filing", "pink")}
-                        {/* <button
-                          onClick={() => handleAddFilingNumber(request)}
-                          className="text-pink-600 hover:text-white bg-pink-100 hover:bg-pink-600 px-3 py-1 rounded-md text-xs font-semibold transition duration-150 cursor-pointer"
-                        >
-                          <WholeWord className="w-4 h-4" />
-                        </button> */}
                       </div>
                     </td>
                   </tr>
@@ -808,7 +764,6 @@ export default function MyReferralServicesPage() {
           </table>
         </div>
 
-        {/* Pagination */}
         {(() => {
           const meta = window.__paginationMeta;
           if (!meta || meta.filteredRequests.length === 0) return null;

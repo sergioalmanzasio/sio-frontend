@@ -33,14 +33,12 @@ export default function SysAdminDashboard() {
           <p className="text-gray-500 mt-2">Bienvenido al panel principal del sistema.</p>
         </div>
 
-        {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {summaryData.map((item, index) => (
             <DashboardCard key={index} {...item} />
           ))}
         </div>
 
-        {/* Charts Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           <ServiceRequestsChart data={dashboardCardsData.serviceRequestsByMonth} />
           <RolesChart data={dashboardCardsData.usersByRole} />

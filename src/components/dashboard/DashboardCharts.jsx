@@ -102,7 +102,6 @@ export const ServiceRequestsChart = ({ data }) => {
 };
 
 export const CommissionsChart = ({ data }) => {
-  // rename amount to Total pagado
   const dataAux = data.map((item) => {
     return {
       name: item.name,

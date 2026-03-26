@@ -8,7 +8,6 @@ import InlineAlert from "../../components/alert/InlineAlert";
 
 const ITEMS_PER_PAGE = 10;
 
-// Helper: parse formatted currency string like "$ 50.000" or "$ 1.200.000" to number
 const parseCurrency = (value) => {
   if (typeof value === "number") return value;
   if (!value) return 0;
@@ -16,7 +15,6 @@ const parseCurrency = (value) => {
   return parseFloat(cleaned) || 0;
 };
 
-// Helper: format number to COP-style currency string
 const formatCurrency = (value) => {
   return "$ " + Math.round(value).toLocaleString("es-CO");
 };
@@ -56,7 +54,6 @@ const WithdrawalsTable = () => {
     loadData();
   }, [loadData]);
 
-  // Filtering
   const filteredWithdrawals = withdrawals.filter((item) => {
     const term = searchTerm.toLowerCase();
     return (
@@ -65,7 +62,6 @@ const WithdrawalsTable = () => {
     );
   });
 
-  // Sorting
   const handleSort = (column) => {
     if (sortColumn === column) {
       setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
@@ -94,12 +90,9 @@ const WithdrawalsTable = () => {
     });
   }, [filteredWithdrawals, sortColumn, sortDirection]);
 
-  // Reset page when searching
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm]);
-
-  // Pagination calculations
   const totalPages = Math.ceil(sortedWithdrawals.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const currentWithdrawals = sortedWithdrawals.slice(startIndex, startIndex + ITEMS_PER_PAGE);
@@ -112,7 +105,6 @@ const WithdrawalsTable = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
 
-  // Multi-select logic
   const handleToggleSelect = (id) => {
     setSelectedIds((prev) => {
       const next = new Set(prev);
@@ -142,7 +134,6 @@ const WithdrawalsTable = () => {
   const allPageSelected = currentWithdrawals.length > 0 && currentWithdrawals.every((item) => selectedIds.has(item.referral_commission_id));
   const somePageSelected = currentWithdrawals.some((item) => selectedIds.has(item.referral_commission_id));
 
-  // Compute selected total
   const selectedItems = useMemo(() => {
     return withdrawals.filter((item) => selectedIds.has(item.referral_commission_id));
   }, [withdrawals, selectedIds]);
@@ -151,7 +142,6 @@ const WithdrawalsTable = () => {
     return selectedItems.reduce((sum, item) => sum + parseCurrency(item.commission_to_pay), 0);
   }, [selectedItems]);
 
-  // Handle pay all selected
   const handlePayAll = () => {
     if (selectedIds.size === 0) return;
 
@@ -200,7 +190,6 @@ const WithdrawalsTable = () => {
       if (result.isConfirmed) {
         const tokens = Array.from(selectedIds);
 
-        // Show loading state
         Swal.fire({
           title: "Procesando pagos...",
           text: "Esto puede tomar unos momentos.",
@@ -209,7 +198,6 @@ const WithdrawalsTable = () => {
             Swal.showLoading();
           },
         });
-        // Process payments sequentially
         let successCount = 0;
         let errorCount = 0;
         for (const id of tokens) {
@@ -468,7 +456,6 @@ const WithdrawalsTable = () => {
         </table>
       </div>
 
-      {/* Pagination */}
       {sortedWithdrawals.length > 0 && (
         <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 mt-4 rounded-lg shadow-md">
           <div className="flex-1 flex justify-between sm:hidden">

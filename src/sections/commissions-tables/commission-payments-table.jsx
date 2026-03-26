@@ -43,7 +43,6 @@ const CommissionPaymentsTable = () => {
     loadData();
   }, [loadData]);
 
-  // Filtering
   const filteredCommissions = commissions.filter(commission => {
     if (!searchTerm.trim()) return true;
     const term = searchTerm.toLowerCase();
@@ -52,7 +51,6 @@ const CommissionPaymentsTable = () => {
     return clientName.includes(term) || trackingCode.includes(term);
   });
 
-  // Sorting
   const handleSort = (column) => {
     if (sortColumn === column) {
       setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
@@ -81,7 +79,6 @@ const CommissionPaymentsTable = () => {
     });
   }, [filteredCommissions, sortColumn, sortDirection]);
 
-  // Pagination
   const totalPages = Math.max(1, Math.ceil(sortedCommissions.length / ITEMS_PER_PAGE));
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
@@ -217,7 +214,6 @@ const CommissionPaymentsTable = () => {
         </table>
       </div>
 
-      {/* Pagination */}
       {sortedCommissions.length > 0 && (
         <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 mt-4 rounded-lg shadow-md">
           <div className="flex-1 flex justify-between sm:hidden">

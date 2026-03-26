@@ -1,5 +1,3 @@
-// src/components/SessionManager.jsx
-
 import { useAuth } from "../context/AuthContext";
 import useInactivityLogout from "../hooks/useInactivityLogout";
 import { INACTIVITY_LOGOUT_TIMER } from "../shared/constanst";

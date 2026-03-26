@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react"; // ⬅️ Importar useCallback
+import { useState, useCallback } from "react";
 import ToastAlert from "../components/alerts/ToastAlert";
 import { API_BASE_URL } from "../shared/constanst";
 import { useAuth } from "../context/AuthContext";
@@ -45,7 +45,6 @@ const useRequest = () => {
           );
           return { process: 'session-expired' };
         }
-        // throw new Error(data.message || "Error en la solicitud");
       }
       return data;
     } catch (err) {
@@ -80,7 +79,6 @@ const useRequest = () => {
       const data = await response.json();
       if (!response.ok) {
         if (response.status === 401) {
-          // Manejar el caso de sesión expirada 
           sessionExpiredToast(
             logout,
             () => {
@@ -160,7 +158,6 @@ const useRequest = () => {
         body: JSON.stringify({ service_request_id: id })
       });
 
-      // Add timeout to prevent hanging
       const timeoutPromise = new Promise((_, reject) => {
         setTimeout(() => reject(new Error('Tiempo de espera agotado, intente nuevamente o contáctese con soporte técnico.')), 5000);
       });
