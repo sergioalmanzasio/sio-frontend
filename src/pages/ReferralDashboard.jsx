@@ -1,11 +1,14 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Copy } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import DashboardCard from '../components/dashboard/DashboardCard';
 import useReferral from '../hooks/useReferral';
 import { useAuth } from '../context/AuthContext';
 import FullScreenLoader from '../components/loader/FullScreenLoader';
 import BonusModal from '../components/modals/BonusModal';
+import { SIO_CUSTOMER_REFERRAL_URL } from '../shared/constanst';
+import Swal from 'sweetalert2';
 
 export default function ReferralDashboard() {
   const { myReferrals, loadingMyReferrals, getTotalCommission } = useReferral();
@@ -92,7 +95,16 @@ export default function ReferralDashboard() {
     ];
   }, [referrals, totalCommission]);
 
-
+  const handleCopyReferralCode = () => {
+    navigator.clipboard.writeText(`${SIO_CUSTOMER_REFERRAL_URL}${userData?.referralCode}`);
+    Swal.fire({
+      title: "¡Enlace copiado!",
+      text: "El enlace de referenciación ha sido copiado al portapapeles.",
+      icon: "success",
+      timer: 2500,
+      showConfirmButton: false,
+    });
+  }
   
 
   return (
@@ -104,6 +116,15 @@ export default function ReferralDashboard() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Hola, {userData?.firstName || 'Referido'}</h1>
           <p className="text-gray-500 mt-2">Aquí tienes el resumen de tu actividad.</p>
+          {/* TODO: add container with url referencing code with option copy in clipboard */}
+          <div className="mt-4 flex flex-col items-center justify-between items-start gap-2 bg-purple-50 p-2 rounded-xl px-4 py-4">
+            <div className="flex flex-col items-start gap-2">
+              <h2 className="text-gray-900 font-semibold text-sm">Link de referenciación:</h2>
+              <p className="text-gray-900 text-sm">A continuación encontrarás el enlace de referenciación, solo da click en el botón de copiar y envía al cliente que desees referenciar</p>
+            </div>
+            <button className="flex items-center gap-2 bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-xl font-semibold text-sm transition-all duration-300 shadow-lg shadow-pink-500/25 hover:shadow-pink-500/40 transform hover:-translate-y-0.5 cursor-pointer " onClick={handleCopyReferralCode}><Copy className="w-4 h-4"/> Copiar</button>
+          </div>
+
         </div>
 
         {/* Stats Cards */}
