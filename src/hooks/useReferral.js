@@ -54,6 +54,37 @@ const useReferral = () => {
     }
   }, []);
 
+  const addReferralExistCustomerByReferralCode = useCallback(async (requestData, options = {}) => {
+    setLoadingReferralExistCustomer(true);
+    setErrorReferralExistCustomer(null);
+    try {
+      const response = await fetch(`${API_BASE_URL}/referral/create-referred-exist-customer-by-referral-code`, {
+        ...options,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          referral_code: requestData.referral_code,
+          client_document: requestData.document_client,
+        }),
+      });
+      const data = await response.json();
+      return data;
+    } catch (err) {
+      setErrorReferralExistCustomer(err.message);
+      ToastAlert({
+        position: "center",
+        timer: 1800,
+        icon: "error",
+        title: err.message || "Error de red, inténtelo más tarde",
+      });
+      throw err;
+    } finally {
+      setLoadingReferralExistCustomer(false);
+    }
+  }, []);
+
   const myReferrals = useCallback(async (requestData, options = {}) => {
     setLoadingMyReferrals(true);
     setErrorMyReferrals(null);
@@ -552,6 +583,7 @@ const useReferral = () => {
 
   return {
     addReferralExistCustomer,
+    addReferralExistCustomerByReferralCode,
     loadingReferralExistCustomer,
     errorReferralExistCustomer,
     myReferrals,

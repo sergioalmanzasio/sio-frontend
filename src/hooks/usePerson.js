@@ -63,6 +63,50 @@ const usePerson = () => {
     }
   }, []);
 
+  const addPersonByReferralCode = useCallback(async (requestData, options = {}) => {
+    setLoadingAddPerson(true);
+    setErrorAddPerson(null);
+    try {
+      const response = await fetch(`${API_BASE_URL}/person/create-person-by-referral-code`, {
+        ...options,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          document: requestData.document,
+          document_type_acronym: requestData.document_type_acronym,
+          name: requestData.name,
+          middle_name: requestData.middle_name,
+          last_name: requestData.last_name,
+          email: requestData.email,
+          phone: requestData.phone,
+          department: requestData.department,
+          city: requestData.city,
+          neighborhood: requestData.neighborhood,
+          address: requestData.address,
+          type_of_housing: requestData.type_of_housing,
+          observations: requestData.observations,
+          referral_code: requestData.referral_code
+        }),
+      });
+      const data = await response.json();
+
+      return data;
+    } catch (err) {
+      setErrorAddPerson(err.message);
+      ToastAlert({
+        position: "center",
+        timer: 1800,
+        icon: "error",
+        title: err.message || "Error de red, inténtelo más tarde",
+      });
+      throw err;
+    } finally {
+      setLoadingAddPerson(false);
+    }
+  }, []);
+
   const addClient = useCallback(async (requestData, options = {}) => {
     setLoadingAddPerson(true);
     setErrorAddPerson(null);
@@ -286,6 +330,7 @@ const usePerson = () => {
     loadingValidatePersonExistByDocument,
     errorValidatePersonExistByDocument,
     addPerson,
+    addPersonByReferralCode,
     loadingAddPerson,
     errorAddPerson,
     addClient,
