@@ -152,21 +152,6 @@ export default function CustomerReferencingPage() {
       return;
     }
 
-    console.log("Submitting client with referral-code:", referralCode, {
-      documentType: clientDocumentType,
-      documentNumber: clientDocumentNumber,
-      firstName: clientFirstName,
-      lastName: clientLastName,
-      email: clientEmail,
-      phone: clientPhone,
-      department: clientDepartment,
-      city: clientCity,
-      neighborhood: clientNeighborhood,
-      address: clientAddress,
-      housingType: clientHousingType,
-      observations: clientObservations,
-    });
-
     try {
       setLoadingAssignReferral(true);
       const addPersonResponse = await addPersonByReferralCode({
