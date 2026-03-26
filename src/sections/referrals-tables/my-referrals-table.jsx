@@ -10,34 +10,6 @@ import { useAuth } from "../../context/AuthContext";
 import ToastAlert from "../../components/alerts/ToastAlert";
 import { useNavigate } from "react-router-dom";
 
-
-// Mock data - 22 referrals (kept for testing purposes)
-const MOCK_REFERRALS = [
-  { id: "REF001", clientName: "María González Pérez", trackingCode: "TRK-2024-001", registrationDate: "2024-01-15", status: true},
-  { id: "REF002", clientName: "Carlos Rodríguez López", trackingCode: "TRK-2024-002", registrationDate: "2024-01-18", status: true},
-  { id: "REF003", clientName: "Ana Martínez Silva", trackingCode: "TRK-2024-003", registrationDate: "2024-01-22", status: false},
-  { id: "REF004", clientName: "Luis Hernández Castro", trackingCode: "TRK-2024-004", registrationDate: "2024-02-05", status: true},
-  { id: "REF005", clientName: "Patricia Ramírez Gómez", trackingCode: "TRK-2024-005", registrationDate: "2024-02-10", status: true},
-  { id: "REF006", clientName: "Jorge Díaz Morales", trackingCode: "TRK-2024-006", registrationDate: "2024-02-15", status: true},
-  { id: "REF007", clientName: "Carmen Torres Ruiz", trackingCode: "TRK-2024-007", registrationDate: "2024-02-20", status: false},
-  { id: "REF008", clientName: "Roberto Flores Vargas", trackingCode: "TRK-2024-008", registrationDate: "2024-03-01", status: true},
-  { id: "REF009", clientName: "Laura Sánchez Ortiz", trackingCode: "TRK-2024-009", registrationDate: "2024-03-05", status: true},
-  { id: "REF010", clientName: "Miguel Ángel Reyes", trackingCode: "TRK-2024-010", registrationDate: "2024-03-10", status: true},
-  { id: "REF011", clientName: "Sofía Jiménez Navarro", trackingCode: "TRK-2024-011", registrationDate: "2024-03-15", status: false},
-  { id: "REF012", clientName: "Diego Moreno Cruz", trackingCode: "TRK-2024-012", registrationDate: "2024-03-20", status: true},
-  { id: "REF013", clientName: "Valentina Castro Méndez", trackingCode: "TRK-2024-013", registrationDate: "2024-04-01", status: true},
-  { id: "REF014", clientName: "Andrés Romero Gutiérrez", trackingCode: "TRK-2024-014", registrationDate: "2024-04-05", status: true},
-  { id: "REF015", clientName: "Isabella Herrera Vega", trackingCode: "TRK-2024-015", registrationDate: "2024-04-10", status: false},
-  { id: "REF016", clientName: "Santiago Medina Rojas", trackingCode: "TRK-2024-016", registrationDate: "2024-04-15", status: true},
-  { id: "REF017", clientName: "Camila Aguilar Soto", trackingCode: "TRK-2024-017", registrationDate: "2024-04-20", status: true},
-  { id: "REF018", clientName: "Mateo Vargas Peña", trackingCode: "TRK-2024-018", registrationDate: "2024-05-01", status: true},
-  { id: "REF019", clientName: "Lucía Mendoza Ríos", trackingCode: "TRK-2024-019", registrationDate: "2024-05-05", status: false},
-  { id: "REF020", clientName: "Sebastián Núñez Paredes", trackingCode: "TRK-2024-020", registrationDate: "2024-05-10", status: true},
-  { id: "REF021", clientName: "Mariana Campos Delgado", trackingCode: "TRK-2024-021", registrationDate: "2024-05-15", status: true},
-  { id: "REF022", clientName: "Emilio Salazar Fuentes", trackingCode: "TRK-2024-022", registrationDate: "2024-05-20", status: true},
-];
-
-
 const ITEMS_PER_PAGE = 10;
  
 const MyReferralsTable = () => {
@@ -74,15 +46,10 @@ const MyReferralsTable = () => {
       // If API returns data, use it; otherwise use mock data for testing
       if (result && result.data) {
         setReferrals(result.data);
-      } else {
-        // Fallback to mock data for testing
-        setReferrals(MOCK_REFERRALS);
-      }
+      } 
       return result;
     } catch (error) {
       console.error('Error fetching referrals:', error);
-      // Fallback to mock data on error for testing
-      setReferrals(MOCK_REFERRALS);
     }
   };
 
