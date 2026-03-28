@@ -435,7 +435,7 @@ const AdminOffersTable = () => {
         operators={operators || []}
         benefitsList={benefitsList || []}
         categoriesList={categoriesList || []}
-        isSubmitting={loadingUpdate}
+        isSubmitting={isSubmitting}
       />
 
       <OfferCommissionConfigModal
