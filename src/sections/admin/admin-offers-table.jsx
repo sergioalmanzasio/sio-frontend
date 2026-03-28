@@ -14,7 +14,7 @@ import { adminOfferTableDriver } from "../../shared/drivers-object";
 const ITEMS_PER_PAGE = 10;
 
 const AdminOffersTable = () => {
-  const { getAdminOffers, getAllBenefits, getAllCategories, createOffer, updateOffer, getOfferCommissionConfig, loading: loadingOffers, loadingConfig } = useOffer();
+  const { getAdminOffers, getAllBenefits, getAllCategories, createOffer, updateOffer, getOfferCommissionConfig, loading: loadingOffers, loadingConfig, loadingUpdate } = useOffer();
   const { getOperators, operators, loading: loadingOperators } = useOperator();
   
   const [offers, setOffers] = useState([]);
@@ -435,7 +435,7 @@ const AdminOffersTable = () => {
         operators={operators || []}
         benefitsList={benefitsList || []}
         categoriesList={categoriesList || []}
-        isSubmitting={isSubmitting}
+        isSubmitting={loadingUpdate}
       />
 
       <OfferCommissionConfigModal

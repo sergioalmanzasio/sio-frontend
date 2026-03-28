@@ -7,6 +7,7 @@ const useOffer = () => {
   const [offers, setOffers] = useState(null);
   const [loading, setLoading] = useState(false);
   const [loadingConfig, setLoadingConfig] = useState(false);
+  const [loadingUpdate, setLoadingUpdate] = useState(false);
   const [error, setError] = useState(null);
   const token = localStorage.getItem("auth_token");
 
@@ -273,7 +274,7 @@ const useOffer = () => {
   }, []);
 
   const updateOffer = useCallback(async (id, offerData) => {
-    setLoading(true);
+    setLoadingUpdate(true);
     try {
       const response = await fetch(`${API_BASE_URL}/admin/offers/update/${id}`, {
         method: "PUT",
@@ -304,7 +305,7 @@ const useOffer = () => {
       });
       return { process: "error" };
     } finally {
-      setLoading(false);
+      setLoadingUpdate(false);
     }
   }, []);
 
