@@ -178,18 +178,7 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, operators = [], benefitsLis
     }else{
       setErrorDateEnd(false);
     }
-    if (formData.commission_type === "" || !formData.commission_type.trim()) {
-      setErrorCommissionType(true);
-      return;
-    }else{
-      setErrorCommissionType(false);
-    }
-    if (formData.commission_value === "" || !formData.commission_value.trim()) {
-      setErrorCommissionValue(true);
-      return;
-    }else{
-      setErrorCommissionValue(false);
-    }
+    
     
     onSubmit(formData);
     document.querySelector('body').style.overflow = "auto";
