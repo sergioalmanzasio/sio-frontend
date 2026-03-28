@@ -183,6 +183,7 @@ const AdminOffersTable = () => {
       setLoadingMessage("Creando oferta...");
       result = await createOffer(formData);
     }
+    setIsFormModalOpen(false);
     setIsSubmitting(false);
     
     if (result && result.process === "success") {

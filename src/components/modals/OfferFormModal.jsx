@@ -182,7 +182,7 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, operators = [], benefitsLis
     
     onSubmit(formData);
     document.querySelector('body').style.overflow = "auto";
-    onClose();
+    // onClose(); 
   };
 
   const filteredBenefits = benefitsList.filter((benefit) =>
