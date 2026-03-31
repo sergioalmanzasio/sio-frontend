@@ -8,7 +8,7 @@ export default function AdminOffersPage() {
       <Navbar />
       <TransversalHeader
         title="Gestión de Ofertas"
-        description="Visualiza todas las ofertas disponibles en el sistema."
+        description="Visualiza todas las ofertas disponibles para las ofertas."
       />
       <AdminOffersTable />
     </div>
