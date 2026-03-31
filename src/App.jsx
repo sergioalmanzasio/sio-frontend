@@ -29,6 +29,7 @@ import AdminBonusesPage from "./pages/AdminBonusesPage";
 import AdminBenefitsPage from "./pages/AdminBenefitsPage";
 import AdminOffersPage from "./pages/AdminOffersPage";
 import AdminOperatorsPage from "./pages/AdminOperatorsPage";
+import AdminCategoriesPage from "./pages/AdminCategoriesPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import SessionManager from "./components/SessionManager";
 import ReferralBonusesPage from "./pages/ReferralBonusesPage";
@@ -80,6 +81,7 @@ function App() {
             <Route path="/admin/offers" element={<AdminOffersPage />} />
             <Route path="/admin/operators" element={<AdminOperatorsPage />} />
             <Route path="/admin/benefits" element={<AdminBenefitsPage />} />
+            <Route path="/admin/categories" element={<AdminCategoriesPage />} />
           </Route>
 
           <Route path="/v2" element={<LandingPageV2 />} />
