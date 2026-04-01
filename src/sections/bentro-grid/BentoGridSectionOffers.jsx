@@ -122,7 +122,8 @@ export default function BentoGridSectionOffers( { offers = [] } ) {
       index: offer.offer_id,
       operator: offer.operator_name.toUpperCase(),
       price: offer.price_formatted,
-      operatorLogo: offer.operator_logo
+      operatorLogo: offer.operator_logo,
+      operatorColor: offer.operator_color
     }));
   }
 
@@ -153,6 +154,7 @@ export default function BentoGridSectionOffers( { offers = [] } ) {
                 onBenefitsClick={() => handleBenefitsClick(item.id, item.title, item.description, item.price, item.operator, item.operatorLogo)}
                 onBuyClick={() => handleBuyClick(item.id, item.title, item.description, item.price, item.operator)}
                 operatorLogo={item.operatorLogo}
+                operatorColor={item.operatorColor}
               />
             </div>
           ))}

@@ -2,12 +2,12 @@ import React from 'react';
 import { ButtonCard } from '../ui/button';
 import { getColorOpertator, getColorButtonBuy, getColorButtonBenefits } from '../../shared/utils';
 
-export default function Card({ title, description, operator, price = "$ -- /mes", onBenefitsClick, onBuyClick, operatorLogo }) {
+export default function Card({ title, description, operator, price = "$ -- /mes", onBenefitsClick, onBuyClick, operatorLogo, operatorColor }) {
   return (
     <div 
       className={`
         relative overflow-hidden
-        ${getColorOpertator(operator)}
+        ${operatorColor}
         text-white
         rounded-xl p-5 shadow-lg border border-gray-100 
         transition-all duration-500 hover:shadow-2xl hover:scale-[1.01]
@@ -33,12 +33,8 @@ export default function Card({ title, description, operator, price = "$ -- /mes"
         {price} <span className="text-white text-sm font-normal opacity-90"> /mes</span>
       </p>
       <div className="flex flex-col lg:flex-row justify-end gap-2 mt-2">
-        <ButtonCard className={`mt-2 md:mt-4 ${getColorButtonBenefits(operator)}`} onClick={onBenefitsClick}>
+        <ButtonCard className="mt-2 md:mt-4 bg-black/30" onClick={onBenefitsClick}>
           Beneficios
-        </ButtonCard>
-
-        <ButtonCard className={`mt-2 md:mt-4 hidden ${getColorButtonBuy(operator)}`} onClick={onBuyClick}>
-          Adquirir
         </ButtonCard>
       </div>
     </div>

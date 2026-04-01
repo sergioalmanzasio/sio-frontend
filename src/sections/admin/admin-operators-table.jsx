@@ -224,7 +224,10 @@ const AdminOperatorsTable = () => {
                     currentOperators.map((operator) => (
                       <tr key={operator.id} className="hover:bg-gray-50">
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm font-medium text-gray-900">{operator.name}</div>
+                          <div className="flex items-center gap-2">
+                            <div className={`w-3 h-3 rounded-full ${operator.color || 'bg-gray-600'}`}></div>
+                            <div className="text-sm font-medium text-gray-900">{operator.name}</div>
+                          </div>
                         </td>
                         <td className="px-6 py-4">
                           <div className="text-sm text-gray-500">{operator.description}</div>

@@ -8,7 +8,8 @@ const OperatorFormModal = ({ isOpen, onClose, onSubmit, isSubmitting = false, op
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    is_active: true
+    is_active: true,
+    color: "bg-blue-700"
   });
   const [errorName, setErrorName] = useState(false);
   const [errorDescription, setErrorDescription] = useState(false);
@@ -25,10 +26,11 @@ const OperatorFormModal = ({ isOpen, onClose, onSubmit, isSubmitting = false, op
         setFormData({
           name: operatorToEdit.name || "",
           description: operatorToEdit.description || "",
-          is_active: operatorToEdit.is_active !== undefined ? operatorToEdit.is_active : true
+          is_active: operatorToEdit.is_active !== undefined ? operatorToEdit.is_active : true,
+          color: operatorToEdit.color || "bg-blue-700"
         });
       } else {
-        setFormData({ name: "", description: "", is_active: true });
+        setFormData({ name: "", description: "", is_active: true, color: "bg-blue-700" });
         setSelectedFile(null);
         setPreviewUrl(null);
       }
@@ -98,6 +100,39 @@ const OperatorFormModal = ({ isOpen, onClose, onSubmit, isSubmitting = false, op
     onClose();
   };
 
+  const AVAILABLE_COLORS = [
+  { name: "Rojo Intenso", class: "bg-red-600" },
+  { name: "Carmesí", class: "bg-rose-600" },
+  { name: "Rosado", class: "bg-pink-500" },
+  { name: "Naranja", class: "bg-orange-500" },
+  { name: "Ambar", class: "bg-amber-500" },
+  { name: "Amarillo", class: "bg-yellow-400" },
+  { name: "Verde Lima", class: "bg-lime-500" },
+  { name: "Verde", class: "bg-green-600" },
+  { name: "Esmeralda", class: "bg-emerald-500" },
+  { name: "Verde Azulado", class: "bg-teal-500" },
+  { name: "Cian", class: "bg-cyan-500" },
+  { name: "Azul Cielo", class: "bg-sky-500" },
+  { name: "Azul Claro", class: "bg-blue-400" },
+  { name: "Azul Corporativo", class: "bg-blue-600" },
+  { name: "Azul Oscuro", class: "bg-blue-800" },
+  { name: "Índigo", class: "bg-indigo-600" },
+  { name: "Violeta", class: "bg-violet-600" },
+  { name: "Morado", class: "bg-purple-600" },
+  { name: "Fucsia", class: "bg-fuchsia-600" },
+  { name: "Pizarra", class: "bg-slate-500" },
+  { name: "Gris Humo", class: "bg-gray-600" },
+  { name: "Zinc", class: "bg-zinc-700" },
+  { name: "Neutro", class: "bg-neutral-500" },
+  { name: "Piedra", class: "bg-stone-600" },
+  { name: "Café", class: "bg-amber-900" },
+  { name: "Marrón", class: "bg-orange-900" },
+  { name: "Borgona", class: "bg-red-900" },
+  { name: "Bosque", class: "bg-green-900" },
+  { name: "Media Noche", class: "bg-slate-900" },
+  { name: "Negro Puro", class: "bg-black" }
+];
+
   if (!isOpen) return null;
 
   const isCreating = !operatorToEdit;
@@ -114,7 +149,7 @@ const OperatorFormModal = ({ isOpen, onClose, onSubmit, isSubmitting = false, op
         <div className="relative inline-block align-bottom bg-white rounded-lg text-left shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl w-full z-50">
           <form onSubmit={handleSubmit} className="flex flex-col max-h-[90vh]">
             <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 flex-shrink-0">
-              <div className="flex justify-between items-center mb-5 pb-4 border-b border-gray-200">
+              <div className="flex justify-between items-center mb-5 pb-2 border-b border-gray-200">
                 <h3 className="text-xl leading-6 font-bold text-gray-900" id="modal-title">
                   {operatorToEdit ? "Actualizar operador" : "Nuevo operador"}
                 </h3>
@@ -130,7 +165,7 @@ const OperatorFormModal = ({ isOpen, onClose, onSubmit, isSubmitting = false, op
             </div>
 
             <div className="px-4 sm:px-6 overflow-y-auto flex-grow">
-              <div className="mt-2 space-y-4 pb-4">
+              <div className="space-y-4 pb-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
@@ -160,6 +195,30 @@ const OperatorFormModal = ({ isOpen, onClose, onSubmit, isSubmitting = false, op
                     {errorDescription && (
                       <span className="text-red-500 text-xs mt-1">El campo descripción es requerido</span>
                     )}
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Color distintivo del operador
+                    </label>
+                    <div className="flex flex-wrap max-h-40 overflow-y-auto justify-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                      {AVAILABLE_COLORS.map((color) => (
+                        <button
+                          key={color.class}
+                          type="button"
+                          onClick={() => setFormData({ ...formData, color: color.class })}
+                          className={`w-10 h-10 rounded-full border-4 transition-all transform hover:scale-110 cursor-pointer ${color.class} ${
+                            formData.color === color.class 
+                              ? "border-gray-900 scale-110 shadow-lg shadow-gray-900" 
+                              : "border-transparent opacity-70 hover:opacity-100"
+                          }`}
+                          title={color.name}
+                        />
+                      ))}
+                    </div>
+                    <p className="text-[10px] text-gray-500 mt-2">
+                      Este color se usará para identificar visualmente al operador en la plataforma.
+                    </p>
                   </div>
 
                   {isCreating && (

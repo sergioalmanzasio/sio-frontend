@@ -113,10 +113,7 @@ const AdminCategoriesTable = () => {
   const handleSubmitCategory = async (formData) => {
     setIsSubmitting(true);
     let resultProcess;
-    // Colocar modal de confirmación, con el mensaje, si se actualiza el estado, esto influye en el estado de las ofertas asociadas a la categoría, es decir, si se inactiva la categoría, se inactivan todas las ofertas asociadas a ésta.
-    console.log(categoryToEdit.is_active, formData.is_active);
     if (categoryToEdit && categoryToEdit.is_active !== formData.is_active) {
-      console.log("Se actualiza el estado de la categoría");
       Swal.fire({
         title: "¿Estás seguro?",
         text: "Si actualizas el estado de la categoría, se actualizará el estado de todas las ofertas asociadas a ésta.",
