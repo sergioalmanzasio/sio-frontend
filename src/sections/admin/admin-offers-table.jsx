@@ -9,6 +9,7 @@ import OfferCommissionConfigModal from "../../components/modals/OfferCommissionC
 import ToastAlert from '../../components/alerts/ToastAlert'
 import { driver } from "driver.js";
 import { adminOfferTableDriver } from "../../shared/drivers-object";
+import Swal from "sweetalert2";
 
 
 const ITEMS_PER_PAGE = 10;
@@ -144,6 +145,19 @@ const AdminOffersTable = () => {
   };
 
   const handleOpenFormModal = (offer = null) => {
+    if( offer && offer.operator_status === false ){
+      Swal.fire({
+        title: "Operador Inactivo",
+        text: "Esta oferta no se puede editar porque el operador está inactivo. Actívalo para poder modificarla.",
+        icon: "info",
+        showConfirmButton: true,  
+        confirmButtonText: "Entendido",
+        customClass: {
+          confirmButton: "btn-gradient",
+        }
+      });
+      return;
+    }
     setOfferToEdit(offer);
     setIsFormModalOpen(true);
   };
@@ -302,7 +316,7 @@ const AdminOffersTable = () => {
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                          <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${offer.operator_status === true ? "bg-blue-100 text-blue-800" : "bg-red-100 text-red-800"}`}>
                             {offer.operator_name}
                           </span>
                         </td>
