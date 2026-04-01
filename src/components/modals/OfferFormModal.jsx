@@ -5,7 +5,6 @@ import Select from "../ui/select";
 import Textarea from "../ui/textarea";
 
 const OfferFormModal = ({ isOpen, onClose, onSubmit, operators = [], benefitsList = [], categoriesList = [], isSubmitting = false, offerToEdit = null }) => {
- 
   let objData = {};
   if(!offerToEdit){
     objData = {
@@ -258,7 +257,7 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, operators = [], benefitsLis
                   <div className="md:col-span-1 md:mt-6">
                     <Select
                       label="Operador"
-                      options={operators.map(op => op.name)}
+                      options={operators.filter(op => op.is_active === true).map(op => op.name)}
                       value={formData.operator_name}
                       onChange={(e) => {
                         e.target.name === "operator_name" ? formData.operator_name !==  "" || formData.operator_name.trim() ? setErrorOperator(false) : setErrorOperator(true) : null;

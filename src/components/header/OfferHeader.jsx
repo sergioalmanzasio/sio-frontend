@@ -43,12 +43,12 @@ const OfferHeader = ({isLoadingOffers = true, onSearch}) => {
 
 
   const OPERATORS_LIST = fetchedOperators && fetchedOperators.length > 0
-    ? fetchedOperators.map(op => op.name) 
+    ? fetchedOperators.filter(op => op.is_active === true).map(op => op.name) 
     : [];
   OPERATORS_LIST.push("Todos");
 
   const SERVICES_LIST = fetchedCategories && fetchedCategories.length > 0
-    ? fetchedCategories.map(cat => cat.name) 
+    ? fetchedCategories.filter(cat => cat.is_active === true).map(cat => cat.name) 
     : [];
   SERVICES_LIST.push("Todos");
   
