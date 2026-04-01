@@ -1,6 +1,6 @@
 
 export const saveUserData = (data) => {
-  const { role_id, role_name, person, username, email, optionMenu, referral_code } = data.data;
+  const { role_id, role_name, person, username, email, options, referral_code } = data.data;
   const userData = {
     firstName: person.first_name,
     middleName: person.middle_name,
@@ -12,8 +12,8 @@ export const saveUserData = (data) => {
     referralCode: referral_code,
   };
   localStorage.setItem("userData", JSON.stringify(userData));
-  if (optionMenu && optionMenu.length > 0) {
-    localStorage.setItem("menus", JSON.stringify(optionMenu));
+  if (options && options.length > 0) {
+    localStorage.setItem("menus", JSON.stringify(options));
   }
 };
 
