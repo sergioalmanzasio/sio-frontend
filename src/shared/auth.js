@@ -28,4 +28,5 @@ export const getUserData = () => {
 export const clearUserData = () => {
   localStorage.removeItem("userData");
   localStorage.removeItem("menus");
+  localStorage.removeItem("auth_token");
 };
