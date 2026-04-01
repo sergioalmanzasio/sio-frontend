@@ -57,7 +57,7 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, operators = [], benefitsLis
         setFormData({
           name: offerToEdit.name || "",
           description: offerToEdit.description || "",
-          price: offerToEdit.price || "",
+          price: parseCOP(offerToEdit.price) || "",
           is_range: offerToEdit.is_range || false,
           date_start: offerToEdit.date_start ? new Date(offerToEdit.date_start).toISOString().split('T')[0] : "",
           date_end: offerToEdit.date_end ? new Date(offerToEdit.date_end).toISOString().split('T')[0] : "",
@@ -92,6 +92,14 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, operators = [], benefitsLis
       ...prev,
       [name]: type === "checkbox" ? checked : value
     }));
+  };
+
+  const handlePriceChange = (e) => {
+    const rawValue = e.target.value.replace(/\D/g, "");
+    setFormData({
+      ...formData,
+      price: rawValue ? rawValue : ""
+    });
   };
 
   const handleBenefitToggle = (id) => {
@@ -181,12 +189,23 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, operators = [], benefitsLis
     
     onSubmit(formData);
     document.querySelector('body').style.overflow = "auto";
-    // onClose(); 
   };
 
   const filteredBenefits = benefitsList.filter((benefit) =>
     benefit.description.toLowerCase().includes(benefitSearchTerm.toLowerCase())
   );
+
+   const formatCOP = value => {
+    if (!value) return "";
+    value = Number(value);
+    return new Intl.NumberFormat("es-CO").format(value);
+  };
+
+   const parseCOP = value => {
+    if (!value) return 0;
+    console.log('ParceCOP', value);
+    return Number(value.toString().replace(/[^\d]/g, ""));
+  }
 
 
 
@@ -287,11 +306,11 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, operators = [], benefitsLis
                   <div className="md:col-span-1">
                     <label className="block text-sm font-medium text-gray-700 mb-1">Precio</label>
                     <Input
-                      type="number"
+                      type="text"
                       name="price"
-                      value={formData.price}
-                      onChange={handleChange}
-                      placeholder="Ej. 55900"
+                      value={formData.price ? `$ ${formatCOP(formData.price)}` : ""}
+                      onChange={handlePriceChange}
+                      placeholder="Ej. 59.000"
                       autoComplete="off"
                     />
                     {errorPrice && (
