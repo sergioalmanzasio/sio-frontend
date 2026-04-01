@@ -5,15 +5,39 @@ import tigoLogo from "../assets/logos/TIGOLOGO.png";
 import ToastAlert from "../components/alerts/ToastAlert";
 import { API_COLOMBIA } from "./constanst";
 
+const FIXED_COLORS = {
+  CLARO: "bg-red-500",
+  MOVISTAR: "bg-blue-700",
+  TIGO: "bg-blue-400",
+  WOM: "bg-purple-500",
+};
+
+const RANDOM_POOL = [
+  "bg-emerald-500", "bg-orange-500", "bg-pink-500", "bg-indigo-500",
+  "bg-yellow-500", "bg-cyan-500", "bg-lime-500", "bg-fuchsia-500",
+  "bg-teal-500", "bg-rose-500"
+];
+
+const assignedColors = new Map();
 
 export const getColorOpertator = (nameOperator) => {
-  const colors = {
-    CLARO: "bg-red-500",
-    MOVISTAR: "bg-blue-700",
-    TIGO: "bg-blue-400",
-    WOM: "bg-purple-500",
-  };
-  return colors[nameOperator];
+  if (!nameOperator) return "bg-gray-400";
+
+  const nameUpper = nameOperator.toUpperCase();
+
+  if (FIXED_COLORS[nameUpper]) {
+    return FIXED_COLORS[nameUpper];
+  }
+
+  if (assignedColors.has(nameUpper)) {
+    return assignedColors.get(nameUpper);
+  }
+  const usedColors = Array.from(assignedColors.values());
+  const availableColor = RANDOM_POOL.find(c => !usedColors.includes(c));
+  const finalColor = availableColor || "bg-slate-600";
+  assignedColors.set(nameUpper, finalColor);
+
+  return finalColor;
 };
 
 export const getColorHoverOpertator = (nameOperator) => {
