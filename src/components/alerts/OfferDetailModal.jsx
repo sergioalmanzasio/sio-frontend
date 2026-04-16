@@ -1,16 +1,17 @@
 import Swal from "sweetalert2";
+import { SALE_CONTACT_PHONE } from '../../shared/constanst';
 
-export default function OfferDetailModal({ 
-  title, 
-  html, 
-  icon, 
-  confirmText, 
-  cancelText, 
-  confirmCallback, 
+export default function OfferDetailModal({
+  title,
+  html,
+  icon,
+  confirmText,
+  cancelText,
+  confirmCallback,
   cancelCallback,
   isConfirmButtonVisible = true,
   isCancelButtonVisible = true,
-  footerText =  "Tienes dudas, contacta a ventas al 3123456789."
+  footerText = `Tienes dudas, contacta a ventas al ${SALE_CONTACT_PHONE}.`
 }) {
   return Swal.fire({
     title,
@@ -33,7 +34,7 @@ export default function OfferDetailModal({
       const shouldClose = await confirmCallback();
 
       if (shouldClose === false) {
-        return false; 
+        return false;
       }
 
       return true;

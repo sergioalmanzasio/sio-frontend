@@ -9,4 +9,5 @@ export const FACEBOOK_URL = import.meta.env.VITE_FACEBOOK_URL;
 export const INSTAGRAM_URL = import.meta.env.VITE_INSTAGRAM_URL;
 export const WEBSITE_URL = import.meta.env.VITE_WEBSITE_URL;
 export const SIO_LOGO_URL = import.meta.env.VITE_SIO_LOGO_URL;
-export const SIO_CUSTOMER_REFERRAL_URL = import.meta.env.VITE_SIO_URL_CUSTOMER_REFERENCING; 
+export const SIO_CUSTOMER_REFERRAL_URL = import.meta.env.VITE_SIO_URL_CUSTOMER_REFERENCING;
+export const SALE_CONTACT_PHONE = import.meta.env.VITE_SALE_CONTACT_PHONE;
