@@ -11,7 +11,7 @@ export default function OfferDetailModal({
   cancelCallback,
   isConfirmButtonVisible = true,
   isCancelButtonVisible = true,
-  footerText = `Tienes dudas, contacta a ventas al ${SALE_CONTACT_PHONE}.`
+  footerText = `¿Tienes dudas? Contáctanos vía WhatsApp al ${SALE_CONTACT_PHONE}.`
 }) {
   return Swal.fire({
     title,
