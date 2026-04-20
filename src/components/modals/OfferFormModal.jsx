@@ -6,7 +6,7 @@ import Textarea from "../ui/textarea";
 
 const OfferFormModal = ({ isOpen, onClose, onSubmit, operators = [], benefitsList = [], categoriesList = [], isSubmitting = false, offerToEdit = null }) => {
   let objData = {};
-  if(!offerToEdit){
+  if (!offerToEdit) {
     objData = {
       name: "",
       description: "",
@@ -22,7 +22,7 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, operators = [], benefitsLis
       _display_commission_value: "",
       benefits: []
     }
-  }else{
+  } else {
     objData = {
       name: "",
       description: "",
@@ -36,7 +36,7 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, operators = [], benefitsLis
       benefits: []
     }
   }
-  
+
   const [formData, setFormData] = useState(objData);
   const [errorName, setErrorName] = useState(false);
   const [errorOperator, setErrorOperator] = useState(false);
@@ -146,47 +146,47 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, operators = [], benefitsLis
     if (formData.name === "" || !formData.name.trim()) {
       setErrorName(true);
       return;
-    }else{
+    } else {
       setErrorName(false);
     }
     if (formData.description === "" || !formData.description.trim()) {
       setErrorDescription(true);
       return;
-    }else{
+    } else {
       setErrorDescription(false);
     }
     if (formData.operator_name === "" || !formData.operator_name.trim()) {
       setErrorOperator(true);
       return;
-    }else{
+    } else {
       setErrorOperator(false);
     }
     if (formData.category_name === "" || !formData.category_name.trim()) {
       setErrorCategory(true);
       return;
-    }else{
+    } else {
       setErrorCategory(false);
     }
-    if (formData.price === "" || !formData.price.trim()) {
+    if (formData.price === "") {
       setErrorPrice(true);
       return;
-    }else{
+    } else {
       setErrorPrice(false);
     }
-    if( formData.date_start === "" || !formData.date_start.trim() ){
+    if (formData.date_start === "" || !formData.date_start.trim()) {
       setErrorDateStart(true);
       return;
-    }else{
+    } else {
       setErrorDateStart(false);
     }
-    if( formData.date_end === "" || !formData.date_end.trim() ){
+    if (formData.date_end === "" || !formData.date_end.trim()) {
       setErrorDateEnd(true);
       return;
-    }else{
+    } else {
       setErrorDateEnd(false);
     }
-    
-    
+
+
     onSubmit(formData);
     document.querySelector('body').style.overflow = "auto";
   };
@@ -195,15 +195,14 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, operators = [], benefitsLis
     benefit.description.toLowerCase().includes(benefitSearchTerm.toLowerCase())
   );
 
-   const formatCOP = value => {
+  const formatCOP = value => {
     if (!value) return "";
     value = Number(value);
     return new Intl.NumberFormat("es-CO").format(value);
   };
 
-   const parseCOP = value => {
+  const parseCOP = value => {
     if (!value) return 0;
-    console.log('ParceCOP', value);
     return Number(value.toString().replace(/[^\d]/g, ""));
   }
 
@@ -214,10 +213,10 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, operators = [], benefitsLis
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
       <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-        
-        <div 
-          className="fixed inset-0 bg-black/80 transition-opacity" 
-          aria-hidden="true" 
+
+        <div
+          className="fixed inset-0 bg-black/80 transition-opacity"
+          aria-hidden="true"
           onClick={onClose}
         ></div>
         <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
@@ -279,8 +278,8 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, operators = [], benefitsLis
                       options={operators.filter(op => op.is_active === true).map(op => op.name)}
                       value={formData.operator_name}
                       onChange={(e) => {
-                        e.target.name === "operator_name" ? formData.operator_name !==  "" || formData.operator_name.trim() ? setErrorOperator(false) : setErrorOperator(true) : null;
-                        setFormData({...formData, operator_name: e.target.value})
+                        e.target.name === "operator_name" ? formData.operator_name !== "" || formData.operator_name.trim() ? setErrorOperator(false) : setErrorOperator(true) : null;
+                        setFormData({ ...formData, operator_name: e.target.value })
                       }}
                     />
                     {errorOperator && (
@@ -294,8 +293,8 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, operators = [], benefitsLis
                       options={categoriesList.map(cat => cat.name)}
                       value={formData.category_name}
                       onChange={(e) => {
-                        e.target.name === "category_name" ? formData.category_name !==  "" || formData.category_name.trim() ? setErrorOperator(false) : setErrorCategory(true) : null;
-                        setFormData({...formData, category_name: e.target.value})
+                        e.target.name === "category_name" ? formData.category_name !== "" || formData.category_name.trim() ? setErrorOperator(false) : setErrorCategory(true) : null;
+                        setFormData({ ...formData, category_name: e.target.value })
                       }}
                     />
                     {errorOperator && (
@@ -339,25 +338,25 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, operators = [], benefitsLis
                   </div>
 
                   {offerToEdit && (
-                  <div className="md:col-span-2 pt-2">
-                    <div className="flex items-center justify-between p-4 bg-gray-50 border border-gray-100 rounded-lg">
-                      <div>
-                        <h3 className="text-sm font-medium text-gray-800">Estado</h3>
-                        <p className="text-xs text-gray-500 mt-1">
-                          {formData.is_active ? "Activa" : "Inactiva"}
-                        </p>
+                    <div className="md:col-span-2 pt-2">
+                      <div className="flex items-center justify-between p-4 bg-gray-50 border border-gray-100 rounded-lg">
+                        <div>
+                          <h3 className="text-sm font-medium text-gray-800">Estado</h3>
+                          <p className="text-xs text-gray-500 mt-1">
+                            {formData.is_active ? "Activa" : "Inactiva"}
+                          </p>
+                        </div>
+                        <label className="relative inline-flex items-center cursor-pointer">
+                          <input
+                            type="checkbox"
+                            className="sr-only peer"
+                            checked={formData.is_active}
+                            onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
+                          />
+                          <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                        </label>
                       </div>
-                      <label className="relative inline-flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          className="sr-only peer"
-                          checked={formData.is_active}
-                          onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
-                        />
-                        <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
-                      </label>
                     </div>
-                  </div>
                   )}
 
                   <div className="md:col-span-2 grid grid-cols-2 gap-5 mt-1">
@@ -385,20 +384,20 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, operators = [], benefitsLis
                     </div>
                   </div>
                 </div>
-                
-                { !offerToEdit && (
+
+                {!offerToEdit && (
                   <div className="grid grid-cols-2 gap-5 mt-1 mt-6 border-t border-gray-200 pt-4 items-center justify-center">
                     <div className="col-span-2 md:col-span-2">
                       <h5 className="block text-sm font-medium text-gray-700">Configuración de comisión</h5>
                     </div>
                     <div className="col-span-2 md:col-span-1">
                       <Select
-                          label="Tipo de comisión"
-                          options={["Valor fijo", "Porcentaje"]}
-                          value={formData.commission_type}
-                          onChange={handleCommissionTypeChange}
-                        />
-                        {errorCommissionType && <span className="text-red-500 text-xs mt-1">El campo tipo de comisión es requerido</span>}
+                        label="Tipo de comisión"
+                        options={["Valor fijo", "Porcentaje"]}
+                        value={formData.commission_type}
+                        onChange={handleCommissionTypeChange}
+                      />
+                      {errorCommissionType && <span className="text-red-500 text-xs mt-1">El campo tipo de comisión es requerido</span>}
                     </div>
                     <div className="col-span-2 md:col-span-1 md:-mt-6">
                       <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -417,8 +416,8 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, operators = [], benefitsLis
                       {errorCommissionValue && <span className="text-red-500 text-xs mt-1">El campo valor de la comisión es requerido</span>}
                     </div>
                   </div>
-                ) }  
-                
+                )}
+
                 <div className="mt-6 border-t border-gray-200 pt-4">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3">
                     <label className="block text-sm font-medium text-gray-700 mb-2 sm:mb-0">Beneficios incluidos</label>
@@ -432,7 +431,7 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, operators = [], benefitsLis
                       />
                     </div>
                   </div>
-                  
+
                   <div className="max-h-48 overflow-y-auto border border-gray-200 rounded-md p-2 space-y-2">
                     {filteredBenefits.length > 0 ? (
                       filteredBenefits.map((benefit) => (
