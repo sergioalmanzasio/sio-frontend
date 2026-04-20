@@ -46,7 +46,7 @@ export default function AssociateOfferPage() {
     setSelectedOperator(value);
     setShowOffers(false);
     setSelectedOffer(null);
-    
+
     const operator = operators?.find(op => op.name === value);
     if (operator) {
       setSelectedOperatorId(operator.id);
@@ -147,10 +147,10 @@ export default function AssociateOfferPage() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Nombre del cliente
                 </label>
-                <Input 
-                  type="text" 
-                  value={clientName} 
-                  disabled 
+                <Input
+                  type="text"
+                  value={clientName}
+                  disabled
                   className="bg-gray-100 cursor-not-allowed"
                 />
               </div>
@@ -158,10 +158,10 @@ export default function AssociateOfferPage() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Código de referencia
                 </label>
-                <Input 
-                  type="text" 
-                  value={trackingCode} 
-                  disabled 
+                <Input
+                  type="text"
+                  value={trackingCode}
+                  disabled
                   className="bg-gray-100 cursor-not-allowed"
                 />
               </div>
@@ -175,7 +175,7 @@ export default function AssociateOfferPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
               <div className="md:col-span-2">
                 <Select
-                  options={operators?.map(op => op.name) || []}
+                  options={operators?.filter(op => op.is_active === true).map(op => op.name) || []}
                   label="Operador"
                   value={selectedOperator}
                   onChange={(e) => handleOperatorChange(e.target.value)}
@@ -212,7 +212,7 @@ export default function AssociateOfferPage() {
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-100">
                       {offers.map((offer) => (
-                        <tr 
+                        <tr
                           key={offer.offer_id}
                           className={`hover:bg-gray-50 transition ${selectedOffer?.offer_id === offer.offer_id ? 'bg-blue-50' : ''}`}
                         >
@@ -223,11 +223,10 @@ export default function AssociateOfferPage() {
                           <td className="px-4 py-3 text-center">
                             <button
                               onClick={() => handleSelectOffer(offer)}
-                              className={`px-3 py-1 rounded-md text-xs font-semibold transition ${
-                                selectedOffer?.offer_id === offer.offer_id
+                              className={`px-3 py-1 rounded-md text-xs font-semibold transition ${selectedOffer?.offer_id === offer.offer_id
                                   ? 'bg-blue-600 text-white'
                                   : 'bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white'
-                              }`}
+                                }`}
                             >
                               {selectedOffer?.offer_id === offer.offer_id ? 'Seleccionada' : 'Seleccionar'}
                             </button>
@@ -255,10 +254,10 @@ export default function AssociateOfferPage() {
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Nombre de la Oferta
                     </label>
-                    <Input 
-                      type="text" 
-                      value={selectedOffer.offer_name} 
-                      disabled 
+                    <Input
+                      type="text"
+                      value={selectedOffer.offer_name}
+                      disabled
                       className="bg-gray-100 cursor-not-allowed"
                     />
                   </div>
@@ -277,9 +276,9 @@ export default function AssociateOfferPage() {
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Número de Radicado
                     </label>
-                    <Input 
-                      type="text" 
-                      value={filingNumber} 
+                    <Input
+                      type="text"
+                      value={filingNumber}
                       onChange={(e) => setFilingNumber(e.target.value)}
                       placeholder="Ingrese el número de radicado (opcional)"
                       className=""
