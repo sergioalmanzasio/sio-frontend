@@ -48,53 +48,53 @@ export default function ConfigPage() {
   useEffect(() => {
     const loadUserData = async () => {
       setLoading(true);
-      
+
       try {
         const userDataSession = getUserData();
-        if(!userDataSession?.email) {
-            setLoading(false);
-            return;
+        if (!userDataSession?.email) {
+          setLoading(false);
+          return;
         }
 
         const response = await getPersonInfo(userDataSession.email);
 
-        if(response.process === "success") {
-            const { person_info, data_location, data_bank } = response.data;
+        if (response.process === "success") {
+          const { person_info, data_location, data_bank } = response.data;
 
-            const docType = DOCUMENT_TYPES.find(dt => dt.label === person_info.document_type_name);
-            setDocumentType(docType ? docType.acronym : "");
+          const docType = DOCUMENT_TYPES.find(dt => dt.label === person_info.document_type_name);
+          setDocumentType(docType ? docType.acronym : "");
 
-            setDocumentNumber(person_info.document_number);
-            setFirstName(person_info.first_name);
-            setSecondName(person_info.middle_name);
-            setLastName1(person_info.last_name_1);
-            setLastName2(person_info.last_name_2);
-            setEmail(person_info.email);
-            setPhone(person_info.phone);
-            setRole(person_info.role_name);
-            
-            if(data_location.is_data_location === false) {
-            } else {
-                 setDepartment(data_location.department == 'Pendiente' ? "" : data_location.department);
-                 setCity(data_location.city == 'Pendiente' ? "" : data_location.city);
-                 setNeighborhood(data_location.neighborhood);
-                 setAddress(data_location.address);
-                 setHousingType(data_location.type_of_housing);
-            }
+          setDocumentNumber(person_info.document_number);
+          setFirstName(person_info.first_name);
+          setSecondName(person_info.middle_name);
+          setLastName1(person_info.last_name_1);
+          setLastName2(person_info.last_name_2);
+          setEmail(person_info.email);
+          setPhone(person_info.phone);
+          setRole(person_info.role_name);
 
-            if(data_bank.is_data_bank === false) {
-            } else {
-                 setBank(data_bank.name);
-                 setAccountNumber(data_bank.account_number);
-            }
+          if (data_location.is_data_location === false) {
+          } else {
+            setDepartment(data_location.department == 'Pendiente' ? "" : data_location.department);
+            setCity(data_location.city == 'Pendiente' ? "" : data_location.city);
+            setNeighborhood(data_location.neighborhood);
+            setAddress(data_location.address);
+            setHousingType(data_location.type_of_housing);
+          }
+
+          if (data_bank.is_data_bank === false) {
+          } else {
+            setBank(data_bank.name);
+            setAccountNumber(data_bank.account_number);
+          }
 
         } else {
-             ToastAlert({
-                position: 'center',
-                timer: 2000,
-                icon: 'error',
-                title: response.message || 'Error al cargar información.'
-              });
+          ToastAlert({
+            position: 'center',
+            timer: 2000,
+            icon: 'error',
+            title: response.message || 'Error al cargar información.'
+          });
         }
 
       } catch (error) {
@@ -173,7 +173,7 @@ export default function ConfigPage() {
     setHousingType(backupData.housingType);
     setBank(backupData.bank);
     setAccountNumber(backupData.accountNumber);
-    
+
     setIsEditMode(false);
   };
 
@@ -194,7 +194,7 @@ export default function ConfigPage() {
       icon: 'success',
       title: 'Información actualizada correctamente.'
     });
-    
+
     setIsEditMode(false);
   };
 
@@ -327,7 +327,7 @@ export default function ConfigPage() {
     setDepartment(value);
     setCity("");
     setDepartmentCodeSelected("");
-    
+
     setTimeout(() => {
       const dept = departments.find(d => d.name === value);
       if (dept) {
@@ -479,11 +479,11 @@ export default function ConfigPage() {
                     />
                   </div>
                   <div className='md:col-span-2'>
-                    <PrimaryButton 
+                    <PrimaryButton
                       onClick={handleUpdatePersonalInfo}
-                      >
+                    >
                       <div className='flex items-center gap-2 text-sm'>
-                        <UserPen className='w-4 h-4 mr-2' />   
+                        <UserPen className='w-4 h-4 mr-2' />
                         Actualizar datos personales
                       </div>
                     </PrimaryButton>
@@ -499,15 +499,15 @@ export default function ConfigPage() {
                   Información bancaria
                 </h3>
                 {(!bank || !accountNumber) && !isEditMode ? (
-                    <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
-                        <div className="flex">
-                            <div className="ml-3">
-                                <p className="text-sm text-yellow-700">
-                                    El usuario no cuenta con información bancaria registrada.
-                                </p>
-                            </div>
-                        </div>
+                  <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
+                    <div className="flex">
+                      <div className="ml-3">
+                        <p className="text-sm text-yellow-700">
+                          El usuario no cuenta con información bancaria registrada.
+                        </p>
+                      </div>
                     </div>
+                  </div>
                 ) : null}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
@@ -516,7 +516,7 @@ export default function ConfigPage() {
                       label="Banco"
                       value={bank || ""}
                       onChange={(e) => setBank(e.target.value)}
-                      
+
                       icon={Landmark}
                     />
                   </div>
@@ -524,20 +524,20 @@ export default function ConfigPage() {
                     <Input
                       type="text"
                       value={accountNumber || ""}
-                      onChange={(e) => setAccountNumber(e.target.value.replace(/[^0-9]/g, ''))}
+                      onChange={(e) => setAccountNumber(e.target.value)}
                       placeholder="Número de Cuenta"
                       icon={CreditCard}
-                      
+
                     />
                   </div>
                   <div>
-                    <PrimaryButton 
-                      onClick={handleUpdateBankInfo}                      
-                      >
-                        <div className='flex items-center gap-2 text-sm'>
-                          <BanknoteArrowUp className='w-4 h-4 mr-2' />   
-                          Actualizar datos bancario
-                        </div>
+                    <PrimaryButton
+                      onClick={handleUpdateBankInfo}
+                    >
+                      <div className='flex items-center gap-2 text-sm'>
+                        <BanknoteArrowUp className='w-4 h-4 mr-2' />
+                        Actualizar datos bancario
+                      </div>
                     </PrimaryButton>
                   </div>
                 </div>
@@ -551,15 +551,15 @@ export default function ConfigPage() {
                   Información de ubicación
                 </h3>
                 {(!department || !address) && !isEditMode ? (
-                    <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
-                        <div className="flex">
-                            <div className="ml-3">
-                                <p className="text-sm text-yellow-700">
-                                    El usuario no cuenta con información de ubicación registrada.
-                                </p>
-                            </div>
-                        </div>
+                  <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
+                    <div className="flex">
+                      <div className="ml-3">
+                        <p className="text-sm text-yellow-700">
+                          El usuario no cuenta con información de ubicación registrada.
+                        </p>
+                      </div>
                     </div>
+                  </div>
                 ) : null}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
@@ -613,13 +613,13 @@ export default function ConfigPage() {
                     />
                   </div>
                   <div className='md:col-span-2'>
-                    <PrimaryButton 
+                    <PrimaryButton
                       onClick={handleUpdateLocationInfo}
-                      >
-                        <div className='flex items-center gap-2 text-sm'>
-                          <MapPinPen className='w-4 h-4 mr-2' />   
-                          Actualizar datos de ubicación
-                        </div>
+                    >
+                      <div className='flex items-center gap-2 text-sm'>
+                        <MapPinPen className='w-4 h-4 mr-2' />
+                        Actualizar datos de ubicación
+                      </div>
                     </PrimaryButton>
                   </div>
                 </div>
@@ -636,17 +636,17 @@ export default function ConfigPage() {
             </SecondaryButton>
           </div>
         </div>
-      ):(
+      ) : (
         <div className="container mx-auto px-4 mt-8 max-w-6xl">
           <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
             <div className="bg-gray-100 p-6 text-white">
               <div className="flex justify-between items-center">
                 <div>
                   <h2 className="text-3xl font-bold mb-2 bg-gray-300 rounded-lg animate-pulse w-120 h-8">
-                    
+
                   </h2>
                   <p className="text-gray-800 flex items-center gap-2 bg-gray-300 rounded-lg animate-pulse w-48 h-8">
-                    
+
                   </p>
                 </div>
               </div>
