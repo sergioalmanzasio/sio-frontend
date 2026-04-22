@@ -58,7 +58,8 @@ const WithdrawalsTable = () => {
     const term = searchTerm.toLowerCase();
     return (
       item.referral_name?.toLowerCase().includes(term) ||
-      item.account_number?.toLowerCase().includes(term)
+      item.account_number?.toLowerCase().includes(term) ||
+      item.guide_code?.toLowerCase().includes(term)
     );
   });
 
@@ -237,9 +238,9 @@ const WithdrawalsTable = () => {
   };
 
   const handlePayment = (commission) => {
-   Swal.fire({
-    title: '¿Esta comisión ha sido pagada?',
-    html: `
+    Swal.fire({
+      title: '¿Esta comisión ha sido pagada?',
+      html: `
       <p class="text-center text-orange-400 font-semibold mb-4">Esta acción no se podrá deshacer.</p>
       <div class="bg-gray-100 p-4 rounded-lg text-sm mt-2 text-justify">
         <h4 class="font-semibold text-lg">Datos de pago</h4>
@@ -249,47 +250,47 @@ const WithdrawalsTable = () => {
         <p>No. de cuenta: <span class="font-semibold text-lg">${commission.account_number}</span></p>
       </div>
     `,
-    icon: 'warning',
-    showCancelButton: true,
-    customClass: {
-     confirmButton: 'btn-gradient',
-     cancelButton: 'btn-cancel',
-    },
-    confirmButtonText: 'Sí, pagada',
-    cancelButtonText: 'Cancelar'
-   }).then(async (result) => {
-    if (result.isConfirmed) {
-      setProcessingId(commission.referral_commission_id);
-      try {
-        const response = await payCommission(commission.referral_commission_id);
-        if (response && response.process === "success") {
-          ToastAlert({
-            position: 'center',
-            timer: 2000,
-            icon: 'success',
-            title: response.message || 'Pago registrado exitosamente',
-          });
-          await loadData();
-        } else {
-          ToastAlert({
-            position: 'center',
-            timer: 2000,
-            icon: 'error',
-            title: response?.message || 'Error al procesar el pago',
-          });
+      icon: 'warning',
+      showCancelButton: true,
+      customClass: {
+        confirmButton: 'btn-gradient',
+        cancelButton: 'btn-cancel',
+      },
+      confirmButtonText: 'Sí, pagada',
+      cancelButtonText: 'Cancelar'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        setProcessingId(commission.referral_commission_id);
+        try {
+          const response = await payCommission(commission.referral_commission_id);
+          if (response && response.process === "success") {
+            ToastAlert({
+              position: 'center',
+              timer: 2000,
+              icon: 'success',
+              title: response.message || 'Pago registrado exitosamente',
+            });
+            await loadData();
+          } else {
+            ToastAlert({
+              position: 'center',
+              timer: 2000,
+              icon: 'error',
+              title: response?.message || 'Error al procesar el pago',
+            });
+          }
+        } catch (error) {
+          console.error("Error al pagar la comisión:", error);
+        } finally {
+          setProcessingId(null);
         }
-      } catch (error) {
-        console.error("Error al pagar la comisión:", error);
-      } finally {
-        setProcessingId(null);
       }
-    }
-   });
+    });
   };
 
   return (
     <div className="container mx-auto px-4 lg:px-0 py-8 animate-fadeIn max-w-6xl">
-       {loadingGetPaymentRequirements && (
+      {loadingGetPaymentRequirements && (
         <FullScreenLoader show={loadingGetPaymentRequirements} message="Cargando solicitudes de pagos..." />
       )}
       <InlineAlert
@@ -320,11 +321,10 @@ const WithdrawalsTable = () => {
             <button
               onClick={handlePayAll}
               disabled={selectedIds.size === 0}
-              className={`px-4 py-2 rounded-lg text-sm font-semibold transition duration-150 shadow-md whitespace-nowrap ${
-                selectedIds.size === 0
-                  ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                  : "bg-teal-600 hover:bg-teal-700 text-white cursor-pointer hover:shadow-lg transform hover:scale-105"
-              }`}
+              className={`px-4 py-2 rounded-lg text-sm font-semibold transition duration-150 shadow-md whitespace-nowrap ${selectedIds.size === 0
+                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                : "bg-teal-600 hover:bg-teal-700 text-white cursor-pointer hover:shadow-lg transform hover:scale-105"
+                }`}
             >
               Pagar todas
             </button>
@@ -392,6 +392,7 @@ const WithdrawalsTable = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       <div className="flex flex-col">
                         <span>{item.referral_name}</span>
+                        <span className="text-xs text-gray-500">Guía: {item.guide_code}</span>
                         <span className="text-xs text-gray-500 sm:hidden">
                           {item.bank_name} - {item.account_number}
                         </span>
@@ -415,12 +416,11 @@ const WithdrawalsTable = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center text-sm">
                       <div className="flex flex-col w-1/2 mx-auto text-center items-center gap-2">
-                        <button 
-                          className={`px-4 py-2 rounded-lg text-sm font-semibold transition duration-150 shadow-md ${
-                            processingId === item.referral_commission_id
-                              ? 'bg-gray-400 text-white cursor-not-allowed'
-                              : 'bg-teal-100 hover:bg-teal-200 cursor-pointer hover:shadow-lg transform hover:scale-105 text-teal-600 hover:text-gray-800'
-                          }`}
+                        <button
+                          className={`px-4 py-2 rounded-lg text-sm font-semibold transition duration-150 shadow-md ${processingId === item.referral_commission_id
+                            ? 'bg-gray-400 text-white cursor-not-allowed'
+                            : 'bg-teal-100 hover:bg-teal-200 cursor-pointer hover:shadow-lg transform hover:scale-105 text-teal-600 hover:text-gray-800'
+                            }`}
                           onClick={() => handlePayment(item)}
                           disabled={processingId === item.referral_commission_id}
                         >
@@ -462,18 +462,16 @@ const WithdrawalsTable = () => {
             <button
               onClick={handlePreviousPage}
               disabled={currentPage === 1}
-              className={`relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md ${
-                currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'
-              }`}
+              className={`relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'
+                }`}
             >
               Anterior
             </button>
             <button
               onClick={handleNextPage}
               disabled={currentPage === totalPages}
-              className={`ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md ${
-                currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'
-              }`}
+              className={`ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'
+                }`}
             >
               Siguiente
             </button>
@@ -489,9 +487,8 @@ const WithdrawalsTable = () => {
                 <button
                   onClick={handlePreviousPage}
                   disabled={currentPage === 1}
-                  className={`relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 text-sm font-medium ${
-                    currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-500 hover:bg-gray-50'
-                  }`}
+                  className={`relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 text-sm font-medium ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-500 hover:bg-gray-50'
+                    }`}
                 >
                   <ChevronLeft className="h-5 w-5" />
                 </button>
@@ -501,9 +498,8 @@ const WithdrawalsTable = () => {
                 <button
                   onClick={handleNextPage}
                   disabled={currentPage === totalPages}
-                  className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 text-sm font-medium ${
-                    currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-500 hover:bg-gray-50'
-                  }`}
+                  className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 text-sm font-medium ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-500 hover:bg-gray-50'
+                    }`}
                 >
                   <ChevronRight className="h-5 w-5" />
                 </button>
