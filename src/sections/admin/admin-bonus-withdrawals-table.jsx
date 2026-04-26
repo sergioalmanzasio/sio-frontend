@@ -58,7 +58,8 @@ const AdminBonusWithdrawalsTable = () => {
     const term = searchTerm.toLowerCase();
     return (
       item.referral_name?.toLowerCase().includes(term) ||
-      item.bonus_amount_formatted?.toLowerCase().includes(term)
+      item.bonus_amount_formatted?.toLowerCase().includes(term) ||
+      item.guide_code?.toLowerCase().includes(term)
     );
   });
 
@@ -86,11 +87,11 @@ const AdminBonusWithdrawalsTable = () => {
       let valB = b[sortColumn];
 
       if (sortColumn === 'bonus_amount') {
-         valA = Number(valA || 0);
-         valB = Number(valB || 0);
+        valA = Number(valA || 0);
+        valB = Number(valB || 0);
       } else {
-         valA = (valA ?? "").toString().toLowerCase();
-         valB = (valB ?? "").toString().toLowerCase();
+        valA = (valA ?? "").toString().toLowerCase();
+        valB = (valB ?? "").toString().toLowerCase();
       }
 
       if (valA < valB) return sortDirection === "asc" ? -1 : 1;
@@ -225,9 +226,9 @@ const AdminBonusWithdrawalsTable = () => {
   };
 
   const handlePayment = (bonus) => {
-   Swal.fire({
-    title: '¿Este bono ha sido pagado?',
-    html: `
+    Swal.fire({
+      title: '¿Este bono ha sido pagado?',
+      html: `
       <p class="text-center text-orange-400 font-semibold mb-4">Esta acción no se podrá deshacer.</p>
       <div class="bg-gray-100 p-4 rounded-lg text-sm mt-2 text-justify">
         <h4 class="font-semibold text-lg">Datos del bono</h4>
@@ -236,32 +237,32 @@ const AdminBonusWithdrawalsTable = () => {
         <p>Tipo: <span class="font-semibold text-lg">${bonus.apply_type}</span></p>
       </div>
     `,
-    icon: 'warning',
-    showCancelButton: true,
-    customClass: {
-     confirmButton: 'btn-gradient',
-     cancelButton: 'btn-cancel',
-    },
-    confirmButtonText: 'Sí, pagado',
-    cancelButtonText: 'Cancelar'
-   }).then(async (result) => {
-    if (result.isConfirmed) {
-      setProcessingId(bonus.bonus_transaction_id);
-      
-      const result = await payBonuses([bonus.bonus_transaction_id]);
+      icon: 'warning',
+      showCancelButton: true,
+      customClass: {
+        confirmButton: 'btn-gradient',
+        cancelButton: 'btn-cancel',
+      },
+      confirmButtonText: 'Sí, pagado',
+      cancelButtonText: 'Cancelar'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        setProcessingId(bonus.bonus_transaction_id);
 
-      if (result && result.process === "success") {
-        ToastAlert({
-          position: 'center',
-          timer: 2000,
-          icon: 'success',
-          title: result.data?.message || 'Pago registrado exitosamente.',
-        });
-        await loadData();
+        const result = await payBonuses([bonus.bonus_transaction_id]);
+
+        if (result && result.process === "success") {
+          ToastAlert({
+            position: 'center',
+            timer: 2000,
+            icon: 'success',
+            title: result.data?.message || 'Pago registrado exitosamente.',
+          });
+          await loadData();
+        }
+        setProcessingId(null);
       }
-      setProcessingId(null);
-    }
-   });
+    });
   };
 
   return (
@@ -281,7 +282,7 @@ const AdminBonusWithdrawalsTable = () => {
           <div className="relative w-full md:w-1/3">
             <input
               type="text"
-              placeholder="Buscar por nombre o monto..."
+              placeholder="Buscar por nombre, monto o guía..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all text-sm"
@@ -297,11 +298,10 @@ const AdminBonusWithdrawalsTable = () => {
             <button
               onClick={handlePayAll}
               disabled={selectedIds.size === 0}
-              className={`px-4 py-2 rounded-lg text-sm font-semibold transition duration-150 shadow-md whitespace-nowrap ${
-                selectedIds.size === 0
-                  ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                  : "bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer hover:shadow-lg transform hover:scale-105"
-              }`}
+              className={`px-4 py-2 rounded-lg text-sm font-semibold transition duration-150 shadow-md whitespace-nowrap ${selectedIds.size === 0
+                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                : "bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer hover:shadow-lg transform hover:scale-105"
+                }`}
             >
               Pagar todos
             </button>
@@ -363,6 +363,7 @@ const AdminBonusWithdrawalsTable = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       <div className="flex flex-col">
                         <span>{item.referral_name}</span>
+                        <span className="text-xs text-gray-500">Guía: {item.guide_code}</span>
                         <span className="text-xs text-gray-500 sm:hidden">
                           {item.apply_type} - {item.bonus_status_translate}
                         </span>
@@ -381,12 +382,11 @@ const AdminBonusWithdrawalsTable = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center text-sm">
                       <div className="flex flex-col w-3/4 mx-auto text-center items-center gap-2">
-                        <button 
-                          className={`px-4 py-2 rounded-lg text-sm font-semibold transition duration-150 shadow-md ${
-                            processingId === item.bonus_transaction_id
-                              ? 'bg-gray-400 text-white cursor-not-allowed'
-                              : 'bg-emerald-100 hover:bg-emerald-200 cursor-pointer hover:shadow-lg transform hover:scale-105 text-emerald-600 hover:text-gray-800'
-                          }`}
+                        <button
+                          className={`px-4 py-2 rounded-lg text-sm font-semibold transition duration-150 shadow-md ${processingId === item.bonus_transaction_id
+                            ? 'bg-gray-400 text-white cursor-not-allowed'
+                            : 'bg-emerald-100 hover:bg-emerald-200 cursor-pointer hover:shadow-lg transform hover:scale-105 text-emerald-600 hover:text-gray-800'
+                            }`}
                           onClick={() => handlePayment(item)}
                           disabled={processingId === item.bonus_transaction_id}
                         >
@@ -428,18 +428,16 @@ const AdminBonusWithdrawalsTable = () => {
             <button
               onClick={handlePreviousPage}
               disabled={currentPage === 1}
-              className={`relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md ${
-                currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'
-              }`}
+              className={`relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'
+                }`}
             >
               Anterior
             </button>
             <button
               onClick={handleNextPage}
               disabled={currentPage === totalPages}
-              className={`ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md ${
-                currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'
-              }`}
+              className={`ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'
+                }`}
             >
               Siguiente
             </button>
@@ -455,9 +453,8 @@ const AdminBonusWithdrawalsTable = () => {
                 <button
                   onClick={handlePreviousPage}
                   disabled={currentPage === 1}
-                  className={`relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 text-sm font-medium ${
-                    currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-500 hover:bg-gray-50'
-                  }`}
+                  className={`relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 text-sm font-medium ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-500 hover:bg-gray-50'
+                    }`}
                 >
                   <ChevronLeft className="h-5 w-5" />
                 </button>
@@ -467,9 +464,8 @@ const AdminBonusWithdrawalsTable = () => {
                 <button
                   onClick={handleNextPage}
                   disabled={currentPage === totalPages}
-                  className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 text-sm font-medium ${
-                    currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-500 hover:bg-gray-50'
-                  }`}
+                  className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 text-sm font-medium ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-500 hover:bg-gray-50'
+                    }`}
                 >
                   <ChevronRight className="h-5 w-5" />
                 </button>
