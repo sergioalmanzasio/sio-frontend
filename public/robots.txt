@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Allow: /offers
+Allow: /compensation-plan
+Allow: /signup
+Disallow: /sysadmin/
+Disallow: /coordinator/
+Disallow: /referral/
+Disallow: /admin/
+Disallow: /config
+Disallow: /reset-password
+Disallow: /auth-redirect
+
+Sitemap: https://siocolombia.com/sitemap.xml
