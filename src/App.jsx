@@ -39,54 +39,56 @@ import BonusPaymentsPage from "./pages/BonusPaymentsPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import CompensationPlanPage from "./pages/CompensationPlanPage";
 import CustomerReferencingPage from "./pages/CustomerReferencingPage";
+import AdminUserPage from "./pages/user/AdminUserPage";
 import "driver.js/dist/driver.css";
 
 function App() {
 
   return (
     <BrowserRouter>
-        <SessionManager />
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/reset-password" element={<ResetPasswordPage />} />
-          <Route path="/compensation-plan" element={<CompensationPlanPage />} />
-          <Route path="/offers" element={<OffersPage />} />
-          <Route path="/auth-redirect" element={<AuthRedirect />} />
-          <Route path="/customer-referencing" element={<CustomerReferencingPage />} />
+      <SessionManager />
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/compensation-plan" element={<CompensationPlanPage />} />
+        <Route path="/offers" element={<OffersPage />} />
+        <Route path="/auth-redirect" element={<AuthRedirect />} />
+        <Route path="/customer-referencing" element={<CustomerReferencingPage />} />
 
-          <Route element={<ProtectedRoute />}>
-            <Route path="/client-service-requests" element={<ClientServiceRequests />} />
-            <Route path="/sysadmin/dashboard" element={<SysAdminDashboard />} />
-            <Route path="/coordinator-service-requests" element={<CoordinatorServiceRequests />} />
-            <Route path="/coordinator/dashboard" element={<ServiceCoordinatorDashboard />} />
-            <Route path="/coordinator/my-referral-services" element={<MyReferralServicesPage />} />
-            <Route path="/config" element={<ConfigPage />} />
-            <Route path="/my-referrals" element={<MyReferralsPage />} />
-            <Route path="/referral/dashboard" element={<ReferralDashboard />} />
-            <Route path="/referral/bonuses" element={<ReferralBonusesPage />} />
-            <Route path="/add-referral" element={<AddReferralPage />} />
-            <Route path="/assigned-referrals" element={<AssignedReferralsPage />} />
-            <Route path="/associate-offer" element={<AssociateOfferPage />} />
-            <Route path="/service-follow-up" element={<ServiceFollowUpPage />} />
-            <Route path="/my-commisions" element={<MyCommissionsPage />} />
-            <Route path="/commision/withdrawals" element={<CommissionWithdrawalsPage />} />
-            <Route path="/commissions/history" element={<CommissionsHistoryPage />} />
-            <Route path="/bonuses/history" element={<BonusesHistoryPage />} />
-            <Route path="/bonuses/payments" element={<BonusPaymentsPage />} />
-            <Route path="/commission-payments" element={<CommissionPaymentsPage />} />
-            <Route path="/admin/service-requests" element={<AdminServiceRequestsPage />} />
-            <Route path="/admin/bonuses" element={<AdminBonusesPage />} />
-            <Route path="/bonuses/withdrawals" element={<AdminBonusWithdrawalsPage />} />
-            <Route path="/admin/offers" element={<AdminOffersPage />} />
-            <Route path="/admin/operators" element={<AdminOperatorsPage />} />
-            <Route path="/admin/benefits" element={<AdminBenefitsPage />} />
-            <Route path="/admin/categories" element={<AdminCategoriesPage />} />
-          </Route>
+        <Route element={<ProtectedRoute />}>
+          <Route path="/client-service-requests" element={<ClientServiceRequests />} />
+          <Route path="/sysadmin/dashboard" element={<SysAdminDashboard />} />
+          <Route path="/coordinator-service-requests" element={<CoordinatorServiceRequests />} />
+          <Route path="/coordinator/dashboard" element={<ServiceCoordinatorDashboard />} />
+          <Route path="/coordinator/my-referral-services" element={<MyReferralServicesPage />} />
+          <Route path="/config" element={<ConfigPage />} />
+          <Route path="/my-referrals" element={<MyReferralsPage />} />
+          <Route path="/referral/dashboard" element={<ReferralDashboard />} />
+          <Route path="/referral/bonuses" element={<ReferralBonusesPage />} />
+          <Route path="/add-referral" element={<AddReferralPage />} />
+          <Route path="/assigned-referrals" element={<AssignedReferralsPage />} />
+          <Route path="/associate-offer" element={<AssociateOfferPage />} />
+          <Route path="/service-follow-up" element={<ServiceFollowUpPage />} />
+          <Route path="/my-commisions" element={<MyCommissionsPage />} />
+          <Route path="/commision/withdrawals" element={<CommissionWithdrawalsPage />} />
+          <Route path="/commissions/history" element={<CommissionsHistoryPage />} />
+          <Route path="/bonuses/history" element={<BonusesHistoryPage />} />
+          <Route path="/bonuses/payments" element={<BonusPaymentsPage />} />
+          <Route path="/commission-payments" element={<CommissionPaymentsPage />} />
+          <Route path="/admin/service-requests" element={<AdminServiceRequestsPage />} />
+          <Route path="/admin/bonuses" element={<AdminBonusesPage />} />
+          <Route path="/bonuses/withdrawals" element={<AdminBonusWithdrawalsPage />} />
+          <Route path="/admin/offers" element={<AdminOffersPage />} />
+          <Route path="/admin/operators" element={<AdminOperatorsPage />} />
+          <Route path="/admin/benefits" element={<AdminBenefitsPage />} />
+          <Route path="/admin/categories" element={<AdminCategoriesPage />} />
+          <Route path="/admin/users" element={<AdminUserPage />} />
+        </Route>
 
-          <Route path="/v2" element={<LandingPageV2 />} />
-        </Routes>
-      
+
+      </Routes>
+
     </BrowserRouter>
   )
 }
